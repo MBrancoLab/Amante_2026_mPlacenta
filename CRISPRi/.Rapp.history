@@ -1,0 +1,515 @@
+library(tidyverse)
+hits = read_tsv('sgRNA_rmsk_hits.txt')
+hits = read_tsv('sgRNA_rmsk_hits.bed', col_names=F)
+hits
+freq = group_by(hits, X10) %>% summarise(count = length(X10))
+freq
+freq = group_by(hits, X10) %>%#
+	summarise(count = length(X10)) %>% #
+	mutate(freq = count/nrow(hits))
+freq
+ggplot(freq, aes(y=count, fill=X10)) +#
+	geom_bar(stat='identity')
+ggplot(freq, aes(x='', y=count, fill=X10)) +#
+	geom_bar(stat='identity')
+ggplot(freq, aes(x='', y=count, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0)
+ggplot(freq, aes(x=2, y=count, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0)
+ggplot(freq, aes(x='', y=count, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0)
+ggplot(freq, aes(x='', y=count, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0) +#
+	xlim(0.5, 2.5)
+ggplot(freq, aes(x=2, y=count, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0) +#
+	xlim(0.5, 2.5)
+ggplot(freq, aes(x=2, y=count, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0) +#
+	xlim(0.5, 2.5) +#
+	theme_classic()
+ggplot(freq, aes(x=2, y=count, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0) +#
+	xlim(0.5, 2.5) +#
+	theme_void()
+ggplot(freq, aes(x=2, y=freq, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0) +#
+	xlim(0.5, 2.5) +#
+	theme_void()
+freq
+lowf = filter(freq, count<50)
+lowf
+freq2 = rbind(filter(freq, count>50),#
+	tibble(X10='Others', count=sum(lowf$count), freq=sum(lowf$freq)))
+freq2
+ggplot(freq2, aes(x=2, y=freq, fill=X10)) +#
+	geom_bar(stat='identity') +#
+	coord_polar(theta = "y", start = 0) +#
+	xlim(0.5, 2.5) +#
+	theme_void()
+library(svglite)
+ggsave('~/Downloads/pie.svg')
+library(tidyverse)
+sq = tibble()#
+for (f in list.files(path='./squire')) {#
+	sub = read_tsv(paste('./squire',f,sep='/')) %>%#
+		add_column(group=sub('_0[[:digit:]]_subFcounts.txt','',f))#
+	sq = rbind(sq, sub)#
+}
+sq
+filter(sq, `Subfamily:Family:Class` %in% sel) %>%#
+ggplot(aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM') +#
+	ggtitle(te)
+sel = c('IAPLTR1_Mm:ERVK:LTR', 'IAPLTR1a_Mm:ERVK:LTR',#
+	'IAPLTR2_Mm:ERVK:LTR', 'IAPLTR2a:ERVK:LTR',#
+	'IAPLTR2a2_Mm:ERVK:LTR', 'IAPLTR2b:ERVK:LTR',#
+	'IAPEz-int:ERVK:LTR')#
+#
+filter(sq, `Subfamily:Family:Class` %in% sel) %>%#
+ggplot(aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM') +#
+	ggtitle(te)
+filter(sq, `Subfamily:Family:Class` %in% sel) %>%#
+ggplot(aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM')
+filter(sq, `Subfamily:Family:Class` %in% sel) %>%#
+ggplot(aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.8)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM')
+filter(sq, `Subfamily:Family:Class` %in% sel) %>%#
+ggplot(aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM')
+sel = c('IAPLTR1_Mm:ERVK:LTR', 'IAPLTR1a_Mm:ERVK:LTR',#
+	'IAPLTR2_Mm:ERVK:LTR', 'IAPLTR2a:ERVK:LTR',#
+	'IAPLTR2a2_Mm:ERVK:LTR', 'IAPLTR2b:ERVK:LTR')#
+#
+filter(sq, `Subfamily:Family:Class` %in% sel) %>%#
+ggplot(aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM')
+filter(sq, `Subfamily:Family:Class` %in% sel) %>%#
+ggplot(aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM') +#
+	labs(fill = '')
+library(svglite)
+ggsave('subf.svg')
+filter(sq, `Subfamily:Family:Class` %in% sel)
+sel.te = c('IAPLTR1_Mm:ERVK:LTR', 'IAPLTR1a_Mm:ERVK:LTR',#
+	'IAPLTR2_Mm:ERVK:LTR', 'IAPLTR2a:ERVK:LTR',#
+	'IAPLTR2a2_Mm:ERVK:LTR', 'IAPLTR2b:ERVK:LTR')#
+#
+sq.sel = filter(sq, `Subfamily:Family:Class` %in% sel.te)#
+#
+ggplot(sq.sel, aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM') +#
+	labs(fill = '')
+model = aov(sq.sel ~ group * `Subfamily:Family:Class`)
+model = with(sq.sel, aov(fpkm ~ group * `Subfamily:Family:Class`))
+model
+summary(model)
+TukeyHSD(model)
+?TukeyHSD
+group_by(sq.sel, `Subfamily:Family:Class`) %>%#
+	summarise(p = t.test(FPKM~group))
+group_by(sq.sel, `Subfamily:Family:Class`) %>%#
+	summarise(p = t.test(fpkm~group))
+group_by(sq.sel, `Subfamily:Family:Class`) %>%#
+	summarise(p = t.test(fpkm~group)$p.value)
+t = group_by(sq.sel, `Subfamily:Family:Class`) %>%#
+	summarise(p = t.test(fpkm~group)$p.value)
+p.adjust(t$p, methods='BH')
+p.adjust(t$p, method='BH')
+model = with(sq.sel, aov(fpkm ~ group))
+TukeyHSD(model)
+model = with(sq.sel, aov(fpkm ~ `Subfamily:Family:Class`))
+TukeyHSD(model)
+sq
+colnames(sq)[3] = 'te'
+sel.te = c('IAPLTR1_Mm:ERVK:LTR', 'IAPLTR1a_Mm:ERVK:LTR',#
+	'IAPLTR2_Mm:ERVK:LTR', 'IAPLTR2a:ERVK:LTR',#
+	'IAPLTR2a2_Mm:ERVK:LTR', 'IAPLTR2b:ERVK:LTR')#
+#
+sq.sel = filter(sq, `Subfamily:Family:Class` %in% sel.te)#
+#
+ggplot(sq.sel, aes(x=`Subfamily:Family:Class`, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM') +#
+	labs(fill = '')
+sq.sel = filter(sq, te %in% sel.te)
+ggplot(sq.sel, aes(x=te, y=fpkm, fill=factor(group,levels=c('KRAB','IAP_gRNA')))) +#
+	geom_bar(stat='summary', fun=mean, col='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('FPKM') +#
+	labs(fill = '')
+model = with(sq.sel, aov(fpkm ~ te))#
+#
+TukeyHSD(model)
+model = with(sq.sel, aov(fpkm ~ group * te))
+TukeyHSD(model)
+summary(model)
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('gene_raw_counts.txt') %>%#
+	mutate(across(KRAB_01:IAP_gRNA_03, ~./sum(.)*1e6))#
+#
+ctrl = rowMeans(log2(rpm[,grep('KRAB',colnames(rpm))] + 0.05))#
+iap = rowMeans(log2(rpm[,grep('IAP_gRNA',colnames(rpm))] + 0.05))#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		ctrl, iap)#
+tss = promoters(rna)
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+K4pos = nearestTE(tss, 'annotations/IAP_H3K4me3_GFPTSCs.bed')#
+K4neg = nearestTE(tss, 'annotations/IAP_notH3K4me3_GFPTSCs.bed')#
+#
+ltr1 = nearestTE(tss, 'annotations/IAPLTR1_Mm.bed')#
+other = nearestTE(tss, 'annotations/notIAPLTR1_Mm.bed')#
+#
+sgpos = nearestTE(tss, 'annotations/IAP_sgRNA_pos.bed')#
+sgneg = nearestTE(tss, 'annotations/IAP_sgRNA_neg.bed')
+K4pos = nearestTE(tss, 'IAP_subsets/IAP_H3K4me3_pos.bed')#
+K4neg = nearestTE(tss, 'IAP_subsets/IAP_H3K4me3_neg.bed')#
+#
+ltr1 = nearestTE(tss, 'IAP_subsets/IAPLTR1_Mm.bed')#
+other = nearestTE(tss, 'IAP_subsets/notIAPLTR1_Mm.bed')#
+#
+sgpos = nearestTE(tss, 'IAP_subsets/IAP_sgRNA_pos.bed')#
+sgneg = nearestTE(tss, 'IAP_subsets/IAP_sgRNA_neg.bed')
+min.expr = -1#
+#
+K4pos.df = filter(as.data.frame(K4pos), !is.na(distance), ctrl>min.expr | iap>min.expr)#
+K4neg.df = filter(as.data.frame(K4neg), !is.na(distance), ctrl>min.expr | iap>min.expr)#
+#
+ltr1.df = filter(as.data.frame(ltr1), !is.na(distance), ctrl>min.expr | iap>min.expr)#
+other.df = filter(as.data.frame(other), !is.na(distance), ctrl>min.expr | iap>min.expr)#
+#
+sgpos.df = filter(as.data.frame(sgpos), !is.na(distance), ctrl>min.expr | iap>min.expr)#
+sgneg.df = filter(as.data.frame(sgneg), !is.na(distance), ctrl>min.expr | iap>min.expr)
+plotFC = function(data) {#
+	p = ggplot(data, aes(x=subset, y=iap-ctrl, fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-2,2) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Relative expression')#
+	print(p)#
+}
+quartz(w=4.5, h=3)#
+plotFC(rbind(add_column(K4pos.df, subset='H3K4me3+'), add_column(K4neg.df, subset='H3K4me3-')))
+plotFC(rbind(add_column(ltr1.df, subset='IAPLTR1_Mm'), add_column(other.df, subset='Other IAPs')))
+library(svglite)
+ggsave('iapltr1.svg')
+plotFC(rbind(add_column(K4pos.df, subset='H3K4me3+'), add_column(K4neg.df, subset='H3K4me3-')))
+ggsave('h3k4me3.svg')
+plotFC(rbind(add_column(sgpos.df, subset='sgRNA+'), add_column(sgneg.df, subset='sgRNA-')))
+ggsave('sgrna.svg')
+summary(aov(iap-ctrl ~ dgroup, data=K4pos.df))
+summary(aov(iap-ctrl ~ dgroup, data=K4neg.df))
+summary(aov(iap-ctrl ~ dgroup, data=ltr1.df))
+summary(aov(iap-ctrl ~ dgroup, data=other.df))
+summary(aov(iap-ctrl ~ dgroup, data=sgpos.df))
+summary(aov(iap-ctrl ~ dgroup, data=sgneg.df))
+summary(aov(ctrl ~ dgroup, data=K4pos.df))
+summary(aov(iap-ctrl ~ dgroup, data=K4pos.df))
+plotFC(rbind(add_column(K4pos.df, subset='H3K4me3+'), add_column(K4neg.df, subset='H3K4me3-')))
+nearestTE = function(tss.data, bed.file) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	return(tss.data)#
+}
+ltr1 = nearestTE(tss, 'IAP_subsets/IAPLTR1_Mm.bed')
+other = nearestTE(tss, 'IAP_subsets/notIAPLTR1_Mm.bed')
+ltr1
+min.expr = -1
+ltr1.df = filter(as.data.frame(ltr1), !is.na(distance), ctrl>min.expr | iap>min.expr)
+ltr1.df
+head(ltr1.df)
+dmax = 1e4
+ltr1.df = filter(as.data.frame(ltr1), distance<dmax, ctrl>min.expr | iap>min.expr)
+head(ltr1.df)
+nrow(ltr1.df)
+ltr1.df$distance
+ltr1.df = filter(as.data.frame(ltr1), distance<dmax, ctrl>min.expr | iap>min.expr)
+other.df = filter(as.data.frame(other), distance<dmax, ctrl>min.expr | iap>min.expr)
+head(ltr1.df)
+plotFC = function(df1, df2, name1, name2) {#
+	data = rbind(select(df1, gene, ctrl, iap) %>% add_column(subset=name1),#
+				select(df2, gene, ctrl, iap) %>% add_column(subset=name2))#
+	p = ggplot(data, aes(x=subset, y=iap-ctrl)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-2,2) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Log2 fold change')#
+	print(p)#
+}#
+#
+quartz(w=4.5, h=3)#
+plotFC(ltr1.df, other.df, 'IAPLTR1_Mm', 'Other IAPs')
+plotFC = function(df1, df2, name1, name2) {#
+	data = rbind(select(df1, gene, ctrl, iap) %>% add_column(subset=name1),#
+				select(df2, gene, ctrl, iap) %>% add_column(subset=name2))#
+	p = ggplot(data, aes(x=subset, y=iap-ctrl)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-2,2) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Log2 fold change')#
+	print(p)#
+	return(data)#
+}
+ltr.data = plotFC(ltr1.df, other.df, 'IAPLTR1_Mm', 'Other IAPs')
+head(ltr.data)
+t.test(ltr.data$iap-ltr.data$ctrl ~ ltr.data$subset)
+K4pos.df = filter(as.data.frame(K4pos), distance<dmax, ctrl>min.expr | iap>min.expr)#
+K4neg.df = filter(as.data.frame(K4neg), distance<dmax, ctrl>min.expr | iap>min.expr)#
+#
+ltr1.df = filter(as.data.frame(ltr1), distance<dmax, ctrl>min.expr | iap>min.expr)#
+other.df = filter(as.data.frame(other), distance<dmax, ctrl>min.expr | iap>min.expr)#
+#
+sgpos.df = filter(as.data.frame(sgpos), distance<dmax, ctrl>min.expr | iap>min.expr)#
+sgneg.df = filter(as.data.frame(sgneg), distance<dmax, ctrl>min.expr | iap>min.expr)
+with(ltr.data, t.test(iap-ctrl ~ subset))
+plotFC = function(df1, df2, name1, name2) {#
+	data = rbind(select(df1, gene, ctrl, iap) %>% add_column(subset=name1),#
+				select(df2, gene, ctrl, iap) %>% add_column(subset=name2))#
+	p = ggplot(data, aes(x=subset, y=iap-ctrl)) +#
+		geom_boxplot(outlier.colour=NA, fill='lightblue') +#
+		theme_classic() +#
+		ylim(-2,2) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Log2 fold change')#
+	print(p)#
+	return(data)#
+}
+quartz(w=3, h=3)#
+K4.data = plotFC(K4pos.df, K4neg.df, 'H3K4me3+', 'H3K4me3-')
+quartz(w=2, h=3)
+K4.data = plotFC(K4pos.df, K4neg.df, 'H3K4me3+', 'H3K4me3-')
+with(K4.data, t.test(iap-ctrl ~ subset))
+sg.data = plotFC(sgpos.df, sgneg.df, 'sgRNA+', 'sgRNA-')
+with(sg.data, t.test(iap-ctrl ~ subset))
+with(K4.data, t.test(iap-ctrl ~ subset))
+with(sg.data, t.test(iap-ctrl ~ subset))
+with(ltr.data, t.test(iap-ctrl ~ subset))
+ltr.data = plotFC(ltr1.df, other.df, 'IAPLTR1_Mm', 'Other IAPs')
+plotFC = function(df1, df2, name1, name2) {#
+	data = rbind(select(df1, gene, ctrl, iap) %>% add_column(subset=name1),#
+				select(df2, gene, ctrl, iap) %>% add_column(subset=name2))#
+	p = ggplot(data, aes(x=subset, y=iap-ctrl)) +#
+		geom_boxplot(outlier.colour=NA, fill='lightblue') +#
+		theme_classic() +#
+		ylim(-1.5,1.5) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Log2 fold change')#
+	print(p)#
+	return(data)#
+}#
+#
+quartz(w=2, h=3)#
+K4.data = plotFC(K4pos.df, K4neg.df, 'H3K4me3+', 'H3K4me3-')#
+ltr.data = plotFC(ltr1.df, other.df, 'IAPLTR1_Mm', 'Other IAPs')
+min.expr = -1#
+dmax = 5e4#
+#
+K4pos.df = filter(as.data.frame(K4pos), distance<dmax, ctrl>min.expr | iap>min.expr)#
+K4neg.df = filter(as.data.frame(K4neg), distance<dmax, ctrl>min.expr | iap>min.expr)#
+#
+ltr1.df = filter(as.data.frame(ltr1), distance<dmax, ctrl>min.expr | iap>min.expr)#
+other.df = filter(as.data.frame(other), distance<dmax, ctrl>min.expr | iap>min.expr)#
+#
+sgpos.df = filter(as.data.frame(sgpos), distance<dmax, ctrl>min.expr | iap>min.expr)#
+sgneg.df = filter(as.data.frame(sgneg), distance<dmax, ctrl>min.expr | iap>min.expr)#
+##plot lfc for two groups#
+#
+plotFC = function(df1, df2, name1, name2) {#
+	data = rbind(select(df1, gene, ctrl, iap) %>% add_column(subset=name1),#
+				select(df2, gene, ctrl, iap) %>% add_column(subset=name2))#
+	p = ggplot(data, aes(x=subset, y=iap-ctrl)) +#
+		geom_boxplot(outlier.colour=NA, fill='lightblue') +#
+		theme_classic() +#
+		ylim(-1.5,1.5) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Log2 fold change')#
+	print(p)#
+	return(data)#
+}#
+#
+quartz(w=2, h=3)#
+K4.data = plotFC(K4pos.df, K4neg.df, 'H3K4me3+', 'H3K4me3-')
+with(K4.data, t.test(iap-ctrl ~ subset))
+ltr.data = plotFC(ltr1.df, other.df, 'IAPLTR1_Mm', 'Other IAPs')
+min.expr = -1#
+dmax = 1e4#
+#
+K4pos.df = filter(as.data.frame(K4pos), distance<dmax, ctrl>min.expr | iap>min.expr)#
+K4neg.df = filter(as.data.frame(K4neg), distance<dmax, ctrl>min.expr | iap>min.expr)#
+#
+ltr1.df = filter(as.data.frame(ltr1), distance<dmax, ctrl>min.expr | iap>min.expr)#
+other.df = filter(as.data.frame(other), distance<dmax, ctrl>min.expr | iap>min.expr)#
+#
+sgpos.df = filter(as.data.frame(sgpos), distance<dmax, ctrl>min.expr | iap>min.expr)#
+sgneg.df = filter(as.data.frame(sgneg), distance<dmax, ctrl>min.expr | iap>min.expr)
+plotFC = function(df1, df2, name1, name2) {#
+	data = rbind(select(df1, gene, ctrl, iap) %>% add_column(subset=name1),#
+				select(df2, gene, ctrl, iap) %>% add_column(subset=name2))#
+	p = ggplot(data, aes(x=subset, y=iap-ctrl)) +#
+		geom_boxplot(outlier.colour=NA, fill='lightblue') +#
+		theme_classic() +#
+		ylim(-1.5,1.5) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Log2 fold change')#
+	print(p)#
+	return(data)#
+}#
+#
+quartz(w=2, h=3)#
+ltr.data = plotFC(ltr1.df, other.df, 'IAPLTR1_Mm', 'Other IAPs')
+ggsave('ltr1.svg')
+sg.data = plotFC(sgpos.df, sgneg.df, 'sgRNA+', 'sgRNA-')
+ggsave('sgrna.svg')
+up = read.table('DEG_up.txt',row.names=1)
+down = read.table('DEG_down.txt',row.names=1)
+head(ltr.data)
+group_by(ltr.data, subset) %>% summarise(all=length(gene))
+group_by(ltr.data, subset) %>%#
+	summarise(all=length(gene), up=sum(gene %in% rownames(up)))
+group_by(ltr.data, subset) %>%#
+	summarise(all=length(gene), up=sum(gene %in% rownames(up)), down=sum(gene %in% rownames(down)))
+group_by(sg.data, subset) %>%#
+	summarise(all=length(gene), up=sum(gene %in% rownames(up)), down=sum(gene %in% rownames(down)))
+library('DESeq2')#
+library('tidyverse')#
+library('topGO')#
+library('org.Mm.eg.db')#
+##read raw counts#
+counts = read.delim('gene_raw_counts.txt')#
+reads = as.matrix(counts[,13:ncol(counts)])#
+rownames(reads) = counts$Probe#
+colData = DataFrame(sample=factor(rep(c('KRAB','IAP_gRNA'),each=3)))#
+##get DE genes#
+dds = DESeqDataSetFromMatrix(reads,colData,design=~sample)#
+dds = DESeq(dds)#
+res = results(dds,contrast=c('sample','IAP_gRNA','KRAB'))#
+up = subset(res, padj<0.05 & log2FoldChange>1)#
+down = subset(res, padj<0.05 & log2FoldChange<(-1))#
+##Volcano plot#
+#
+quartz(w=5,h=3)#
+mutate(as.data.frame(res), is.sig = padj<0.05 & abs(log2FoldChange)>1) %>%#
+ggplot(aes(x=log2FoldChange, y=-log10(padj), colour=is.sig)) +#
+	geom_point(size=0.5) +#
+	theme_classic() +#
+	scale_colour_manual(values=c('grey','red'))
+quartz(w=3,h=3)#
+mutate(as.data.frame(res), is.sig = padj<0.05 & abs(log2FoldChange)>1) %>%#
+ggplot(aes(x=log2FoldChange, y=-log10(padj), colour=is.sig)) +#
+	geom_point(size=0.5) +#
+	theme_classic() +#
+	scale_colour_manual(values=c('grey','blue'))
+library(svglite)
+ggsave('volcano.svg')
+go.ann = function(de.genes) {#
+	genes = factor(as.integer(rownames(reads) %in% rownames(de.genes)))#
+	names(genes) = rownames(reads)#
+	go = new('topGOdata', ontology = 'BP',#
+		allGenes = genes, geneSelectionFun = function(x) x==0,#
+		annotationFun = annFUN.org, mapping = 'org.Mm.eg.db', ID = 'SYMBOL')#
+	return(go)#
+}#
+#
+go.plot = function(go, nodes=8) {#
+	rt = runTest(go, algorithm='classic', statistic='fisher')#
+	gt = GenTable(go, classicFisher=rt, topNodes=nodes)#
+#
+	ggplot(gt, aes(x=-log10(as.numeric(classicFisher)), y=Term)) +#
+		geom_bar(stat='identity', fill='grey', colour='black', width=0.7) +#
+		theme_classic() +#
+		ylab('') +#
+		xlab('-log10 p')#
+}#
+#
+go.up = go.ann(up)#
+go.plot(go.up)
+ggsave('upgo.svg')
+go.down = go.ann(down)#
+go.plot(go.down)
+ggsave('downgo.svg')

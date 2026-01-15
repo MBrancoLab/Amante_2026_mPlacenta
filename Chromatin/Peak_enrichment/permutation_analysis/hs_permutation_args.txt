@@ -1,0 +1,12 @@
+##RepeatMasker annotation
+##Not in repository
+rm.file = 'Repeatmasker_hg38_4.0.5_noSimple.bed'
+
+##file with chromosome sizes (from UCSC)
+chrom.file = 'hg38.chrom.sizes'
+
+##optional: bed file of unmappable regions
+unmap.file = 'hg38_150PE_lowMap.bed.gz'
+
+##path to bedtools
+bedtools.path = ''

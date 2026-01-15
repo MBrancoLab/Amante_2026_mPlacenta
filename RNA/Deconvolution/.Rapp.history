@@ -1,0 +1,465 @@
+library(tidyverse)
+cs = read_tsv('cybersort.txt')
+cs
+cs = read_tsv('cybersort.txt')
+cs
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))
+cs.av
+ggplot(cs.av, aes(x=celltype, y=av.frac)) +#
+	geom_bar(stat='identity')
+ggplot(cs.av, aes(x=celltype, y=av.frac, fill=tissue)) +#
+	geom_bar(stat='identity')
+ggplot(cs.av, aes(x=tissue, y=av.frac, fill=celltype)) +#
+	geom_bar(stat='identity')
+cs = read_tsv('cybersort.txt')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=celltype)) +#
+	geom_bar(stat='identity')
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=celltype)) +#
+	geom_bar(stat='identity') +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+torder = c('LaTP', 'SynTI', 'SynTII', 'S-TGC', 'SpT', 'glycogen cell',#
+			'B-cell', 'T-cell', 'natural killer cell', 'macrophage', 'erythrocyte',#
+			'pro-angiogenic endothelial', 'lymphogenic endothelial',#
+			'fetal mesenchyme')
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+unique(cs$celltype)
+torder
+torder = c('LaTP', 'SynTI', 'SynTII', 'S-TGC', 'JZP', 'SpT', 'glycogen cell',#
+			'B-cell', 'T-cell', 'natural killer cell', 'macrophage', 'erythrocyte',#
+			'pro-angiogenic endothelial', 'lymphogenic endothelial',#
+			'decidual stroma', 'fetal mesenchyme')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+torder
+sort(unique(cs$celltype))
+sort(torder)
+cs = read_tsv('cybersort.txt')#
+##establish tissue order and colours#
+#
+torder = c('LaTP', 'SynTI', 'SynTII', 'S-TGC', 'JZP', 'SpT', 'glycogen cell',#
+			'B-cell', 'T-cell', 'natural killer cell', 'macrophage', 'erythrocyte',#
+			'pro-angiogenic endothelial', 'lymphogenic endothelial',#
+			'decidual stroma', 'fetal mesenchyme')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=factor(celltype, levels=torder)), y=av.frac, fill=tissue) +#
+	geom_bar(stat='identity') +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=factor(celltype, levels=torder), y=av.frac, fill=tissue)) +#
+	geom_bar(stat='identity') +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+colours()
+tcol = c('tomato','red','darkred','orangered','red','tomato4','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','red','orangered','red','tomato4','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','red','indianred','red','tomato4','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','red','indianred','orange','tomato4','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','tomato4','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','tomato4','darkorange2',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','tomato4','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','yellow4','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','yellow2','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','yellow3','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','yellow1','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','magenta','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','salmon','darkorange',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','salmon','darkorange2',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','lightsalmon','darkorange2',#
+		rep('black',9))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('tomato','darkred','orange','red','indianred','lightsalmon','darkorange2',#
+		'lightblue', 'navy', 'cyan', 'blue', 'skyblue',#
+		rep('black',4))#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=hcl.colors(length(torder))) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('#eeac41', '#5da131', '#f6e082', '#497b7c', '#c24320', '#80babb', '#3d516b',#
+		'#8b6a4d', '#ebb695', '#322838', '#c3d583', '#b1d8ec',#
+		'#3472b1', '#678154', '#6f5da0', '#d0628a')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('#282e30', '#7e7f7b', '#b2b5af', '#ebebe9', '#c50000', '#ec2d2e', '#6a456f',#
+		'#1e3f7a', '#6894c7', '#68d02e', '#7fe240', '#ba741d',#
+		'#c75310', '#fda840', '#ecc729', '#f9eb6c')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('#282e30', '#7e7f7b', '#b2b5af', '#ebebe9', '#c50000', '#ec2d2e', '#6a456f',#
+		'#ba741d', '#c75310', '#fda840', '#ecc729', '#f9eb6c',#
+		'#1e3f7a', '#6894c7', '#68d02e', '#7fe240', )#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+tcol = c('#282e30', '#7e7f7b', '#b2b5af', '#ebebe9', '#c50000', '#ec2d2e', '#6a456f',#
+		'#ba741d', '#c75310', '#fda840', '#ecc729', '#f9eb6c',#
+		'#1e3f7a', '#6894c7', '#68d02e', '#7fe240')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+library(gplots)
+col2hex('tomato')
+tcol = c('#282e30', '#7e7f7b', '#b2b5af', '#ebebe9', '#c50000', '#ec2d2e', '#ff6347',#
+		'#ba741d', '#c75310', '#fda840', '#ecc729', '#f9eb6c',#
+		'#1e3f7a', '#6894c7', '#68d02e', '#7fe240')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+torder = c('LaTP', 'SynTI', 'SynTII', 'S-TGC', 'JZP', 'SpT', 'glycogen cell',#
+			'pro-angiogenic endothelial', 'lymphogenic endothelial', 'decidual stroma', 'fetal mesenchyme',#
+			'B-cell', 'T-cell', 'natural killer cell', 'macrophage', 'erythrocyte')#
+#
+tcol = c('#282e30', '#7e7f7b', '#b2b5af', '#ebebe9', '#c50000', '#ec2d2e', '#ff6347',#
+		'#1e3f7a', '#6894c7', '#68d02e', '#7fe240',#
+		'#ba741d', '#c75310', '#fda840', '#ecc729', '#f9eb6c')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+col2hex('darkgreen')
+tcol = c('#282e30', '#7e7f7b', '#b2b5af', '#ebebe9', '#c50000', '#ec2d2e', '#ff6347',#
+		'#1e3f7a', '#6894c7', '#006400', '#7fe240',#
+		'#ba741d', '#c75310', '#fda840', '#ecc729', '#f9eb6c')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))#
+##plot#
+#
+filter(cs.av, tissue!='TSCs') %>%#
+ggplot(aes(x=tissue, y=av.frac, fill=factor(celltype, levels=torder))) +#
+	geom_bar(stat='identity') +#
+	scale_fill_manual(values=tcol) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+library('svglite')
+ggsave('~/Downloads/cybersort.svg')
+library(tidyverse)#
+##Cell type fractions from CYBERSORT output#
+##TO ADD: some details on cybersort processing#
+#
+cs = read_tsv('cybersort.txt')#
+##establish tissue order and colours#
+#
+torder = c('LaTP', 'SynTI', 'SynTII', 'S-TGC', 'JZP', 'SpT', 'glycogen cell',#
+			'pro-angiogenic endothelial', 'lymphogenic endothelial', 'decidual stroma', 'fetal mesenchyme',#
+			'B-cell', 'T-cell', 'natural killer cell', 'macrophage', 'erythrocyte')#
+#
+tcol = c('#282e30', '#7e7f7b', '#b2b5af', '#ebebe9', '#c50000', '#ec2d2e', '#ff6347',#
+		'#1e3f7a', '#6894c7', '#006400', '#7fe240',#
+		'#ba741d', '#c75310', '#fda840', '#ecc729', '#f9eb6c')#
+##get means#
+#
+cs.av = group_by(cs, tissue, celltype) %>% summarise(av.frac = mean(fraction))
+cs.av
+filter(cs.av, tissue=='TSCs')
+unique(cs.av$tissue)
+filter(cs.av, tissue=='placenta')
+.206+.255+.0114+.0217+.111+.225
+filter(cs.av, tissue=='extraembryonic')
+1-.041-.00649-0.0295

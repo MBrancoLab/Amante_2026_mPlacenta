@@ -1,0 +1,939 @@
+epi = filter(over, type=='epiOrthologous')#
+epi.sig = filter(rep %in% unique(epi$rep[epi$sig]))
+epi = filter(over, type=='epiOrthologous')#
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig]))
+epi.sig
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig])) %>%#
+	select(rep, mark, log.enrich, species) %>%#
+	pivot_wider(names_from=species, values_from=log.enrich)
+epi.sig
+ggplot(epi, aes(x=mm, y=mp, colour=mark)) +#
+	geom_point()
+ggplot(epi.sig, aes(x=mm, y=mp, colour=mark)) +#
+	geom_point()
+epi = filter(over, type=='genOrthologous')#
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig])) %>%#
+	select(rep, mark, log.enrich, species) %>%#
+	pivot_wider(names_from=species, values_from=log.enrich)#
+ggplot(epi.sig, aes(x=mm, y=mp, colour=mark)) +#
+	geom_point()
+epi
+epi = filter(over, type=='epiOrthologous')
+epi
+epi.sig = select(epi, rep, mark, species, sig) %>%#
+	pivot_wider(names_from=species, values_from=sig) %>%#
+	mutate(any.sig = mm | mp)
+epi.sig
+epi.ac = filter(over, type=='epiOrthologous', mark=='H3K27ac')#
+epi.me1 = filter(over, type=='epiOrthologous', mark=='H3K4me1')#
+epi.me3 = filter(over, type=='epiOrthologous', mark=='H3K4me3')
+epi.ac
+o.files
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig])) %>%#
+	select(rep, mark, log.enrich, species) %>%#
+	pivot_wider(names_from=species, values_from=log.enrich)
+epi.sig
+unique(epi.sig$rep)
+epi
+unique(epi$mark)
+unique(epi.sig$mark)
+epi = filter(over, type=='epiOrthologous')#
+gen = filter(over, type=='genOrthologous')#
+non = filter(over, type=='nonOrthologous')
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig]))
+gen.sig = filter(gen, rep %in% unique(gen$rep[gen$sig]))
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment')#
+}#
+quartz(h=5.7,w=4.2)#
+enr.hm(epi.sig)
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment',#
+			cexCol=0.8)#
+}#
+quartz(h=5.7,w=4.2)#
+enr.hm(epi.sig)
+enr.hm(gen.sig)
+epi.sig
+max(epi.sig$log.enrich)
+max(gen.sig$log.enrich)
+quartz(h=5.7,w=4.2)#
+enr.hm(epi.sig)
+quartz(h=4,w=4.2)#
+enr.hm(epi.sig)
+quartz(h=3,w=3)#
+enr.hm(epi.sig)
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment',#
+			cexCol=0.8, cexRow=0.8)#
+}#
+quartz(h=3,w=3)#
+enr.hm(epi.sig)
+enr.hm(gen.sig)
+quartz(h=3.5,w=3)#
+enr.hm(gen.sig)
+quartz(h=4,w=3)#
+enr.hm(gen.sig)
+non = filter(over, type=='nonOrthologous')
+non
+mm = filter(over, type=='nonOrthologous', species=='mm')
+mp = filter(over, type=='nonOrthologous', species=='mp')
+mp
+enr.scatter = function(data, mark, ymax=35) {#
+	filter(data, mark==mark) %>% arrange(sig) %>%#
+	ggplot(aes(x=log10(real.overlap), y=real.overlap/random.mean)) +#
+		geom_point(aes(colour=sig, size=sig)) +#
+		theme_classic() +#
+		scale_color_manual(values=c('grey','black')) +#
+		scale_size_manual(values=c(0.5,1)) +#
+		ylim(0,ymax) +#
+		xlab('log10 n overlapped') +#
+		ylab('observed/expected')#
+}#
+#
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K27ac')
+filter(mm, mark=='H3K27ac', sig)
+enr.scatter(mm, 'H3K4me3')
+enr.scatter = function(data, sel.mark, ymax=35) {#
+	filter(data, mark==sel.mark) %>% arrange(sig) %>%#
+	ggplot(aes(x=log10(real.overlap), y=real.overlap/random.mean)) +#
+		geom_point(aes(colour=sig, size=sig)) +#
+		theme_classic() +#
+		scale_color_manual(values=c('grey','black')) +#
+		scale_size_manual(values=c(0.5,1)) +#
+		ylim(0,ymax) +#
+		xlab('log10 n overlapped') +#
+		ylab('observed/expected')#
+}#
+#
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K4me3')
+enr.scatter(mm, 'H3K27ac')
+enr.scatter(mm, 'H3K4me1')
+filter(mm, mark=='H3K4me1', sig)
+filter(mm, mark=='H3K4me1', sig, log.enrich>3)
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K27ac')
+enr.scatter(mp, 'H3K27ac')
+filter(mm, mark=='H3K4me3', sig)
+enr.scatter(mm, 'H3K4me3')
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K4me3')
+2^6
+enr.scatter(mm, 'H3K4me3', ymax=70)
+enr.scatter(mm, 'H3K4me3')
+enr.scatter(mp, 'H3K4me3')
+filter(mp, mark=='H3K4me3', sig)
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K27ac')
+enr.scatter(mm, 'H3K4me1')
+enr.scatter(mm, 'H3K27ac')
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K27ac')
+enr.scatter(mm, 'H3K4me1')
+enr.scatter(mm, 'H3K4me3')
+filter(mm, mark=='H3K4me3', sig)
+filter(mm, mark=='H3K27ac', sig)
+rmer = filter(over, rep=='RMER10A')
+rmer
+rmer = filter(over, rep=='RMER10A', mark=='H3K27ac') %>%#
+	mutate(enrich=real.overlap/random.mean)
+rmer
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge())
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected')
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(intercept=1, linetype='dashed')
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+quartz(h=3,w=3)#
+enr.hm(epi.sig)
+mm
+filter(mm, rep=='RMER10A')
+filter(mp, rep=='RMER10A')
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = list.files(path='orthology',full.names=TRUE)#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = sub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10,#
+			mark = strsplit(sample, '_')[[1]][1],#
+			type = strsplit(sample, '_')[[1]][2],#
+			species = strsplit(sample, '_')[[1]][3],)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'#
+##filter significantly enriched families from orthologous groups#
+#
+epi = filter(over, type=='epiOrthologous')#
+gen = filter(over, type=='genOrthologous')#
+#
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig]))#
+gen.sig = filter(gen, rep %in% unique(gen$rep[gen$sig]))
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment',#
+			cexCol=0.8)#
+}#
+quartz(h=3,w=3)#
+enr.hm(epi.sig)
+quartz(h=4,w=3)#
+enr.hm(gen.sig)
+mp = filter(over, type=='nonOrthologous', species=='mp')
+enr.scatter = function(data, sel.mark, ymax=35) {#
+	filter(data, mark==sel.mark) %>% arrange(sig) %>%#
+	ggplot(aes(x=log10(real.overlap), y=real.overlap/random.mean)) +#
+		geom_point(aes(colour=sig, size=sig)) +#
+		theme_classic() +#
+		scale_color_manual(values=c('grey','black')) +#
+		scale_size_manual(values=c(0.5,1)) +#
+		ylim(0,ymax) +#
+		xlab('log10 n overlapped') +#
+		ylab('observed/expected')#
+}
+quartz(w=4, h=2.7)#
+enr.scatter(mp, 'H3K27ac')
+enr.scatter(mp, 'H3K4me1')
+enr.scatter(mp, 'H3K4me3')
+enr.scatter(mp, 'H3K4me1')
+mp
+filter(mp, sig, mark=='H3K27ac')
+filter(mp, sig, mark=='H3K4me3')
+filter(mp, sig, mark=='H3K4me1')
+print(filter(mp, sig, mark=='H3K4me1'),n=60)
+o.files = list.files(path='orthology',full.names=TRUE)#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = sub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10,#
+			mark = strsplit(sample, '_')[[1]][1],#
+			type = strsplit(sample, '_')[[1]][2],#
+			species = strsplit(sample, '_')[[1]][3],)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'#
+##filter significantly enriched families from orthologous groups#
+#
+epi = filter(over, type=='epiOrthologous')#
+gen = filter(over, type=='genOrthologous')#
+#
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig]))#
+gen.sig = filter(gen, rep %in% unique(gen$rep[gen$sig]))
+quartz(h=3,w=3)#
+enr.hm(epi.sig)
+quartz(h=4,w=3)#
+enr.hm(gen.sig)
+mm = filter(over, type=='nonOrthologous', species=='mm')
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K27ac')
+enr.scatter(mm, 'H3K4me1')
+enr.scatter(mm, 'H3K4me3')
+filter(mm, sig, mark=='H3K4me3')
+filter(mm, sig, mark=='H3K27ac')
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K27ac')
+enr.scatter(mm, 'H3K27ac', ymax=50)
+filter(mm, sig, mark=='H3K4me1')
+gen.sig
+data=gen.sig
+enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)
+enr.sum
+enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])
+head(enr.mat)
+enr.mat = as.matrix(enr.sum[,-1])
+head(enr.mat)
+min(enr.mat[enr.mat!=-Inf])
+filter(enr.sum, is.na(log.enrich))
+enr.sum
+filter(gen.sig, is.na(log.enrich))
+gen.sig
+sum(is.na(enr.mar))
+sum(is.na(enr.mat))
+which(is.na(enr.mat))
+dim(enr.mat)
+head(enr.mat)
+enr.mat[28,]
+row.names(enr.mat) = enr.sum$rep
+enr.mat[28,]
+enr.sum$rep[28]
+filter(gen.sig, rep=='RLTR26B_MM')
+unique(gen$rep[gen$sig])
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig]))#
+gen.sig = filter(gen, rep %in% unique(gen$rep[gen$sig])) %>%	#
+		filter(rep!='RLTR26B_MM') #unnanotated in pahari
+quartz(h=4,w=3)#
+enr.hm(gen.sig)
+enr.hm(epi.sig)
+enr.hm(gen.sig)
+filter(epi.sig,mark=='H3K4me3')
+data.frame(filter(epi.sig,mark=='H3K4me3'))
+data.frame(filter(gen.sig,mark=='H3K4me3'))
+data.frame(filter(gen.sig,mark=='H3K4me3',sig))
+data.frame(filter(gen.sig,mark=='H3K4me1',sig))
+data.frame(filter(gen.sig,mark=='H3K27ac',sig))
+quartz(h=3,w=3)#
+enr.hm(epi.sig)
+rmer = filter(over, rep=='RMER10A', mark=='H3K27ac') %>%#
+	mutate(enrich=real.overlap/random.mean)#
+#
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+over
+rmer = filter(over, rep=='RMER10A', mark=='H3K27ac', type!='nonOrthologous') %>%#
+	mutate(enrich=real.overlap/random.mean)#
+#
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+quartz(h=3,w=3)#
+enr.hm(epi.sig)
+quartz(h=4,w=3)#
+enr.hm(gen.sig)
+enr.hm(epi.sig)
+enr.hm(gen.sig)
+mm = filter(over, type=='nonOrthologous', species=='mm')#
+mp = filter(over, type=='nonOrthologous', species=='mp')#
+#
+enr.scatter = function(data, sel.mark, ymax=35) {#
+	filter(data, mark==sel.mark) %>% arrange(sig) %>%#
+	ggplot(aes(x=log10(real.overlap), y=real.overlap/random.mean)) +#
+		geom_point(aes(colour=sig, size=sig)) +#
+		theme_classic() +#
+		scale_color_manual(values=c('grey','black')) +#
+		scale_size_manual(values=c(0.5,1)) +#
+		ylim(0,ymax) +#
+		xlab('log10 n overlapped') +#
+		ylab('observed/expected')#
+}
+quartz(w=4, h=2.7)#
+enr.scatter(mm, 'H3K27ac', ymax=50)
+enr.scatter(mm, 'H3K4me1')
+enr.scatter(mm, 'H3K4me3')
+enr.scatter(mm, 'H3K4me3', ymax=50)
+enr.scatter(mm, 'H3K4me3', ymax=80)
+enr.scatter(mm, 'H3K4me3', ymax=100)
+enr.scatter(mm, 'H3K4me3', ymax=200)
+enr.scatter(mm, 'H3K4me3', ymax=500)
+enr.scatter(mm, 'H3K4me3', ymax=1000)
+enr.scatter(mm, 'H3K4me3', ymax=5000)
+filter(mm, sig)
+filter(mm, sig, mark=='H3K4me3')
+2^9.17
+enr.scatter(mm, 'H3K4me3', ymax=1000)
+filter(mp, sig, mark=='H3K4me3')
+filter(mp, rep=='L1MdFanc_I')
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=log.enrich, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+sel.te = c('IAPLTR1_Mm','IAPLTR2_Mm','IAPLTR3','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=log.enrich, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+filter(mm, rep %in% sel.te)
+sel.te = c('IAPLTR1_Mm','IAPLTR2_Mm','IAPLTR2a','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+sel.te = c('IAPLTR1_Mm','IAPLTR1a_Mm','IAPLTR2a','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+sel.te = c('IAPLTR1_Mm','IAPLTR2_Mm','IAPLTR2a','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = list.files(path='pahari_cuttag',full.names=TRUE)#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_pahari_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'
+sig = filter(over, rep %in% unique(over$rep[over$sig]))#
+##heatmaps#
+#
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment')#
+}#
+#
+quartz(h=5.7,w=4.6)#
+enr.hm(sig)
+over
+ggplot(filter(over, sig), aes(x=sample, y=log.enrich)) +#
+	geom_point(position=position_jitter(0.2), show.legend=FALSE) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 observed/expected') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))
+quartz(h=5.7,w=4.6)#
+enr.hm(sig)
+quartz(h=5,w=4.6)#
+enr.hm(sig)
+quartz(h=4.5,w=4.5)#
+enr.hm(sig)
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = list.files(path='orthology',full.names=TRUE)#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = sub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10,#
+			mark = strsplit(sample, '_')[[1]][1],#
+			type = strsplit(sample, '_')[[1]][2],#
+			species = strsplit(sample, '_')[[1]][3],)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'#
+##filter significantly enriched families from orthologous groups#
+#
+epi = filter(over, type=='epiOrthologous')#
+gen = filter(over, type=='genOrthologous')#
+#
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig]))#
+gen.sig = filter(gen, rep %in% unique(gen$rep[gen$sig])) %>%	#
+		filter(rep!='RLTR26B_MM') #unnanotated in pahari
+rmer = filter(over, rep=='RMER10A', mark=='H3K27ac') %>%#
+	mutate(enrich=real.overlap/random.mean)#
+#
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+sel.te = c('RMER10A', 'IAPLTR1_Mm','IAPLTR2_Mm','IAPLTR2a','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+mm = filter(over, type=='nonOrthologous', species=='mm')#
+#mp = filter(over, type=='nonOrthologous', species=='mp')#
+#
+sel.te = c('RMER10A', 'IAPLTR1_Mm','IAPLTR2_Mm','IAPLTR2a','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+mm.rna
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = c('musculus_cuttag/H3K27ac_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K27ac_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K27ac_placenta_overlap.txt',#
+			'musculus_cuttag/H3K4me1_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me1_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me1_placenta_overlap.txt',#
+			'musculus_cuttag/H3K4me1_trophoblast_overlap.txt',#
+			'musculus_cuttag/H3K4me1_endothelial_overlap.txt',#
+			'musculus_cuttag/H3K4me3_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me3_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me3_placenta_overlap.txt',#
+			'musculus_cuttag/H3K4me3_trophoblast_overlap.txt',#
+			'musculus_cuttag/H3K4me3_endothelial_overlap.txt',#
+			'musculus_atac/ATAC_TS_overlap.txt',#
+			'musculus_atac/ATAC_d2diff_overlap.txt',#
+			'musculus_atac/ATAC_trophoblast_overlap.txt',#
+			'musculus_atac/ATAC_endothelial_overlap.txt')#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'#
+##filter significantly enriched families in at least one sample#
+#
+sig = filter(over, rep %in% unique(over$rep[over$sig]))
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment')#
+}#
+#
+quartz(h=5.7,w=4.6)#
+enr.hm(filter(sig, grepl('H3K27ac',sample) | grepl('ATAC',sample)))
+?heatmap.2
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	p=heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment')#
+			return(p)#
+}#
+#
+quartz(h=5.7,w=4.6)#
+p=enr.hm(filter(sig, grepl('H3K27ac',sample) | grepl('ATAC',sample)))
+p
+t=p$carpet
+head(t)
+colnames(t)
+rev(colnames(t))
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = list.files(path='encode', full.names=TRUE)#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10,#
+			tissue = sub('H3K27ac_', '', sample))#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'
+enr.scatter = function(sample_to_plot, ymax=35) {#
+	filter(over, sample==sample_to_plot) %>% arrange(sig) %>%#
+	ggplot(aes(x=log10(real.overlap), y=real.overlap/random.mean)) +#
+		geom_point(aes(colour=sig, size=sig)) +#
+		theme_classic() +#
+		scale_color_manual(values=c('grey','black')) +#
+		scale_size_manual(values=c(0.5,1)) +#
+		ylim(0,ymax) +#
+		xlab('log10 n overlapped') +#
+		ylab('observed/expected')#
+}#
+#
+quartz(w=4, h=2.7)#
+enr.scatter('H3K27ac_placenta')
+library(svglite)
+ggsave('~/Downloads/plac.svg')
+enr.scatter('H3K27ac_testis')
+ggsave('~/Downloads/testis.svg')
+comp = full_join(read_tsv('musculus_cuttag/H3K27ac_placenta_overlap.txt'),#
+		read_tsv('encode/H3K27ac_placenta_overlap.txt'), by='...1')#
+colnames(comp)[1] = 'rep'#
+#
+filter(comp, real.overlap.x>10, real.overlap.y>10) %>%#
+ggplot(aes(x=log.enrich.x, y=log.enrich.y)) +#
+	geom_point(col='grey', size=1) +#
+	theme_classic() +#
+	xlab('This study') +#
+	ylab('ENCODE')
+ggsave('~/Downloads/comp.svg')
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = c('musculus_cuttag/H3K27ac_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K27ac_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K27ac_placenta_overlap.txt',#
+			'musculus_cuttag/H3K4me1_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me1_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me1_placenta_overlap.txt',#
+			'musculus_cuttag/H3K4me1_trophoblast_overlap.txt',#
+			'musculus_cuttag/H3K4me1_endothelial_overlap.txt',#
+			'musculus_cuttag/H3K4me3_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me3_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me3_placenta_overlap.txt',#
+			'musculus_cuttag/H3K4me3_trophoblast_overlap.txt',#
+			'musculus_cuttag/H3K4me3_endothelial_overlap.txt',#
+			'musculus_atac/ATAC_TS_overlap.txt',#
+			'musculus_atac/ATAC_d2diff_overlap.txt',#
+			'musculus_atac/ATAC_trophoblast_overlap.txt',#
+			'musculus_atac/ATAC_endothelial_overlap.txt')#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'#
+##filter significantly enriched families in at least one sample#
+#
+sig = filter(over, rep %in% unique(over$rep[over$sig]))
+sig
+filter(sig,grepl('IAP',rep))
+filter(sig,grepl('IAP',rep),sig)
+filter(sig,rep=='IAPLTR1_mm')
+filter(sig,rep=='IAPLTR1_Mm')
+filter(sig,rep=='RLTR4')
+filter(sig,rep=='RLTR4_Mm')
+filter(sig,rep=='L1MdTf_I')
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = list.files(path='pahari_cuttag',full.names=TRUE)#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_pahari_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'#
+##filter significantly enriched families in at least one sample#
+#
+sig = filter(over, rep %in% unique(over$rep[over$sig]))#
+##heatmaps#
+#
+enr.hm = function(data) {#
+	enr.sum = select(data, rep, log.enrich, sample) %>%#
+		pivot_wider(names_from=sample, values_from=log.enrich)#
+	enr.mat = as.matrix(enr.sum[,-1])#
+	row.names(enr.mat) = enr.sum$rep#
+	enr.mat[enr.mat==-Inf] = min(enr.mat[enr.mat!=-Inf])#
+	heatmap.2(enr.mat, scale='none',#
+			dendrogram='row', Colv=FALSE,#
+			col=colorRampPalette(c('navy','black','yellow'))(100),#
+			breaks=seq(-4,4,length.out=101),#
+			trace='none',#
+			margins=c(10,7),#
+			density.info='none',#
+			key.title='log2 enrichment')#
+}#
+#
+quartz(h=4.5,w=4.5)#
+enr.hm(sig)
+library(tidyverse)#
+library(gplots)#
+##files from permutation analysis#
+#
+o.files = list.files(path='orthology',full.names=TRUE)#
+##read into tibble#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = sub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10,#
+			mark = strsplit(sample, '_')[[1]][1],#
+			type = strsplit(sample, '_')[[1]][2],#
+			species = strsplit(sample, '_')[[1]][3],)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'#
+##filter significantly enriched families from orthologous groups#
+#
+epi = filter(over, type=='epiOrthologous')#
+gen = filter(over, type=='genOrthologous')#
+#
+epi.sig = filter(epi, rep %in% unique(epi$rep[epi$sig]))#
+gen.sig = filter(gen, rep %in% unique(gen$rep[gen$sig])) %>%	#
+		filter(rep!='RLTR26B_MM') #unnanotated in pahari
+mm = filter(over, type=='nonOrthologous', species=='mm')#
+#mp = filter(over, type=='nonOrthologous', species=='mp')#
+#
+sel.te = c('RMER10A', 'IAPLTR1_Mm','IAPLTR2_Mm','IAPLTR2a','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+sel.te = c('IAPLTR1_Mm','IAPLTR2_Mm','IAPLTR2a','L1MdTf_I','L1MdTf_II', 'L1MdA_I')#
+#
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+filter(mm, rep %in% sel.te) %>%#
+ggplot(aes(x=rep, y=real.overlap/random.mean, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+library(svglite)
+ggsave('~/Downloads/nonorth.svg')
+rmer = filter(over, rep=='RMER10A', mark=='H3K27ac', type!='nonOrthologous') %>%#
+	mutate(enrich=real.overlap/random.mean)#
+#
+ggplot(rmer, aes(x=type, y=enrich, fill=species)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('observed/expected') +#
+	geom_hline(yintercept=1, linetype='dashed')
+ggsave('~/Downloads/epiorth.svg')
+cwd()
+getwd()
+setwd('~/Dropbox/Amante_2024_mTroph/Chromatin/Peak_enrichment/musculus_cuttag')
+o.files = c('musculus_cuttag/H3K27ac_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K27ac_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K27ac_placenta_overlap.txt',#
+			'musculus_cuttag/H3K4me3_bTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me3_GFPTSCs_overlap.txt',#
+			'musculus_cuttag/H3K4me3_placenta_overlap.txt')#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',basename(f))) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'
+o.files = c('H3K27ac_bTSCs_overlap.txt',#
+			'H3K27ac_GFPTSCs_overlap.txt',#
+			'H3K27ac_placenta_overlap.txt',#
+			'H3K4me3_bTSCs_overlap.txt',#
+			'H3K4me3_GFPTSCs_overlap.txt',#
+			'H3K4me3_placenta_overlap.txt')#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',f) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'
+library(tidyverse)
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',f) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'
+f
+o.files = c('H3K27ac_bTSCs_overlap.txt',#
+			'H3K27ac_GFPTSCs_overlap.txt',#
+			'H3K27ac_placenta_overlap.txt',#
+			'H3K4me3_bTSCs_overlap.txt',#
+			'H3K4me3_GFPTSCs_overlap.txt',#
+			'H3K4me3_placenta_overlap.txt')#
+#
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',f) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'
+f
+o.files
+over = tibble()
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',f) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}
+f
+for (f in o.files) {#
+	ov = read_tsv(f) }
+f
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',f)}
+over = tibble()#
+for (f in o.files) {#
+	ov = read_tsv(f) %>%#
+		add_column(sample = gsub('_overlap.txt','',f)) %>%#
+		mutate(sig = log.enrich>1 & pval<0.05 & real.overlap>10)#
+	over = rbind(over, ov)#
+}#
+colnames(over)[1] = 'rep'
+over
+pivot_wider(over, names_from=sample, values_from=log.enrich)
+pivot_wider(over, id_cols=c(rep,log.enrich,sample), names_from=sample, values_from=log.enrich)
+pivot_wider(over, id_cols=rep, names_from=sample, values_from=log.enrich)
+pivot_wider(over, id_cols=rep, names_from=sample, values_from=log.enrich) %>%#
+ggplot(aes(x=H3K27ac_bTSCs, y=H3K27ac_placenta)) +#
+	geom_point()
+pivot_wider(over, id_cols=rep, names_from=sample, values_from=log.enrich) %>%#
+ggplot(aes(x=H3K27ac_bTSCs, y=H3K27ac_placenta)) +#
+	geom_point()
+filter(over, rep %in% unique(over$rep[over$sig]))#
+pivot_wider(id_cols=rep, names_from=sample, values_from=log.enrich) %>%#
+ggplot(aes(x=H3K27ac_bTSCs, y=H3K27ac_placenta)) +#
+	geom_point()
+filter(over, rep %in% unique(over$rep[over$sig])) %>%#
+pivot_wider(id_cols=rep, names_from=sample, values_from=log.enrich) %>%#
+ggplot(aes(x=H3K27ac_bTSCs, y=H3K27ac_placenta)) +#
+	geom_point()
+filter(over, grepl('IAP',rep))
+filter(over, grepl('IAPLTR',rep))
+data.frame(filter(over, grepl('IAPLTR',rep)))

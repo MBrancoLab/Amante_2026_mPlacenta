@@ -1,0 +1,78 @@
+library(tidyverse)#
+#
+iap = read_tsv('IAPEz_LTR_WGBS.txt')#
+ggplot(arrange(iap,`Feature Orientation`), aes(x=Brain, y=Placenta)) +#
+	geom_point(aes(col=`Feature Orientation`, size=`Feature Orientation`)) +#
+	geom_abline(slope=1, intercept=0, linetype='dashed') +#
+	theme_classic() +#
+	scale_color_manual(values=c('grey','orange'), name='H3K4me3') +#
+	scale_size_manual(values=c(0.3, 1), name=NULL)
+ggplot(iap, aes(x='Placenta', y=Placenta)) +#
+	geom_violin() +#
+	geom_point(aes(x='Placenta', y=Placenta[Type=='H3K4me3']), position=position_jitter(0.2))
+ggplot(arrange(iap,`Feature Orientation`), aes(x=Brain, y=Placenta)) +#
+	geom_point(aes(col=`Feature Orientation`, size=`Feature Orientation`)) +#
+	geom_abline(slope=1, intercept=0, linetype='dashed') +#
+	theme_classic() +#
+	scale_color_manual(values=c('grey','orange'), name='H3K4me3') +#
+	scale_size_manual(values=c(0.3, 1), name=NULL)
+library(pzfx)
+plac = 'VM-IAP_tail_placenta_methylation.pzfx'#
+ptables = pzfx_tables(plac)#
+col_tables = ptables[grep('column',ptables)]#
+#
+met = tibble()#
+for (tab in col_tables) {#
+	df = read_pzfx(plac, tab)#
+	colnames(df)[1] = 'ID'#
+	df.long = pivot_longer(df, cols=!ID, names_to='tissue', values_to='methylation') %>%#
+		add_column(gene = sub('_avg_column','',tab)) %>%#
+		mutate(tlabel = case_when(grepl('Placenta',tissue) ~ 'P',#
+								grepl('Tail',tissue) ~ 'T'))#
+	met = rbind(met, df.long)#
+}#
+##plot#
+#
+met_plot = function(data) {#
+	ggplot(data, aes(x=factor(tlabel, levels=c('T','P')), y=methylation, colour=factor(tlabel, levels=c('T','P')))) +#
+		geom_line(aes(group = interaction(ID, gene)), colour = "grey", linetype='dashed') +#
+		geom_point(position = position_dodge(0.7)) +#
+		ylim(0, 100) +#
+		facet_wrap(vars(gene), nrow=1) +#
+		xlab('') +#
+		ylab('% Methylation') +#
+		theme_classic() +#
+		scale_colour_manual(values = c('black', 'orange'), name = NULL)#
+}
+met_plot(filter(met, gene %in% c('Tfpi','Mbln1','Bmf','Marveld2','Gm13849','Rab6b','Fam78b','Eps8l1','Rnf157')))
+iap = read_tsv('VM-IAPs_H3K4me3.bed', col_names=c('chr','start','end','name','range','strand','overlap'))#
+##plot#
+#
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE, fill='lightblue') +#
+	geom_point(size=0.6, position=position_jitter(0.2)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+iap
+ggplot(arrange(iap,`Feature Orientation`), aes(x=Brain, y=Placenta)) +#
+	geom_point(aes(col=`Feature Orientation`, size=`Feature Orientation`)) +#
+	geom_abline(slope=1, intercept=0, linetype='dashed') +#
+	theme_classic() +#
+	scale_color_manual(values=c('grey','orange'), name='H3K4me3') +#
+	scale_size_manual(values=c(0.3, 1), name=NULL)
+iap = read_tsv('IAPEz_LTR_WGBS.txt')#
+ggplot(arrange(iap,`Feature Orientation`), aes(x=Brain, y=Placenta)) +#
+	geom_point(aes(col=`Feature Orientation`, size=`Feature Orientation`)) +#
+	geom_abline(slope=1, intercept=0, linetype='dashed') +#
+	theme_classic() +#
+	scale_color_manual(values=c('grey','orange'), name='H3K4me3') +#
+	scale_size_manual(values=c(0.3, 1), name=NULL)
+library(svglite)
+ggsave('~/Downloads/wgbs.svg')
+met_plot(filter(met, gene %in% c('Tfpi','Mbln1','Bmf','Marveld2','Gm13849','Rab6b','Fam78b','Eps8l1','Rnf157')))
+met_plot(filter(met, gene %in% c('Cdc73','H2T24','Diap3_nr','Dst','Cdk15','Ell2','Slc24a3','Zak')))
+met_plot(filter(met, gene %in% c('Tfpi','Mbln1','Bmf','Marveld2','Gm13849','Rab6b','Fam78b','Eps8l1','Rnf157')))
+ggsave('~/Downloads/vm_iaps.svg')
+met_plot(filter(met, gene %in% c('Cdc73','H2T24','Diap3_nr','Dst','Cdk15','Ell2','Slc24a3','Zak')))
+ggsave('~/Downloads/stable_iaps.svg')

@@ -1,0 +1,12 @@
+##RepeatMasker annotation
+##Not in repository; see Annotations folder
+rm.file = 'mm_rmask_amante.bed'
+
+##file with chromosome sizes (from UCSC)
+chrom.file = 'mm10.chrom.sizes'
+
+##optional: bed file of unmappable regions
+unmap.file = 'mm10_150PE_lowMap.bed.gz'
+
+##path to bedtools
+bedtools.path = ''

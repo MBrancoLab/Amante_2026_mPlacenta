@@ -1,0 +1,994 @@
+te ='L1MdTf_I'
+samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus')
+filter(data, te==te, sample %in% samples)
+data = tibble()#
+for (f in trend_files) {#
+	sub = read_tsv(f, skip=2, col_names=c('sample','ignore',1:100)) %>%#
+		select(!ignore) %>%#
+		pivot_longer(cols=!sample,names_to='bin') %>%#
+		mutate(across(bin, as.numeric)) %>%#
+		add_column(te = gsub('_trend.txt','',basename(f)))#
+	data = rbind(data, sub)#
+}#
+##plot trends#
+#
+plot_trend = function(data, te, samples, ymax=max(data$value)) {#
+	filter(data, te==te, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, te ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+data = tibble()#
+for (f in trend_files) {#
+	sub = read_tsv(f, skip=2, col_names=c('sample','ignore',1:100)) %>%#
+		select(!ignore) %>%#
+		pivot_longer(cols=!sample,names_to='bin') %>%#
+		mutate(across(bin, as.integer)) %>%#
+		add_column(te = gsub('_trend.txt','',basename(f)))#
+	data = rbind(data, sub)#
+}
+plot_trend(data, te ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+plot_trend = function(data, te, samples, ymax=max(data$value)) {#
+	filter(data, te==te, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(aes(group=samples), linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, te ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+?aes
+filter(data, te==te, sample %in% samples)
+data
+filter(data, te==te, sample %in% samples) %>% select(!te) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))
+ymax=3
+filter(data, te==te, sample %in% samples) %>% select(!te) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))
+filter(data, te==te, sample %in% samples)
+filter(data, te==te, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line() +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))
+utr
+utr = filter(data, bin>=20 & bin<=30) %>%#
+	group_by(sample, te) %>% summarise(total = sum(value))
+utr
+pivot_wider(utr, names_from=te, values_from=total)
+?as.matrix
+utr.mat = as.matrix(pivot_wider(utr, names_from=te, values_from=total) %>% select(!sample))
+pivot_wider(utr, names_from=te, values_from=total)
+data
+dim(utr.mat)
+head(utr.mat)
+utr
+utr = filter(data, bin>=20 & bin<=30) %>%#
+	group_by(sample, te) %>% summarise(total = sum(value)) %>%#
+	pivot_wider(names_from=te, values_from=total)
+utr
+utr.mat = as.matrix(utr[,-1])
+head(utr.mat)
+rownames(utr.mat) = utr$samples
+rownames(utr.mat) = utr$sample
+heatmap(utr.mat)
+utr = filter(data, bin>=20 & bin<=30) %>%#
+	group_by(sample, te) %>% summarise(total = sum(value))
+sel = c('H3K4me3_bTSCs_musculus',#
+		'H3K4me3_GFPTSCs_musculus',#
+		'H3K4me3_placenta_musculus',#
+		'H3K4me3_trophoblast_musculus',#
+		'H3K4me3_endothelial_musculus')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=total)
+utr.mat = as.matrix(utr[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap(utr.mat)
+utr.sel
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap(utr.mat)
+library(gplots)
+heatmap.2(utr.mat, scale='none',#
+		col = cm.colors(60),#
+		#breaks = seq(min,max,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		#breaks = seq(min,max,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,8,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+utr = filter(data, bin>=20 & bin<=40) %>%#
+	group_by(sample, te) %>% summarise(total = sum(value))#
+##plot heatmap#
+#
+sel = c('H3K4me3_bTSCs_musculus',#
+		'H3K4me3_GFPTSCs_musculus',#
+		'H3K4me3_placenta_musculus',#
+		'H3K4me3_trophoblast_musculus',#
+		'H3K4me3_endothelial_musculus')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=total)#
+#
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+sel = c('H3K4me3_bTSCs_musculus_multi',#
+		'H3K4me3_GFPTSCs_musculus_multi',#
+		'H3K4me3_placenta_musculus_multi',#
+		'H3K4me3_trophoblast_musculus_multi',#
+		'H3K4me3_endothelial_musculus_multi')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=total)#
+#
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+t=read.delim('../../Annotations/oneCode/IAP_proviral_mm10.bed',header=F)
+hist(t)
+head(t)
+hist(t$V3-t$V2)
+unique(t$V4)
+un=unique(t$V4)
+iap=t$V4==un[1]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[2]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[3]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[4]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[5]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[6]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[7]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[8]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[9]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[10]
+hist(t$V3[iap]-t$V2[iap])
+iap=t$V4==un[11]
+hist(t$V3[iap]-t$V2[iap])
+hist(t$V5[iap])
+iap=t$V4==un[12]
+hist(t$V5[iap])
+iap=t$V4==un[13]
+hist(t$V5[iap])
+iap=t$V4==un[14]
+hist(t$V5[iap])
+iap=t$V4==un[15]
+hist(t$V5[iap])
+table(t$V4)
+library(tidyverse)#
+library(gplots)#
+##read data#
+#
+trend_files = list.files('Trends', full.names=TRUE)#
+#
+data = tibble()#
+for (f in trend_files) {#
+	sub = read_tsv(f, skip=2, col_names=c('sample','ignore',1:100)) %>%#
+		select(!ignore) %>%#
+		pivot_longer(cols=!sample,names_to='bin') %>%#
+		mutate(across(bin, as.integer)) %>%#
+		add_column(te = gsub('_trend.txt','',basename(f)))#
+	data = rbind(data, sub)#
+}#
+##plot trends#
+#
+plot_trend = function(data, te, samples, ymax=max(data$value)) {#
+	filter(data, te==te, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, te ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+data
+t=filter(data, te='L1MdTf_I')
+t=filter(data, te=='L1MdTf_I')
+t
+ggplot(aes(x=bin,y=value, colour=sample)) +geom_line()
+ggplot(data,aes(x=bin,y=value, colour=sample)) +geom_line()
+filter(t, sample=='H3K4me3_bTSCs_musculus')
+data.frame(filter(t, sample=='H3K4me3_bTSCs_musculus'))
+t=filter(data, te=='L1MdTf_I',sample=='H3K4me3_bTSCs_musculus')
+ggplot(data,aes(x=bin,y=value, colour=sample)) +geom_line()
+ggplot(t,aes(x=bin,y=value, colour=sample)) +geom_line()
+t=filter(data, te=='L1MdTf_I')
+ggplot(t,aes(x=bin,y=value, colour=sample)) +geom_line()
+plot_trend = function(data, te, samples, ymax=max(data$value)) {#
+	filter(data, te==te, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, te ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+ggplot(t,aes(x=bin,y=value, colour=sample)) +geom_line()
+ggplot(t,aes(x=bin,y=value, colour=sample)) +geom_line(linewidth=1)
+ggplot(t,aes(x=bin,y=value, colour=sample)) +geom_line(linewidth=1)+ylim(0,3)
+ggplot(t,aes(x=bin,y=value, colour=sample)) +geom_line(linewidth=1)+ylim(0,3)+theme_classic()
+ggplot(filter(data,te=='L1MdTf_I'),aes(x=bin,y=value, colour=sample)) +geom_line()
+ggplot(filter(data,te=='L1MdTf_I',sample %in% c('H3K4me3_GFPTSCs_musculus','H3K4me3_placenta_musculus')),aes(x=bin,y=value, colour=sample)) +geom_line()
+plot_trend = function(data, te, samples, ymax=max(data$value)) {#
+	filter(data, te==te, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, te ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus')
+te ='L1MdTf_I'
+filter(data, te==te, sample %in% samples)
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, te ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, subf ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+plot_trend(data, subf ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') #+#
+		#scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, subf ='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf ='L1MdTf_II',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+l1 = filter(data, grepl('L1',te))
+plot_trend(l1, subf ='L1MdTf_II',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'))
+l1
+plot_trend(data, subf ='L1MdTf_II',#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+l=unique(data$te)
+l
+plot_trend(data, subf =l[1],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[2],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[3],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[4],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[5],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[6],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[7],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[8],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[7],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[5],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[3],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[9],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[10],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[11],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[12],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[13],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[14],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+l
+plot_trend(data, subf =l[15],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[16],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[7],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[8],#
+	samples=c('H3K4me3_bTSCs_musculus',#
+			'H3K4me3_GFPTSCs_musculus',#
+			'H3K4me3_placenta_musculus'),#
+	ymax=0.5)
+plot_trend(data, subf =l[1],#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi'),#
+	ymax=0.5)
+plot_trend(data, subf =l[36],#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi'),#
+	ymax=0.5)
+plot_trend(data, subf =l[36],#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi'),#
+	ymax=1)
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=seq(0,100,10))#
+		#scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, subf =l[36],#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi'),#
+	ymax=1)
+l
+plot_trend(data, subf='IAPEY_LTR',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='IAPEY_LTR',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi'),#
+	ymax=0.5)
+plot_trend(data, subf='IAPEY_LTR',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=0.5)
+plot_trend(data, subf='IAPEY4_LTR',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=0.5)
+plot_trend(data, subf='IAPLTR1_Mm',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=0.5)
+plot_trend(data, subf='IAPLTR1_Mm',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='IAPLTR1a_Mm',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='IAPLTR2_Mm',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+utr = filter(data, bin>=20 & bin<=40) %>%#
+	group_by(sample, te) %>% summarise(total = sum(value))#
+##plot heatmap#
+#
+sel = c('H3K4me3_bTSCs_musculus_multi',#
+		'H3K4me3_GFPTSCs_musculus_multi',#
+		'H3K4me3_placenta_musculus_multi',#
+		'H3K4me3_trophoblast_musculus_multi',#
+		'H3K4me3_endothelial_musculus_multi')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=total)#
+#
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+trend_files = list.files('Trends', full.names=TRUE)#
+#
+data = tibble()#
+for (f in trend_files) {#
+	sub = read_tsv(f, skip=2, col_names=c('sample','ignore',1:100)) %>%#
+		select(!ignore) %>%#
+		pivot_longer(cols=!sample,names_to='bin') %>%#
+		mutate(across(bin, as.integer)) %>%#
+		add_column(te = gsub('_trend.txt','',basename(f)))#
+	data = rbind(data, sub)#
+}
+utr = filter(data, bin>=20 & bin<=40) %>%#
+	group_by(sample, te) %>% summarise(total = sum(value))#
+##plot heatmap#
+#
+sel = c('H3K4me3_bTSCs_musculus_multi',#
+		'H3K4me3_GFPTSCs_musculus_multi',#
+		'H3K4me3_placenta_musculus_multi',#
+		'H3K4me3_trophoblast_musculus_multi',#
+		'H3K4me3_endothelial_musculus_multi')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=total)#
+#
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+utr.sel
+dim(utr.mat)
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+plot_trend(data, subf='IAPLTR2_Mm',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='IAPLTR2_Mm',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+utr = filter(data, bin>=20 & bin<=40) %>%#
+	group_by(sample, te) %>% summarise(summit = max(value))
+utr
+max(utr$summit)
+sel = c('H3K4me3_bTSCs_musculus_multi',#
+		'H3K4me3_GFPTSCs_musculus_multi',#
+		'H3K4me3_placenta_musculus_multi',#
+		'H3K4me3_trophoblast_musculus_multi',#
+		'H3K4me3_endothelial_musculus_multi')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=total)#
+#
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+utr = filter(data, bin>=20 & bin<=80) %>%#
+	group_by(sample, te) %>% summarise(summit = max(value))#
+##plot heatmap#
+#
+sel = c('H3K4me3_bTSCs_musculus_multi',#
+		'H3K4me3_GFPTSCs_musculus_multi',#
+		'H3K4me3_placenta_musculus_multi',#
+		'H3K4me3_trophoblast_musculus_multi',#
+		'H3K4me3_endothelial_musculus_multi')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=total)#
+#
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+utr = filter(data, bin>=20 & bin<=80) %>%#
+	group_by(sample, te) %>% summarise(summit = max(value))#
+##plot heatmap#
+#
+sel = c('H3K4me3_bTSCs_musculus_multi',#
+		'H3K4me3_GFPTSCs_musculus_multi',#
+		'H3K4me3_placenta_musculus_multi',#
+		'H3K4me3_trophoblast_musculus_multi',#
+		'H3K4me3_endothelial_musculus_multi')#
+#
+utr.sel = filter(utr, sample %in% sel) %>%#
+	pivot_wider(names_from=te, values_from=summit)#
+#
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample#
+#
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,4,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,3,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+plot_trend(data, subf='RLTR4',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+plot_trend(data, subf='L1MdA_I',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi'),#
+	ymax=1)
+heatmap.2(utr.mat, scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		scale='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		Colv=FALSE, Rowv=FALSE,#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+heatmap.2(utr.mat, scale='none',#
+		Rowv=FALSE, dendrogram='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+utr.mat
+utr.mat = as.matrix(utr.sel[sel,-1])
+utr.mat
+utr.mat = as.matrix(utr.sel[,-1])#
+rownames(utr.mat) = utr.sel$sample
+heatmap.2(utr.mat[sel,], scale='none',#
+		Rowv=FALSE, dendrogram='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+data
+unique(data$samplke)
+unique(data$sample)
+plot_trend(data, subf='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='RLTR4',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='RLTR4',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=2)
+plot_trend(data, subf='RLTR4',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=4)
+plot_trend(data, subf='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=4)
+plot_trend(data, subf='L1MdTf_I',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=1)
+plot_trend(data, subf='IAPLTR1_Mm',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=1)
+heatmap.2(utr.mat[sel,], scale='none',#
+		Rowv=FALSE, dendrogram='none',#
+		col = hcl.colors(60),#
+		breaks = seq(0,2,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')
+plot_trend(data, subf='RLTR4',#
+	samples=c('H3K4me3_bTSCs_musculus_multi',#
+			'H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi',#
+			'H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi'),#
+	ymax=4)
+data
+k4_multi = c('H3K4me3_bTSCs_musculus_multi','H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi','H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi')#
+#
+k4_unique = gsub('_multi','',k4_multi)
+k4_multi
+k4_unique
+plot_trend(data, subf='RLTR4', samples=k4_multi, ymax=4)
+plot_trend(data, subf='RLTR4', samples=k4_unique, ymax=4)
+plot_trend(data, subf='RLTR4', samples=k4_unique, ymax=1)
+plot_trend(data, subf='L1MdTf_I', samples=k4_multi, ymax=4)
+plot_trend(data, subf='L1MdTf_I', samples=k4_multi, ymax=1)
+plot_trend(data, subf='L1MdTf_I', samples=k4_unique, ymax=1)
+plot_trend(data, subf='L1MdTf_I', samples=k4_multi, ymax=1)
+plot_trend(data, subf='L1MdTf_II', samples=k4_multi, ymax=1)
+plot_trend(data, subf='L1MdTf_I', samples=k4_multi, ymax=1)
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_multi, ymax=1)
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_unique, ymax=1)
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_multi, ymax=1)
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_unique, ymax=1)
+plot_trend(data, subf='IAPLTR2_Mm', samples=k4_multi, ymax=1)
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_multi, ymax=1)
+library(svglite)
+svg('~/Downloads/iapltr1.svg')
+de.off()
+dev.off()
+ggsave('~/Downloads/iapltr1.svg')
+plot_trend(data, subf='L1MdTf_I', samples=k4_multi, ymax=1)
+ggsave('~/Downloads/l1tf_i.svg')
+plot_trend(data, subf='RLTR4', samples=k4_multi, ymax=4)
+ggsave('~/Downloads/rltr4.svg')
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_unique, ymax=1)
+ggsave('~/Downloads/iapltr1.svg')
+plot_trend(data, subf='L1MdTf_I', samples=k4_unique, ymax=1)
+ggsave('~/Downloads/l1tf_i.svg')
+plot_trend(data, subf='RLTR4', samples=k4_unique, ymax=1)
+plot_trend(data, subf='RLTR4', samples=k4_unique, ymax=4)
+ggsave('~/Downloads/rltr4.svg')
+library(tidyverse)#
+library(gplots)#
+##read data#
+#
+trend_files = list.files('Trends', full.names=TRUE)#
+#
+data = tibble()#
+for (f in trend_files) {#
+	sub = read_tsv(f, skip=2, col_names=c('sample','ignore',1:100)) %>%#
+		select(!ignore) %>%#
+		pivot_longer(cols=!sample,names_to='bin') %>%#
+		mutate(across(bin, as.integer)) %>%#
+		add_column(te = gsub('_trend.txt','',basename(f)))#
+	data = rbind(data, sub)#
+}#
+##plot trends#
+#
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}
+k4_multi = c('H3K4me3_bTSCs_musculus_multi','H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi','H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi')#
+#
+k4_unique = gsub('_multi','',k4_multi)
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_multi, ymax=1)
+k27_multi = gsub('K4me3','K27ac',k4_multi)#
+plot_trend(data, subf='IAPLTR1_Mm', samples=k27_multi, ymax=1)
+plot_trend(data, subf='IAPLTR1_Mm', samples=k27_multi)
+data
+unique(data$sample)
+library(tidyverse)#
+library(gplots)#
+##read data#
+#
+trend_files = list.files('Trends', full.names=TRUE)#
+#
+data = tibble()#
+for (f in trend_files) {#
+	sub = read_tsv(f, skip=2, col_names=c('sample','ignore',1:100)) %>%#
+		select(!ignore) %>%#
+		pivot_longer(cols=!sample,names_to='bin') %>%#
+		mutate(across(bin, as.integer)) %>%#
+		add_column(te = gsub('_trend.txt','',basename(f)))#
+	data = rbind(data, sub)#
+}#
+##plot trends#
+#
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+k4_multi = c('H3K4me3_bTSCs_musculus_multi','H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi','H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi')
+plot_trend(data, subf='L1MdGf_I', samples=k4_multi, ymax=1)
+plot_trend(data, subf='L1MdTf_I', samples=k4_unique, ymax=1)
+plot_trend(data, subf='RLTR4', samples=k4_multi, ymax=4)
+plot_trend(data, subf='L1MdGf_I', samples=k4_multi, ymax=1)
+plot_trend(data, subf='L1MdTf_I', samples=k4_multi, ymax=1)
+##Plot average normalised read count across selected TE families#
+##Source data produced by deeptools (trends.sh script)#
+#
+library(tidyverse)#
+library(gplots)#
+##read data#
+#
+trend_files = list.files('Trends', full.names=TRUE)#
+#
+data = tibble()#
+for (f in trend_files) {#
+	sub = read_tsv(f, skip=2, col_names=c('sample','ignore',1:100)) %>%#
+		select(!ignore) %>%#
+		pivot_longer(cols=!sample,names_to='bin') %>%#
+		mutate(across(bin, as.integer)) %>%#
+		add_column(te = gsub('_trend.txt','',basename(f)))#
+	data = rbind(data, sub)#
+}#
+##plot trends#
+#
+plot_trend = function(data, subf, samples, ymax=max(data$value)) {#
+	filter(data, te==subf, sample %in% samples) %>%#
+	ggplot(aes(x=bin, y=value, colour=sample)) +#
+		geom_line(linewidth=1) +#
+		ylim(0, ymax) +#
+		theme_classic() +#
+		ylab('Mean RPM') +#
+		scale_x_continuous(name='', breaks=c(0,20,80,100), labels=c('-2kb','start','end','+2kb'))#
+}#
+##plots#
+#
+k4_multi = c('H3K4me3_bTSCs_musculus_multi','H3K4me3_GFPTSCs_musculus_multi',#
+			'H3K4me3_placenta_musculus_multi','H3K4me3_trophoblast_musculus_multi',#
+			'H3K4me3_endothelial_musculus_multi')#
+#
+k4_unique = gsub('_multi','',k4_multi)
+plot_trend(data, subf='L1MdTf_I', samples=k4_unique, ymax=1)
+library(svglite)
+ggsave('~/Downloads/l1.svg')
+plot_trend(data, subf='IAPLTR1_Mm', samples=k4_unique, ymax=1)
+ggsave('~/Downloads/iap.svg')
+75/13

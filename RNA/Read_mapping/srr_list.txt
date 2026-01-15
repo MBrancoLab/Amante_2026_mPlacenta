@@ -1,0 +1,4 @@
+ftp://ftp.sra.ebi.ac.uk/vol1/srr/SRR119/085/SRR11993485
+ftp://ftp.sra.ebi.ac.uk/vol1/srr/SRR119/086/SRR11993486
+ftp://ftp.sra.ebi.ac.uk/vol1/srr/SRR119/087/SRR11993487
+ftp://ftp.sra.ebi.ac.uk/vol1/srr/SRR119/088/SRR11993488

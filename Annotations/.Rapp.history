@@ -1,0 +1,447 @@
+rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]],collate='')
+rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]])
+paste(rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]]),collapse=')'
+)
+paste(rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]]),collapse='')
+paste(rev(strsplit('AATGGCTCAGCCAGTCATG','')[[1]]),collapse='')
+t=scan('Downloads/temp.txt',numeric())
+t
+median(t)
+boxplot(t)
+quantile(t)
+quantile(t,c(0.1,0.9))
+quantile(t[t<30])
+boxplot(t[t<30])
+t=scan('Downloads/temp.txt',numeric())
+boxplot(t)
+quantile(t,c(0.1,0.9))
+68790/92880
+56626/77556
+41235/56242
+24484/34288
+library(GenomicRanges)
+? ScanBamParam
+library(Rsamtools)
+? ScanBamParam
+21.5*5.3
+2^0.55
+library(tidyverse)
+data = read_tsv('Downloads/PSG_sv_pop_freq.txt')
+data = read_tsv('~/Downloads/PSG_sv_pop_freq.txt')
+data = read_tsv('~/Downloads/PSG_sv_pop_freqs.txt')
+data
+data = read_tsv('~/Downloads/PSG_sv_pop_freqs.txt') %>%#
+	pivot_longer(cols=!alt, names_to='pop', values_to='freq')
+data
+print(data,n-30)
+print(data,n=30)
+ggplot(data, aes(x=alt, y=pop)) +#
+	geom_point(aes(size=freq))
+ggplot(data, aes(x=alt, y=pop, fill=pop)) +#
+	geom_point(aes(size=freq))
+ggplot(data, aes(x=alt, y=pop, col=pop)) +#
+	geom_point(aes(size=freq))
+ggplot(data, aes(x=alt, y=pop, col=pop)) +#
+	geom_point(aes(size=freq)) +#
+	theme_classi()
+ggplot(data, aes(x=alt, y=pop, col=pop)) +#
+	geom_point(aes(size=freq)) +#
+	theme_classic()
+ggplot(data, aes(x=pop, y=alt, col=pop)) +#
+	geom_point(aes(size=freq)) +#
+	theme_classic()
+filter(data, alt!='<INS:1592>', alt!='<DEL:-171>') %>%#
+ggplot(aes(x=pop, y=alt, col=pop)) +#
+	geom_point(aes(size=freq)) +#
+	theme_classic()
+filter(data, alt=='<DEL:-4602>') %>%#
+ggplot(aes(x=pop, y=freq)) +#
+	geom_bar(stat='identity') +#
+	theme_classic()
+filter(data, alt=='<DEL:-4602>') %>%#
+ggplot(aes(x=pop, y=freq, col=pop)) +#
+	geom_bar(stat='identity') +#
+	theme_classic()
+filter(data, alt=='<DEL:-4602>') %>%#
+ggplot(aes(x=pop, y=freq, fill=pop)) +#
+	geom_bar(stat='identity') +#
+	theme_classic()
+library(svglite)
+ggsave('~/Downloads/temp.avg')
+ggsave('~/Downloads/temp.svg')
+393.40/340.09
+x=read.delim('Downloads/abundance.tsv')
+head(x)
+hist(x$tpm)
+hist(log2(x$tpm+0.01))
+sum(x$est_counts)
+library(tidyverse)
+species  = c('musculus','caroli','pahari','rat')#
+#
+iap = tibble(te = rep('IAP',4), species,#
+		annot = c(28798,5568,2297,1506),#
+		orth = c(28798,853,9,0))
+iap
+ggplot(iap,aes(x=species,y=annot)) +geom_bar(stat='identity')
+ggplot(iap,aes(x=factor(species,levels=species),y=annot)) +geom_bar(stat='identity')
+ggplot(iap,aes(x=factor(species,levels=species),y=orth)) +geom_bar(stat='identity')
+counts = rbind(r13d5, mer10a, iap, l1tf)
+r13d5 = tibble(te = rep('RLTR13D5',4), species,#
+		annot = c(683,481,693,0),#
+		orth = c(683,335,103,0))#
+#
+mer10a = tibble(te = rep('RMER10A',4), species,#
+		annot = c(6117,3896,3729,4160),#
+		orth = c(6117,3450,2731,2207))#
+iap = tibble(te = rep('IAP',4), species,#
+		annot = c(28798,5568,2297,1506),#
+		orth = c(28798,853,9,0))#
+#
+l1tf = tibble(te = rep('L1MdTf',4), species,#
+		annot = c(9774,2149,447,0),#
+		orth = c(9774,5,0,0))#
+counts = rbind(r13d5, mer10a, iap, l1tf)
+counts
+ggplot(counts, aes(x=te, y=factor(species,levels=species))) +#
+	geom_point(aes(size=orth),stroke=0)
+ggplot(counts, aes(x=te, y=species)) +#
+	geom_point(aes(size=orth),stroke=0)
+ggplot(counts, aes(x=te, y=species)) +#
+	geom_point(aes(size=orth),stroke=0) +#
+	scale_size_continuous(range=c(0,6)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('')
+ggplot(counts, aes(x=te, y=species)) +#
+	geom_point(aes(size=orth),stroke=0) +#
+	scale_size_continuous(range=c(0,8)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('')
+ggplot(counts, aes(x=te, y=species)) +#
+	geom_point(aes(size=annot),stroke=0) +#
+	scale_size_continuous(range=c(0,8)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('')
+ggplot(counts, aes(x=te, y=species)) +#
+	geom_point(aes(size=orth),stroke=0) +#
+	scale_size_continuous(range=c(0,8)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('')
+counts
+3667/5524
+3289/8960
+1992/4459
+x=read.delim('~/OneDrive - Queen Mary, University of London/Work in progress/mPlac_stringtie/pahari/Kidney_pahari-chimTx.txt')
+head(x)
+x=read.delim('~/OneDrive - Queen Mary, University of London/Work in progress/mPlac_stringtie/pahari/Kidney_pahari-chimTx.txt',header=F)
+head(x)
+table(x$V4)
+x=read.delim('~/OneDrive - Queen Mary, University of London/Work in progress/mPlac_stringtie/pahari/Placenta_pahari-2-chimTx.txt',header=F)
+table(x$V4)
+762*667/1420
+6.5*0.6+9*.4
+x=read.delim('~/Downloads/SAI2903_Fiddler_crab.chromsizes.txt',header=F)
+hist(x$V1)
+head(x)
+hist(x$V2)
+hist(log10(x$V2))
+barplot(x$V2)
+barplot(sort(x$V2))
+barplot(x$V2)
+124224004/4
+23/8
+23/3
+library(tidyverse)
+x=read_tsv('Downloads/GSE139049_hypoxia_RNAseq.txt')
+x
+filter(x, Probe=='Apln')
+filter(x, Probe=='Apln') %>% select(Probe, `TSC 20% RNA`:`TSC 3dd 5% RNA`)
+filter(x, Probe=='Apln') %>% select(Probe, `TSC 20% RNA`:`TSC 3dd 5% RNA`) %>% pivot_longer(cols=!Probe, names_to='sample',values_to='expr')
+y=filter(x, Probe=='Apln') %>% select(Probe, `TSC 20% RNA`:`TSC 3dd 5% RNA`) %>% pivot_longer(cols=!Probe, names_to='sample',values_to='expr')
+ggplot(y, aes(x=sample,y=expr)) +geom_bar(stat='identity')+theme_classic()
+ggplot(y, aes(x=sample,y=2^expr)) +geom_bar(stat='identity')+theme_classic()
+ggplot(y[c(1,4),], aes(x=sample,y=2^expr)) +geom_bar(stat='identity')+theme_classic()
+ggplot(y[c(1,3),], aes(x=sample,y=2^expr)) +geom_bar(stat='identity')+theme_classic()
+ggsave('Downloads/apln.svg')
+x=read.delim('~/OneDrive - Queen Mary, University of London/Work in progress/mPlac_stringtie/Placenta_musculus-2-tss.bed',header=F)
+head(x)
+sum(is.na(x$V2))
+sum(is.na(x$V3))
+x=read.delim('~/OneDrive - Queen Mary, University of London/Work in progress/mPlac_stringtie/Placenta_musculus-1-tss.bed',header=F)
+sum(is.na(x$V2))
+sum(is.na(x$V3))
+x[is.na(x$V2),]
+library(tidyverse)
+x=read_tsv('~/Dropbox/Amante_2024_mTroph/RNA/Chimeric_transcripts/iap_l1_transcripts.txt')
+x
+y = group_by(x, te.id) %>% summarise(te.chr=unique(te.chr),#
+	te.start=unique(te.start))
+y
+unique(x$sample)
+y = group_by(x, te.id) %>% summarise(te.chr=unique(te.chr),#
+	te.start=unique(te.start),#
+	te.end=unique(te.end),#
+	te.name=unique(te.name),#
+	gene.name=unique(tx.name),#
+	gene.strand=unique(tx.strand),#
+	samples = paste(sub('_musculus','',sample),collapse=', '))
+y = group_by(x, te.id) %>% summarise(te.chr=unique(te.chr),#
+	te.start=unique(te.start),#
+	te.end=unique(te.end),#
+	te.name=unique(te.name),#
+	gene.name=unique(tx.name),#
+	gene.strand=unique(tx.strand),#
+	samples = paste(gsub('_musculus','',sample),collapse=', '))
+y = group_by(x, te.id) %>% summarise(te.chr=unique(te.chr),#
+	te.start=unique(te.start),#
+	te.end=unique(te.end),#
+	te.name=unique(te.name),#
+	gene.name=unique(tx.name),#
+	gene.strand=unique(tx.strand),#
+	samples = paste(sample,collapse=', '))
+x
+attach(x)
+te.id
+x
+y = tibble()
+te=te.id[1]
+sub = filter(x,te.id==te)
+sub
+detach(x)
+paste(sub$sample,collapse=', ')
+paste(sub('_musculus','',sub$sample),collapse=', ')
+y = tibble()#
+for (te in x$te.id) {#
+	sub = filter(x,te.id==te)#
+	t = tibble(te.chr=sub$te.chr[1],#
+		te.start=sub$te.start[1],#
+		te.end=sub$te.end[1],#
+		te.name=sub$te.name[1],#
+		te.strand=sub$te.strand[1],#
+		gene.name=sub$tx.name[1],#
+		gene.strand=sub$tx.strand[1],#
+		samples = paste(sub('_musculus','',sub$sample),collapse=', '))#
+	y=rbind(y,t)#
+}
+y
+y = tibble()#
+for (te in unique(x$te.id)) {#
+	sub = filter(x,te.id==te)#
+	t = tibble(te.chr=sub$te.chr[1],#
+		te.start=sub$te.start[1],#
+		te.end=sub$te.end[1],#
+		te.name=sub$te.name[1],#
+		te.strand=sub$te.strand[1],#
+		gene.name=sub$tx.name[1],#
+		gene.strand=sub$tx.strand[1],#
+		samples = paste(sub('_musculus','',sub$sample),collapse=', '))#
+	y=rbind(y,t)#
+}
+y
+write_tsv(y,'temp.txt')
+x=read_tsv('OneDrive - Queen Mary, University of London/Work in progress/mPlac_stringtie/merged.gtf',col_names=F)
+x
+x=read_tsv('OneDrive - Queen Mary, University of London/Work in progress/mPlac_stringtie/merged.gtf',col_names=F,comment='#')
+x
+filter(x,grepl('Suv39h2',X9))
+filter(x,X3=='transcript',X2=='chr2',X5>3481000, X5<3489000)
+filter(x,X3=='transcript',X1=='chr2',X5>3481000, X5<3489000)
+filter(x,X3=='transcript',X1=='chr3',X5>51238000, X5<51252000)
+filter(x,X3=='transcript',X1=='chr3',X4>51238000, X4<51252000)
+filter(x,X3=='transcript',X1=='chr11',X4>29124000, X4<29130000)
+go=read.delim('Downloads/GO_term_summary_20240809_090028.txt')
+library(tidiverse)
+library(tidyverse)
+go=read_tsv('Downloads/GO_term_summary_20240809_090028.txt')
+go
+de=read_tsv('Dropbox/Amante_2024_mTroph/RNA/Pahari/placenta_DE_genes.txt')
+de
+filter(de, gene %in% go$Symbol)
+filter(de, gene %in% go$Symbol) %>% pull(gene)
+filter(de, gene %in% go$Symbol) %>% arrange(gene) %>% pull(gene)
+rowe=scan('Downloads/ISG_Helen.txt',character())
+rowe
+sort(rowe)
+def = filter(de, gene %in% go$Symbol) %>% arrange(gene) %>% pull(gene)
+def[toupper(def) %in% rowe]
+setwd('Downloads/')
+x=scan('VM-IAPs.txt',character())
+x
+sp = strsplit(x,split='[:-]')
+sp[[1]]
+chr=sapply(x,function(x) x[1])
+chr
+chr=sapply(sp,function(x) x[1])
+chr
+start=sapply(sp,function(x) x[2])
+end=sapply(sp,function(x) x[3])
+bed=data.frame(chr,start,end)
+head(bed)
+write.table(bed, 'VM-IAPs.bed', sep='\t', quote=F, col.names=F, row.names=F)
+head(x)
+iap=read.delim('VM-IAPs.txt',header=F)
+head(iap)
+nrow(iap)
+nrow(bed)
+head(bed)
+bed$name=iap$V2
+bed$score=iap$V4
+bed$strand=iap$V3
+head(bed)
+write.table(bed, 'VM-IAPs.bed', sep='\t', quote=F, col.names=F, row.names=F)
+library(tidyverse)
+iap=read_tsv('active_VM-IAPs.bed',col_names=F)
+iap
+ggplot(iap,aes(x=X7>0,y=X5)) +geom_point(position=position_jitter(0.2))
+ggplot(iap,aes(x=X7>0,y=X5)) +geom_point(position=position_jitter(0.2)) +geom_violin()
+ggplot(iap,aes(x=X7>0,y=X5))+geom_violin() +geom_point(position=position_jitter(0.2))
+wilcox.test(iap$X5[iap$X7==0],iap$X5[iap$X7>0])
+ggplot(iap,aes(x=X7>0,y=X5))+geom_boxplot() +geom_point(position=position_jitter(0.2))
+iap = read_tsv('VM-IAPs_H3K4me3.bed', col_names=c('chr','start','end','name','range','strand'))
+setw('~/Dropbox/Amante_2024_mTroph/Annotations/')
+setwd('~/Dropbox/Amante_2024_mTroph/Annotations/')
+iap = read_tsv('VM-IAPs_H3K4me3.bed', col_names=c('chr','start','end','name','range','strand'))
+iap
+iap = read_tsv('VM-IAPs_H3K4me3.bed', col_names=c('chr','start','end','name','range','strand','H3K4me3'))
+iap = read_tsv('VM-IAPs_H3K4me3.bed', col_names=c('chr','start','end','name','range','strand','overlap'))
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE)
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE) +#
+	geom_point(position=position_dodge(0.2)) +#
+	theme_classic()
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE) +#
+	geom_point(position=position_jitter(0.2)) +#
+	theme_classic()
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE) +#
+	geom_point(position=position_jitter(0.2), fill='lightblue') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE) +#
+	geom_point(position=position_jitter(0.2), col='lightblue') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE, fill='lightblue') +#
+	geom_point(position=position_jitter(0.2)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+group_by(iap, range>0)
+wilcox.test(iap$range ~ iap$overlap>0)
+library(svglite)
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE, fill='lightblue') +#
+	geom_point(size=0.5, position=position_jitter(0.2)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE, fill='lightblue') +#
+	geom_point(size=0.6, position=position_jitter(0.2)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+ggsave('~/Downloads/vmiap.svg')
+library(tidyverse)#
+##Ferraj et al supp data filtered for IAPs with H3K27ac in placenta#
+#
+del = read_tsv('active_IAP_dels_mm39.txt')#
+##parse strain names into matrix of deletion calls#
+#
+samples = strsplit(del$MERGE_SAMPLES, split=',')#
+strains = unique(unlist(samples))#
+#
+isdel = lapply(samples, function(x) strains %in% x)#
+delmat = matrix(as.numeric(unlist(isdel)), nrow=length(isdel), byrow=TRUE)#
+colnames(delmat) = strains#
+rownames(delmat) = del$ID#
+##plot as heatmap#
+#
+heatmap(delmat, scale='none', col=c('navy','white'))
+iap = read_tsv('VM-IAPs_H3K4me3.bed', col_names=c('chr','start','end','name','range','strand','overlap'))#
+##plot#
+#
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE, fill='lightblue') +#
+	geom_point(size=0.6, position=position_jitter(0.2)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+heatmap(delmat, scale='none', col=c('navy','white'))
+delmat
+h = heatmap(delmat, scale='none', col=c('navy','white'))
+h
+delmat[h$rowInd,]
+delmat[h$rowInd,h$colInd]
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE, fill='lightblue') +#
+	geom_point(size=0.6, position=position_jitter(0.2)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+wilcox.test(iap$range ~ iap$overlap>0)
+wilcox.test(iap$range ~ iap$overlap)
+wilcox.test(iap$range ~ iap$overlap>0)
+26/65
+96/14338
+9/28
+18/818
+iap
+filter(iap, overlap>0)
+data.frame(filter(iap, overlap>0))
+library(tidyverse)#
+##Ferraj et al supp data filtered for IAPs with H3K27ac in placenta#
+#
+del = read_tsv('active_IAP_dels_mm39.txt')#
+##parse strain names into matrix of deletion calls#
+#
+samples = strsplit(del$MERGE_SAMPLES, split=',')#
+strains = unique(unlist(samples))#
+#
+isdel = lapply(samples, function(x) strains %in% x)#
+delmat = matrix(as.numeric(unlist(isdel)), nrow=length(isdel), byrow=TRUE)#
+colnames(delmat) = strains#
+rownames(delmat) = del$ID
+h = heatmap(delmat, scale='none', col=c('navy','white'))
+iap = read_tsv('VM-IAPs_H3K4me3.bed', col_names=c('chr','start','end','name','range','strand','overlap'))
+ggplot(iap, aes(x=overlap>0, y=range)) +#
+	geom_boxplot(outliers=FALSE, fill='lightblue') +#
+	geom_point(size=0.6, position=position_jitter(0.2)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Methylation range (%)')
+library(tidyverse)#
+##Ferraj et al supp data filtered for IAPs with H3K27ac in placenta#
+#
+del = read_tsv('active_IAP_dels_mm39.txt')#
+##parse strain names into matrix of deletion calls#
+#
+samples = strsplit(del$MERGE_SAMPLES, split=',')#
+strains = unique(unlist(samples))#
+#
+isdel = lapply(samples, function(x) strains %in% x)#
+delmat = matrix(as.numeric(unlist(isdel)), nrow=length(isdel), byrow=TRUE)#
+colnames(delmat) = strains#
+rownames(delmat) = del$ID#
+##plot as heatmap#
+#
+h = heatmap(delmat, scale='none', col=c('navy','white'))
+library(svglite)
+ggsave('~/Downloads/variants.svg')
+ggsave('~/Downloads/variants.svg')
+svg('~/Downloads/variants.svg',width=5, height=5)
+heatmap(delmat, scale='none', col=c('navy','white'))
+dev.off()
+h = heatmap(delmat, scale='none', col=c('navy','white'))
+h = heatmap(delmat, scale='none', col=c('navy','white'), margins=c(7,7))
+h = heatmap(delmat, scale='none', col=c('navy','white'), margins=c(7,8))
+h = heatmap(delmat, scale='none', col=c('navy','white'), margins=c(7,10))

@@ -1,0 +1,1068 @@
+te.sum
+ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
+	geom_bar(stat='identity') +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('')
+ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('')
+ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('')
+ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('') +#
+	scale_fill_discrete(values=c('lightblue','blue',rep('orange',3)))
+ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('') +#
+	scale_colour_discrete(values=c('lightblue','blue',rep('orange',3)))
+?scale_fill_discrete
+ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('') +#
+	scale_fill_manual(values=c('lightblue','blue',rep('orange',3)))
+te.sum
+quant
+te.sum = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))
+te.sum
+ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
+	geom_bar(stat='summary', stat='mean', position=position_dodge(), col='black') +#
+	geom_point(position=position_dodge(0.9)) +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('')
+ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
+	geom_bar(stat='summary', fun=mean, position=position_dodge(), col='black') +#
+	geom_point(position=position_dodge(0.9)) +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('')
+te.sum
+te.sum = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
+te.sum$perc[te.sum$perc=='NaN'] = 0#
+ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
+	geom_bar(stat='summary', fun=mean, position=position_dodge(), col='black') +#
+	geom_point(position=position_dodge(0.9)) +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('')
+te.sum
+ggplot(te.sum, aes(x=sample, y=gene)) +#
+	geom_point(aes(size=perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,8))
+ggplot(te.sum, aes(x=sample, y=gene)) +#
+	geom_point(aes(size=perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+q.files = list.files('encode_quant', full.names=TRUE)#
+#
+quant = tibble()#
+for (f in q.files) {#
+	sub = read_tsv(f) %>%#
+		add_column(sample = gsub('_quant.ctab.gz','',basename(f))) %>%#
+		mutate(tissue = gsub('RNA_','',gsub('-[[:digit:]]','',sample)))#
+	quant = rbind(quant,sub)#
+}
+te.sum = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
+te.sum$perc[te.sum$perc=='NaN'] = 0
+te.sum
+ggplot(te.sum, aes(x=sample, y=gene)) +#
+	geom_point(aes(size=perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+meta = read_tsv('iap_l1_isoforms.txt')
+meta = read_tsv('iap_chimera_isoforms.txt')
+te.sum = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
+te.sum$perc[te.sum$perc=='NaN'] = 0#
+ggplot(te.sum, aes(x=sample, y=gene)) +#
+	geom_point(aes(size=perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+q.files = list.files('merged_quant', full.names=TRUE)#
+#
+quant = tibble()#
+for (f in q.files) {#
+	sub = read_tsv(f) %>%#
+		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
+		mutate(tissue = gsub('-[[:digit:]]','',sample))#
+	quant = rbind(quant,sub)#
+}#
+##isoforms with/without IAP/L1 TSS#
+#
+meta = read_tsv('iap_chimera_isoforms.txt')#
+#
+te.sum = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
+te.sum$perc[te.sum$perc=='NaN'] = 0
+ggplot(te.sum, aes(x=sample, y=gene)) +#
+	geom_point(aes(size=perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+quant
+te.sum = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
+te.sum$perc[te.sum$perc=='NaN'] = 0
+te.sum
+iap = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
+iap$perc[te.sum$perc=='NaN'] = 0
+iap
+ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
+	geom_bar(stat='summary', fun=mean, position=position_dodge(), col='black') +#
+	geom_point(position=position_dodge(0.9)) +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	theme_classic() +#
+	xlab('')
+ggplot(te.sum, aes(x=sample, y=gene)) +#
+	geom_point(aes(size=perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
+ggplot(aes(x=gene, y=tissue)) +#
+	geom_point(aes(size=perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc))
+iap = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
+iap$perc[iap$perc=='NaN'] = 0
+group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
+ggplot(aes(x=gene, y=tissue)) +#
+	geom_point(aes(size=mean_perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
+ggplot(aes(x=gene, y=tissue)) +#
+	geom_point(aes(size=mean_perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5)) +#
+	xlab('') +#
+	ylab('')
+filter(quant, gene_id=='MSTRG.10695') %>%#
+ggplot(aes(x=sample, y=t_name)) +#
+	geom_point(aes(size=FPKM), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,8))
+filter(quant, gene_id=='MSTRG.10695')
+filter(quant, gene_id=='MSTRG.10695') %>%#
+group_by(tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
+ggplot(aes(x=tissue, y=t_name)) +#
+	geom_point(aes(size=fpkm), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,8))
+filter(quant, gene_id=='MSTRG.10695') %>%#
+group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
+ggplot(aes(x=tissue, y=t_name)) +#
+	geom_point(aes(size=fpkm), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,8))
+filter(quant, gene_id=='MSTRG.10695') %>%#
+group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
+ggplot(aes(x=tissue, y=t_name)) +#
+	geom_point(aes(size=fpkm), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+ggsave('~/Downloads/suv.svg')
+library(tidyverse)#
+##stringtie quantification data#
+#
+q.files = list.files('merged_quant', full.names=TRUE)#
+#
+quant = tibble()#
+for (f in q.files) {#
+	sub = read_tsv(f) %>%#
+		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
+		mutate(tissue = gsub('-[[:digit:]]','',sample))#
+	quant = rbind(quant,sub)#
+}
+filter(quant, gene_id=='MSTRG.10695') %>%#
+group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
+ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
+	geom_bar(stat='identity') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+filter(quant, gene_id=='MSTRG.10695') %>%#
+group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
+ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5))
+filter(quant, gene_id=='MSTRG.10695') %>%#
+group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
+ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	xlab('') +#
+	ylab('FPKM')
+filter(quant, gene_id=='MSTRG.10695') %>%#
+group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
+ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	xlab('') +#
+	ylab('FPKM')
+library(svglite)
+ggsave('~/Downloads/suv.svg')
+library(tidyverse)#
+library(ggtranscript)#
+#gtf file#
+#
+gtf = read_tsv('Suv39h2_isoforms.gtf', col_names=FALSE)#
+#
+##parse#
+#
+split.att = strsplit(gtf$X9, split='[;\"]')#
+get.att = function(att) {#
+	unlist(lapply(split.att, function(x) {#
+			pos = grep(att, x)#
+			if (length(pos)>0) {#
+				return(x[pos + 1])#
+			} else {#
+				return('')#
+			}#
+		}))#
+}#
+#
+suv = tibble(seqnames=gtf$X1,#
+			start=gtf$X4,#
+			end=gtf$X5,#
+			strand=gtf$X7,#
+			type=gtf$X3,#
+			gene_name=get.att('^gene_id'),#
+			transcript_name=get.att('transcript_id'))#
+##plot#
+#
+suv.exons = filter(suv, type=='exon')#
+#
+ggplot(suv.exons, aes(xstart=start, xend=end, y=transcript_name)) +#
+    geom_range() +#
+    geom_intron(data=to_intron(suv.exons,'transcript_name'), aes(strand=strand)) +#
+    theme_classic()
+library(tidyverse)#
+##stringtie quantification data#
+#
+q.files = list.files('merged_quant', full.names=TRUE)#
+#
+quant = tibble()#
+for (f in q.files) {#
+	sub = read_tsv(f) %>%#
+		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
+		mutate(tissue = gsub('-[[:digit:]]','',sample))#
+	quant = rbind(quant,sub)#
+}#
+##add info on which isoforms from selected genes have IAP TSS#
+##calculate percentage of IAP TSS usage#
+#
+meta = read_tsv('iap_chimera_isoforms.txt')#
+#
+iap = filter(quant, t_name %in% meta$t_name) %>%#
+	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
+			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
+	group_by(gene, sample, tissue) %>%#
+	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
+iap$perc[iap$perc=='NaN'] = 0#
+##plot IAP isoform usage#
+#
+group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
+ggplot(aes(x=gene, y=tissue)) +#
+	geom_point(aes(size=mean_perc), stroke=0, col='navy') +#
+	theme_classic() +#
+	scale_x_discrete(guide=guide_axis(angle=90)) +#
+	scale_size_continuous(range=c(0,5)) +#
+	xlab('') +#
+	ylab('')
+library(tidyverse)
+tx.files = list.files(pattern='chimTx.txt')#
+#
+tx = tibble()#
+for (f in tx.files) {#
+	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
+								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
+		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
+		add_column(sample = gsub('-chimTx.txt','',f))#
+	tx = rbind(tx,sub)#
+}#
+##select consistent TEs in placenta#
+#
+p1.tes = tx$te.id[tx$sample=='Placenta_musculus-1']#
+p2.tes = tx$te.id[tx$sample=='Placenta_musculus-2']#
+p3.tes = tx$te.id[tx$sample=='Placenta_musculus-3']#
+plac.tes = p1.tes[p1.tes %in% p2.tes & p1.tes %in% p3.tes]#
+#
+plac.tx = filter(tx, te.id %in% plac.tes)#
+group_by(plac.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+gfp.tes = tx$te.id[tx$sample=='GFPTSCs_musculus']#
+b6.tes = tx$te.id[tx$sample=='bTSCs_musculus']#
+#
+pspec = filter(plac.tx, !(te.id %in% gfp.tes) & !(te.id %in% b6.tes),#
+			sample=='Placenta_musculus-1')#
+group_by(pspec, te.name) %>% summarise(n=length(te.name))
+filter(tx,grepl('IAP',te.name)) %>%#
+	group_by(sample) %>%#
+	summarise(n.te=length(unique(te.id)))#
+#
+iap.tx = filter(plac.tx, grepl('IAP',te.name))#
+group_by(iap.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
+group_by(l1.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+write_tsv(rbind(iap.tx, l1.tx), 'iap_l1_transcripts.txt')
+iap.tx
+filter(iap.tx, te.chr=='chr2')
+tx
+filter(tx, tx.name=='Suv39h2')
+filter(tx, te.end==3488773)
+tx.files = list.files(pattern='chimTx.txt')#
+#
+tx = tibble()#
+for (f in tx.files) {#
+	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
+								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
+		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
+		add_column(sample = gsub('-chimTx.txt','',f))#
+	tx = rbind(tx,sub)#
+}#
+##select consistent TEs in placenta#
+#
+p1.tes = tx$te.id[tx$sample=='Placenta_musculus-1']#
+p2.tes = tx$te.id[tx$sample=='Placenta_musculus-2']#
+p3.tes = tx$te.id[tx$sample=='Placenta_musculus-3']#
+plac.tes = p1.tes[p1.tes %in% p2.tes & p1.tes %in% p3.tes]#
+#
+plac.tx = filter(tx, te.id %in% plac.tes)
+plac.tx
+filter(plac.tx, te.chr=='chr2')
+filter(plac.tx, te.chr=='chr2',grepl('IAP',te.name))
+data.frame(filter(plac.tx, te.chr=='chr2',grepl('IAP',te.name)))
+tx
+data.frame(filter(tx, te.chr=='chr2',grepl('IAP',te.name)))
+tx
+plac.tes = tx$te.id[grep('Placenta_musculus', tx$sample)]
+te.frq = table(plac.tes)
+head(te.frq)
+sum(te.freq>1)
+sum(te.frq>1)
+sum(te.frq>2)
+plac.tx = filter(tx, te.id %in% names(te.frq[te.freq>=2]))
+te.freq = table(plac.tes)
+plac.tx = filter(tx, te.id %in% names(te.frq[te.freq>=2]))
+plac.tx
+group_by(plac.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+filter(tx,grepl('IAP',te.name)) %>%#
+	group_by(sample) %>%#
+	summarise(n.te=length(unique(te.id)))#
+#
+iap.tx = filter(plac.tx, grepl('IAP',te.name))#
+group_by(iap.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
+group_by(l1.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+filter(iap.tx,te.chr=='chr2')
+iap.tx
+filter(tx,grepl('IAP',te.name)) %>%#
+	group_by(sample) %>%#
+	summarise(n.te=length(unique(te.id)))
+filter(tx,grepl('L1Md',te.name)) %>%#
+	group_by(sample) %>%#
+	summarise(n.te=length(unique(te.id)))
+group_by(plac.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+tx.files = list.files(pattern='chimTx.txt')#
+#
+tx = tibble()#
+for (f in tx.files) {#
+	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
+								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
+		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
+		add_column(sample = gsub('-chimTx.txt','',f))#
+	tx = rbind(tx,sub)#
+}#
+##overview of IAP/L1 transcrips#
+#
+filter(tx,grepl('IAP',te.name)) %>%#
+	group_by(sample) %>%#
+	summarise(n.te=length(unique(te.id)))
+filter(tx,grepl('L1Md',te.name)) %>%#
+	group_by(sample) %>%#
+	summarise(n.te=length(unique(te.id)))
+plac.tes = tx$te.id[grep('Placenta_musculus', tx$sample)]#
+te.freq = table(plac.tes)#
+plac.tx = filter(tx, te.id %in% names(te.frq[te.freq>=2])) #TE in at least 2 out of 3 replicates
+iap.tx = filter(plac.tx, grepl('IAP',te.name))#
+l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
+##write output for manual curation#
+#
+write_tsv(rbind(iap.tx, l1.tx), 'iap_l1_transcripts.txt')
+library(tidyverse)#
+##read data#
+#
+tx.files = list.files(pattern='chimTx.txt')#
+#
+tx = tibble()#
+for (f in tx.files) {#
+	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
+								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
+		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
+		add_column(sample = gsub('-chimTx.txt','',f))#
+	tx = rbind(tx,sub)#
+}
+plac.tes = tx$te.id[grep('Placenta_musculus', tx$sample)]
+head(plac.tes)
+te.freq = table(plac.tes)
+te.freq(grep('L1Md',names(te.freq)))
+te.freq[grep('L1Md',names(te.freq))]
+plac.tx = filter(tx, te.id %in% names(te.freq[te.freq>=2])) #TE in at least 2 out of 3 replicates
+iap.tx = filter(plac.tx, grepl('IAP',te.name))#
+l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
+##write output for manual curation#
+#
+write_tsv(rbind(iap.tx, l1.tx), 'iap_l1_transcripts.txt')
+library(tidyverse)#
+##stringtie quantification data#
+#
+q.files = list.files('merged_quant', full.names=TRUE)#
+#
+quant = tibble()#
+for (f in q.files) {#
+	sub = read_tsv(f) %>%#
+		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
+		mutate(tissue = gsub('-[[:digit:]]','',sample))#
+	quant = rbind(quant,sub)#
+}
+meta = read_tsv('iap_chimera_isoforms.txt')#
+#
+iap = inner_join(select(quant, !gene_name), select(meta, t_id, gene_name, te_tss), by='t_id')
+iap
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm=log2(sum(FPKM)+0.1)) %>%
+s
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm=log2(sum(FPKM)+0.1))
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm = log2(sum(FPKM)+0.1)) %>%#
+	group_by(gene_name, sample) %>%#
+	summarise(fpkm = mean(fpkm))
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm = log2(sum(FPKM)+0.1)) %>%#
+	group_by(gene_name, tissue) %>%#
+	summarise(fpkm = mean(fpkm))
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm=log2(sum(FPKM)+0.1)) %>%#
+	group_by(gene_name, tissue) %>%#
+	summarise(fpkm=mean(fpkm)) %>%#
+	pivot_wider(names_from=tisue, values_from=fpkm)
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm=log2(sum(FPKM)+0.1)) %>%#
+	group_by(gene_name, tissue) %>%#
+	summarise(fpkm=mean(fpkm))
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm=log2(sum(FPKM)+0.1)) %>%#
+	group_by(gene_name, tissue) %>%#
+	summarise(fpkm=mean(fpkm)) %>%#
+	pivot_wider(names_from=tissue, values_from=fpkm)
+iap
+group_by(iap, gene_name, sample, tissue, te_tss) %>%#
+	summarise(fpkm=log2(sum(FPKM)+0.1))
+group_by(iap, gene_name, sample, tissue, te_tss) %>%#
+	summarise(fpkm=log2(sum(FPKM)+0.1)) %>%#
+	group_by(gene_name, te_tss, tissue) %>%#
+	summarise(fpkm=mean(fpkm))
+group_by(iap, gene_name, sample, tissue, te_tss) %>%#
+	summarise(fpkm=sum(FPKM))
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(te.fpkm=sum(FPKM[te_tss]), can.fpkm=sum(FPKM[!te_tss]))
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm = log2(sum(FPKM)+0.1),#
+			perc = case_when(sum(FPKM)==0 ~ 0,#
+				.default = sum(FPKM[te_tss])/sum(FPKM)*100))
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm = log2(sum(FPKM)+0.1),#
+			perc = case_when(sum(FPKM)==0 ~ 0,#
+				.default = sum(FPKM[te_tss])/sum(FPKM)*100)) %>%	#
+	group_by(gene_name, tissue) %>%#
+	summarise(fpkm=mean(fpkm), perc=mean(perc))
+?pivot_wider
+group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm = log2(sum(FPKM)+0.1),#
+			perc = case_when(sum(FPKM)==0 ~ 0,#
+				.default = sum(FPKM[te_tss])/sum(FPKM)*100)) %>%	#
+	group_by(gene_name, tissue) %>%#
+	summarise(fpkm=mean(fpkm), perc=mean(perc)) %>%#
+	pivot_wider(names_from=tissue, values_from=c(fpkm,perc))
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) %>%#
+	geom_point()
+iap.sum = group_by(iap, gene_name, sample, tissue) %>%#
+	summarise(fpkm = log2(sum(FPKM)+0.1),#
+			perc = case_when(sum(FPKM)==0 ~ 0,#
+				.default = sum(FPKM[te_tss])/sum(FPKM)*100)) %>%	#
+	group_by(gene_name, tissue) %>%#
+	summarise(fpkm=mean(fpkm), perc=mean(perc)) %>%#
+	pivot_wider(names_from=tissue, values_from=c(fpkm,perc))#
+#
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) %>%#
+	geom_point()
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point()
+ggplot(iap.sum, aes(x=perc_Placenta_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point()
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point()
+ggplot(iap.sum, aes(x=perc_Placenta_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point()
+iap.sum
+iap
+ggplot(iap.sum, aes(x=perc_Placenta_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point()
+ggplot(iap.sum, aes(x=perc_Placenta_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('% IAP TSS usage') +#
+	ylab('Placenta/TSC log2 ratio')
+ggplot(iap.sum, aes(x=perc_Placenta_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point() +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	theme_classic() +#
+	xlab('% IAP TSS usage') +#
+	ylab('Placenta/TSC log2 ratio')
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point() +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	theme_classic() +#
+	xlab('% IAP TSS usage') +#
+	ylab('Placenta/TSC log2 ratio')
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point() +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	theme_classic() +#
+	xlab('Difference in IAP usage (%)') +#
+	ylab('Placenta/TSC log2 ratio')
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point(col='grey') +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	theme_classic() +#
+	xlab('Difference in IAP usage (%)') +#
+	ylab('Placenta/TSC log2 ratio')
+ggplot(iap.sum, aes(x=perc_Placenta_musculus-perc_bTSCs_musculus, y=fpkm_Placenta_musculus-fpkm_bTSCs_musculus)) +#
+	geom_point(col='navy') +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	theme_classic() +#
+	xlab('Difference in IAP usage (%)') +#
+	ylab('Placenta/TSC log2 ratio')
+library(svglite)
+ggsave('~/Downloads/tss.svg')
+library(tidyverse)
+tx.files = list.files(path='chimeras')
+tx.files
+tx = tibble()#
+for (f in tx.files) {#
+	sub = read_tsv(paste('chimeras',f,sep='/'),#
+					col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
+								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
+		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
+		add_column(sample = gsub('-chimTx.txt','',f))#
+	tx = rbind(tx,sub)#
+}
+filter(tx,grepl('IAP',te.name)) %>%#
+	group_by(sample) %>%#
+	summarise(n.te=length(unique(te.id)))
+plac.tes = tx$te.id[grep('Placenta_musculus', tx$sample)]#
+te.freq = table(plac.tes)#
+plac.tx = filter(tx, te.id %in% names(te.freq[te.freq>=2])) #TE in at least 2 out of 3 replicates#
+##placental IAP/L1 transcripts#
+#
+iap.tx = filter(plac.tx, grepl('IAP',te.name))#
+l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)
+library(Seurat)
+plac = LoadSeuratRds('../scRNA_processing/Marsh_IAP_Seurat.Rds')
+cgenes = read.delim('iap_l1_transcripts_curated.txt')
+head(cgenes)
+cgenes = read.delim('iap_l1_transcripts_curated.txt')$gene.name
+cgenes
+idents = Idents(plac)#
+chim = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% cgenes) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])
+library(tidyverse)
+cgenes = read.delim('iap_l1_transcripts_curated.txt')$gene.name
+idents = Idents(plac)#
+chim = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% cgenes) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])
+chim.sum = group_by(chim, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)
+chim.sum
+group_by(chim, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100)
+ggplot(chim.sum, aes(x=gene, y=perc_cells, fill=cluster)) +#
+	geom_bar(stat='identity', position=position_dodge())
+chim.sum = group_by(chim, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100)#
+#
+ggplot(chim.sum, aes(x=gene, y=perc_cells, fill=cluster)) +#
+	geom_bar(stat='identity', position=position_dodge())
+filter(chim.sum, gene!='Noct') %>%#
+ggplot(aes(x=gene, y=perc_cells, fill=cluster)) +#
+	geom_bar(stat='identity', position=position_dodge())
+plot.means = function(data, genes) {#
+	sub = tibble(data[rownames(data) %in% genes,]) %>%#
+		add_column(gene = rownames(data)[rownames(data) %in% genes]) %>%#
+		pivot_longer(cols=colnames(data)) %>%#
+		mutate(cluster = clusters$cluster[match(name, rownames(clusters))])#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	group_by(sub, gene, cluster) %>% summarise(av_expr=mean(value)) %>%#
+	ggplot(aes(x=factor(gene,levels=genes), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=av_expr, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}#
+plot.means(plac, c('Ror2','Lgr5','Met','Gcm1','Synb','Gcgr','Vegfa','Egfr',#
+			'Tcf7l1','Epha4','Tgfa','Tfrc','Glis1','Stra6','Nos1ap',#
+			'Podxl','Lepr','Ctsq','Cdh4','Pvt1','Prune2','Ncam1',#
+			'Igfbp7','Pla2g4d','Plac8','Mitf','Flt1','Prl8a9','Slco2a1'))
+data=plac
+genes=c('Ror2','Lgr5','Met','Gcm1','Synb','Gcgr','Vegfa','Egfr',#
+			'Tcf7l1','Epha4','Tgfa','Tfrc','Glis1','Stra6','Nos1ap',#
+			'Podxl','Lepr','Ctsq','Cdh4','Pvt1','Prune2','Ncam1',#
+			'Igfbp7','Pla2g4d','Plac8','Mitf','Flt1','Prl8a9','Slco2a1')
+sub = tibble(data[rownames(data) %in% genes,]) %>%#
+		add_column(gene = rownames(data)[rownames(data) %in% genes]) %>%#
+		pivot_longer(cols=colnames(data)) %>%#
+		mutate(cluster = clusters$cluster[match(name, rownames(clusters))])
+tibble(data[rownames(data) %in% genes,])
+as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes)
+sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])
+sub
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	group_by(sub, gene, cluster) %>% summarise(av_expr=mean(value)) %>%#
+	ggplot(aes(x=factor(gene,levels=genes), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=av_expr, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')
+group_by(sub, gene, cluster) %>% summarise(av_expr=mean(expr)) %>%#
+	ggplot(aes(x=factor(gene,levels=genes), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=av_expr, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')
+plot.means(plac, cgenes)
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	group_by(sub, gene, cluster) %>% summarise(av_expr=mean(expr)) %>%#
+	ggplot(aes(x=factor(gene,levels=genes), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=av_expr, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}
+plot.means(plac, cgenes)
+plot.means(plac, unique(cgenes))
+plot.means(plac, unique(cgenes[cgenes!='Noct']))
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	ggplot(aes(x=factor(gene,levels=genes), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}#
+plot.means(plac, c('Ror2','Lgr5','Met','Gcm1','Synb','Gcgr','Vegfa','Egfr',#
+			'Tcf7l1','Epha4','Tgfa','Tfrc','Glis1','Stra6','Nos1ap',#
+			'Podxl','Lepr','Ctsq','Cdh4','Pvt1','Prune2','Ncam1',#
+			'Igfbp7','Pla2g4d','Plac8','Mitf','Flt1','Prl8a9','Slco2a1'))
+plot.means(plac, unique(cgenes[cgenes!='Noct']))
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=median(expr), perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	ggplot(aes(x=factor(gene,levels=genes), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}#
+plot.means(plac, unique(cgenes[cgenes!='Noct']))
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	ggplot(aes(x=factor(gene,levels=genes), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}#
+plot.means(plac, unique(cgenes[cgenes!='Noct']))
+plot.means(plac, unique(cgenes))
+plot.means(plac, 'Noct')
+chim = read_tsv('iap_l1_transcripts_curated.txt')
+chim
+cgenes = unique(chim$gene.name)
+plot.means(plac, cgenes[cgenes!='Noct'])
+sub
+group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)
+data=plac
+genes=cgenes[cgenes!='Noct']
+sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")
+sub
+expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)
+expr.sum
+filter(expr.sum, cluster=='SpT')
+filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells)
+filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)
+g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)
+ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')
+g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)#
+#
+	ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')
+sub
+ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')
+cgenes
+no.expr = c('4930481A15Rik', 'Csta2', 'Gm20110', 'Gm36888')#
+plot.means(plac, cgenes[(cgenes %in% no.expr])
+no.expr = c('4930481A15Rik', 'Csta2', 'Gm20110', 'Gm36888')#
+plot.means(plac, cgenes[!(cgenes %in% no.expr)])
+plot.means(plac, cgenes[!(cgenes %in% no.expr) & cgenes!='Notc'])
+plot.means(plac, cgenes[!(cgenes %in% no.expr) & cgenes!='Noct'])
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+#
+	expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)#
+#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)#
+#
+	ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0.5,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}
+no.expr = c('4930481A15Rik', 'Csta2', 'Gm20110', 'Gm36888')#
+plot.means(plac, cgenes[!(cgenes %in% no.expr) & cgenes!='Noct'])
+library(svglite)
+ggsave('~/Downloads/scrna.svg')
+plot.means(plac, 'Noct')
+ggsave('~/Downloads/noct.svg')
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+#
+	expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)#
+#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)#
+#
+	ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}#
+#
+plot.means(plac, 'Noct')
+plot.means(plac, 'Noct')
+plot.means(plac, cgenes[!(cgenes %in% no.expr) & cgenes!='Noct'])
+ggsave('~/Downloads/scrna.svg')
+library(tidyverse)#
+##read data#
+#
+tx.files = list.files(path='chimeras')#
+#
+tx = tibble()#
+for (f in tx.files) {#
+	sub = read_tsv(paste('chimeras',f,sep='/'),#
+					col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
+								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
+		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
+		add_column(sample = gsub('-chimTx.txt','',f))#
+	tx = rbind(tx,sub)#
+}
+tx
+filter(tx,tx.name=='Eps8l1')
+library(Seurat)#
+library(tidyverse)#
+##Load Seurat object#
+#
+plac = LoadSeuratRds('../scRNA_processing/Marsh_IAP_Seurat.Rds')#
+##Chimeras#
+#
+chim = read_tsv('iap_l1_transcripts_curated.txt')#
+cgenes = unique(chim$gene.name)#
+##chimera expression summary#
+#
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+#
+	expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)#
+#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)#
+#
+	ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}
+plot.means(plac, c('Zfp57','Zfp932', 'Gm15446'))
+install.packages('Seurat')
+library(Seurat)
+plac = LoadSeuratRds('../scRNA_processing/Marsh_IAP_Seurat.Rds')#
+##Chimeras#
+#
+chim = read_tsv('iap_l1_transcripts_curated.txt')#
+cgenes = unique(chim$gene.name)#
+##chimera expression summary#
+#
+plot.means = function(data, genes) {#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+#
+	expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)#
+#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)#
+#
+	ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}
+plot.means(plac, c('Zfp57','Zfp932', 'Gm15446'))
+plac
+data=plac
+genes=c('Zfp57','Zfp932', 'Gm15446')
+sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])
+as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes)
+plot.means(plac, 'Noct')
+as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr')
+idents = Idents(data)
+sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])
+expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)#
+#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)
+ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')
+library(Seurat)#
+library(tidyverse)#
+##Load Seurat object#
+#
+plac = LoadSeuratRds('../scRNA_processing/Marsh_IAP_Seurat.Rds')
+plot.means = function(data, genes) {#
+	idents = Idents(data)#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+#
+	expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)#
+#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)#
+#
+	ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}
+plot.means(plac, 'Trim28')
+plot.means(plac, 'Noct')
+plot.means(plac, 'Trim28')
+plot.means(plac, c('Trim28','Tpbpa'))
+plot.means(plac, c('Trim28','Tpbpa','Prl3d1'))
+plot.means(plac, c('Trim28','Tpbpa','Csta2'))
+plot.means(plac, c('Trim28','Tpbpa','Cstq'))
+plot.means(plac, c('Trim28','Tpbpa','Elf5'))
+plot.means(plac, c('Trim28','Tpbpa','Gcm1'))

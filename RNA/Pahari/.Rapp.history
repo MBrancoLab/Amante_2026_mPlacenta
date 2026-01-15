@@ -1,0 +1,780 @@
+head(ms)
+head(mus)
+head(de)
+pah = de$gene[de$species=='pahari',]
+pah = de$gene[de$species=='pahari']
+pah
+mus = de$gene[de$species=='musculus']
+length(mus)
+length(pah)
+sum(rownames(up) %in% mus)
+sum(rownames(up) %in% pah)
+sum(rownames(down) %in% mus)
+sum(rownames(down) %in% pah)
+3884-2157
+library(tidyverse)#
+##normalise read counts (from Seqmonk)#
+#
+enc = read_tsv('../encode_raw_counts.txt.gz') %>%#
+	mutate(across(cerebellum_encode_1:thymus_encode_2, ~log2(./sum(.)*1e6+0.05)))#
+#
+mp = read_tsv('../pahari_raw_counts.txt.gz') %>%#
+	dplyr::select(Probe, Brain_pahari:Spleen_pahari) %>%#
+	mutate(across(Brain_pahari:Spleen_pahari, ~log2(./sum(.)*1e6+0.05)))#
+colnames(mp)[1] = 'pahari_id'#
+##orthology info from biomart#
+#
+ortho = read_tsv('mm.mp.orthologues.txt.gz')#
+ortho1 = filter(ortho, `Shrew mouse homology type`=='ortholog_one2one') %>%#
+	dplyr::select(`Gene stable ID`, `Shrew mouse gene stable ID`) %>%#
+	distinct()#
+colnames(ortho1) = c('ID', 'pahari_id')#
+##merge datasets#
+##remove sex chromosome data#
+#
+enc.ortho = inner_join(enc, ortho1, by='ID') %>%#
+	relocate(pahari_id, .after=ID)#
+#
+enc.mp = inner_join(enc.ortho, mp, by='pahari_id') %>%#
+	filter(Chromosome!='X', Chromosome!='Y')
+expr = as.matrix(dplyr::select(enc.mp,#
+	cortex_encode_1, cortex_encode_2, Brain_pahari,#
+	liver_encode_1, liver_encode_2, Liver_pahari,#
+	kidney_encode_1, kidney_encode_2, Kidney_pahari,#
+	spleen_encode_1, spleen_encode_2, Spleen_pahari,#
+	placenta_encode_1, placenta_encode_2, Placenta_pahari_2, Placenta_pahari_3))#
+rownames(expr) = enc.mp$Probe#
+#
+hc = hclust(dist(t(expr)))#
+par(mar=c(4,2,2,8))#
+plot(as.dendrogram(hc, hang=0.1), horiz=T)
+expr.var = apply(expr, 1, var)#
+#
+species = case_when(grepl('encode', colnames(expr)) ~ 16,#
+					grepl('pahari', colnames(expr)) ~ 17)#
+tissue = rep(c('#648FFF','#785EF0','#DC267F','#FE6100','#FFB000'), c(rep(3,4),4))#
+#
+pca = prcomp(expr[expr.var>quantile(expr.var,0.75),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+expr.av = tibble(gene = enc.mp$Probe,#
+				brain_musculus = rowMeans(select(enc.mp, cortex_encode_1:cortex_encode_2)),#
+				kidney_musculus = rowMeans(select(enc.mp, kidney_encode_1:kidney_encode_2)),#
+				liver_musculus = rowMeans(select(enc.mp, liver_encode_1:liver_encode_2)),#
+				placenta_musculus = rowMeans(select(enc.mp, placenta_encode_1:placenta_encode_2)),#
+				spleen_musculus = rowMeans(select(enc.mp, spleen_encode_1:spleen_encode_2)),#
+				brain_pahari = enc.mp$Brain_pahari,#
+				kidney_pahari = enc.mp$Kidney_pahari,#
+				liver_pahari = enc.mp$Liver_pahari,#
+				placenta_pahari = rowMeans(select(enc.mp, Placenta_pahari_2:Placenta_pahari_3)),#
+				spleen_pahari = enc.mp$Spleen_pahari) %>%#
+	pivot_longer(cols=!gene, names_to='sample', values_to='expr') %>%#
+	mutate(tissue = sub('_[[:print:]]+','',sample), species = sub('[[:print:]]+_','',sample)) %>%#
+	select(!sample) %>% pivot_wider(names_from = species, values_from = expr)#
+#
+expr.diff = filter(expr.av, musculus > -1 | pahari > -1) %>%#
+	mutate(log2FC = musculus-pahari)
+plot.te.genes = function(data, gene_file) {#
+	gene.data = read_tsv(gene_file)#
+	sub = filter(data, gene %in% gene.data$gene)#
+	p =	ggplot(sub, aes(x=tissue, y=log2FC)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90)) +#
+			geom_hline(yintercept=0, linetype='dashed')#
+	print(p)#
+#
+	pval = group_by(sub, tissue) %>% summarise(p = t.test(log2FC)$p.value) %>%#
+		mutate(padj = p.adjust(p, method='BH'))#
+	return(pval)#
+}	#
+plot.te.genes(expr.diff,'IAP_proximal_genes.txt')
+plot.te.genes(expr.diff,'RMER10A_mm_proximal_genes.txt')
+plot.te.genes(expr.diff,'RMER10A_mp_proximal_genes.txt')
+plot.te.genes(expr.diff,'IAP_proximal_genes.txt')
+library(tidyverse)#
+##normalise read counts (from Seqmonk)#
+#
+enc = read_tsv('../encode_raw_counts.txt.gz') %>%#
+	mutate(across(cerebellum_encode_1:thymus_encode_2, ~log2(./sum(.)*1e6+0.05)))#
+#
+mp = read_tsv('../pahari_raw_counts.txt.gz') %>%#
+	dplyr::select(Probe, Brain_pahari:Spleen_pahari) %>%#
+	mutate(across(Brain_pahari:Spleen_pahari, ~log2(./sum(.)*1e6+0.05)))#
+colnames(mp)[1] = 'pahari_id'#
+##orthology info from biomart#
+#
+ortho = read_tsv('mm.mp.orthologues.txt.gz')#
+ortho1 = filter(ortho, `Shrew mouse homology type`=='ortholog_one2one') %>%#
+	dplyr::select(`Gene stable ID`, `Shrew mouse gene stable ID`) %>%#
+	distinct()#
+colnames(ortho1) = c('ID', 'pahari_id')#
+##merge datasets#
+##remove sex chromosome data#
+#
+enc.ortho = inner_join(enc, ortho1, by='ID') %>%#
+	relocate(pahari_id, .after=ID)#
+#
+enc.mp = inner_join(enc.ortho, mp, by='pahari_id') %>%#
+	filter(Chromosome!='X', Chromosome!='Y')#
+##hierarchical clusterting#
+#
+expr = as.matrix(dplyr::select(enc.mp,#
+	cortex_encode_1, cortex_encode_2, Brain_pahari,#
+	liver_encode_1, liver_encode_2, Liver_pahari,#
+	kidney_encode_1, kidney_encode_2, Kidney_pahari,#
+	spleen_encode_1, spleen_encode_2, Spleen_pahari,#
+	placenta_encode_1, placenta_encode_2, Placenta_pahari_2, Placenta_pahari_3))#
+rownames(expr) = enc.mp$Probe#
+#
+hc = hclust(dist(t(expr)))#
+par(mar=c(4,2,2,8))#
+plot(as.dendrogram(hc, hang=0.1), horiz=T)
+head(expr)
+cor.test(expr[,1],expr[,2])
+cor.test(expr[,1],expr[,3])
+cor.test(expr[,4],expr[,6])
+cor.test(expr[,7],expr[,9])
+cor.test(expr[,10],expr[,12])
+cor.test(expr[,13],expr[,15])
+dist(t(expr))
+hc = hclust(dist(t(expr)))#
+par(mar=c(4,2,2,8))#
+plot(as.dendrogram(hc, hang=0.1), horiz=T)
+library(tidyverse)#
+library(DESeq2)#
+library(topGO)#
+library(org.Mm.eg.db)#
+##gene raw counts from Seqmonk#
+#
+mm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	dplyr::select(!c(bTSCs_musculus, GFPTSCs_musculus))#
+#
+mp = read_tsv('../pahari_raw_counts.txt.gz') %>%#
+	dplyr::select(Probe, Placenta_pahari_2, Placenta_pahari_3)#
+colnames(mp)[1] = 'pahari_id'#
+##orthology info from biomart#
+#
+ortho = read_tsv('mm.mp.orthologues.txt.gz')#
+ortho1 = filter(ortho, `Shrew mouse homology type`=='ortholog_one2one') %>%#
+	dplyr::select(`Gene stable ID`, `Shrew mouse gene stable ID`) %>%#
+	distinct()#
+colnames(ortho1) = c('ID', 'pahari_id')#
+##merge datasets#
+##remove sex chromosome data#
+#
+mm.ortho = inner_join(mm, ortho1, by='ID') %>%#
+	relocate(pahari_id, .after=ID)#
+#
+mm.mp = inner_join(mm.ortho, mp, by='pahari_id') %>%#
+	filter(Chromosome!='X', Chromosome!='Y')
+counts = data.frame(dplyr::select(mm.mp, Placenta_musculus_1:Placenta_pahari_3))#
+rownames(counts) = mm.mp$Feature#
+#
+coldata = DataFrame(sample=factor(sub('_[[:digit:]]','',colnames(counts))))
+dds = DESeqDataSetFromMatrix(counts, coldata, design=~sample)#
+dds = DESeq(dds)#
+#
+res = results(dds, contrast=c('sample','Placenta_musculus','Placenta_pahari'))#
+de = subset(res, padj<0.05 & abs(log2FoldChange)>1) %>%#
+	as_tibble(rownames='gene') %>%#
+	mutate(species = case_when(log2FoldChange>0 ~ 'musculus', log2FoldChange<0 ~ 'pahari')) %>%#
+	arrange(-log2FoldChange)
+group_by(de, species) %>% summarise(n.de=length(gene))
+go.ann = function(de.genes) {#
+	genes = factor(as.integer(rownames(counts) %in% de.genes$gene))#
+	names(genes) = rownames(counts)#
+	go = new('topGOdata', ontology = 'BP',#
+		allGenes = genes, geneSelectionFun = function(x) x==0,#
+		annotationFun = annFUN.org, mapping = 'org.Mm.eg.db', ID = 'SYMBOL')#
+	return(go)#
+}#
+#
+go.plot = function(go, nodes=5) {#
+	rt = runTest(go, algorithm='classic', statistic='fisher')#
+	gt = GenTable(go, classicFisher=rt, topNodes=nodes)#
+#
+	ggplot(gt, aes(x=-log10(as.numeric(classicFisher)), y=Term)) +#
+		geom_bar(stat='identity', fill='grey', colour='black', width=0.7) +#
+		theme_classic() +#
+		ylab('') +#
+		xlab('-log10 p')#
+}
+go.mm = go.ann(filter(de, species=='musculus'))#
+go.plot(go.mm)
+go.mp = go.ann(filter(de, species=='pahari'))#
+go.plot(go.mp)
+library(tidyverse)#
+##normalise read counts (from Seqmonk)#
+#
+enc = read_tsv('../encode_raw_counts.txt.gz') %>%#
+	mutate(across(cerebellum_encode_1:thymus_encode_2, ~log2(./sum(.)*1e6+0.05)))#
+#
+mp = read_tsv('../pahari_raw_counts.txt.gz') %>%#
+	dplyr::select(Probe, Brain_pahari:Spleen_pahari) %>%#
+	mutate(across(Brain_pahari:Spleen_pahari, ~log2(./sum(.)*1e6+0.05)))#
+colnames(mp)[1] = 'pahari_id'#
+##orthology info from biomart#
+#
+ortho = read_tsv('mm.mp.orthologues.txt.gz')#
+ortho1 = filter(ortho, `Shrew mouse homology type`=='ortholog_one2one') %>%#
+	dplyr::select(`Gene stable ID`, `Shrew mouse gene stable ID`) %>%#
+	distinct()#
+colnames(ortho1) = c('ID', 'pahari_id')#
+##merge datasets#
+##remove sex chromosome data#
+#
+enc.ortho = inner_join(enc, ortho1, by='ID') %>%#
+	relocate(pahari_id, .after=ID)#
+#
+enc.mp = inner_join(enc.ortho, mp, by='pahari_id') %>%#
+	filter(Chromosome!='X', Chromosome!='Y')#
+##hierarchical clusterting#
+#
+expr = as.matrix(dplyr::select(enc.mp,#
+	cortex_encode_1, cortex_encode_2, Brain_pahari,#
+	liver_encode_1, liver_encode_2, Liver_pahari,#
+	kidney_encode_1, kidney_encode_2, Kidney_pahari,#
+	spleen_encode_1, spleen_encode_2, Spleen_pahari,#
+	placenta_encode_1, placenta_encode_2, Placenta_pahari_2, Placenta_pahari_3))#
+rownames(expr) = enc.mp$Probe#
+#
+hc = hclust(dist(t(expr)))#
+par(mar=c(4,2,2,8))#
+plot(as.dendrogram(hc, hang=0.1), horiz=T)
+hc
+dist(t(expr))
+plot(hc)
+plot(hc,horiz=T)
+?hclust
+dist(t(expr))
+enc.mp
+mp
+enc
+plot(enc$placenta_encode_1, mp$Placenta_pahari_2)
+enc.ortho
+enc.mp
+ggplot(enc.mp, aes(x=placenta_encode_1, y=Placenta_pahari_2))+geom_point()
+ggplot(enc.mp, aes(x=placenta_encode_1, y=Placenta_pahari_2))+geom_point()+geom_abline(intercept=0,slope=1, colour='blue')
+ggplot(enc.mp, aes(x=spleen_encode_1, y=Spleen_pahari))+geom_point()+geom_abline(intercept=0,slope=1, colour='blue')
+ggplot(enc.mp, aes(x=placenta_encode_1, y=Placenta_pahari_2))+geom_point()+geom_abline(intercept=0,slope=1, colour='blue')
+ggplot(enc.mp, aes(x=spleen_encode_1, y=Spleen_pahari))+geom_point()+geom_abline(intercept=0,slope=1, colour='blue')
+ggplot(enc.mp, aes(x=placenta_encode_1, y=Placenta_pahari_2))+geom_point()+geom_abline(intercept=0,slope=1, colour='blue')
+ggplot(enc.mp, aes(x=spleen_encode_1, y=Spleen_pahari))+geom_point()+geom_abline(intercept=0,slope=1, colour='blue')
+expr.var = apply(expr, 1, var)#
+#
+species = case_when(grepl('encode', colnames(expr)) ~ 16,#
+					grepl('pahari', colnames(expr)) ~ 17)#
+tissue = rep(c('#648FFF','#785EF0','#DC267F','#FE6100','#FFB000'), c(rep(3,4),4))#
+#
+pca = prcomp(expr[expr.var>quantile(expr.var,0.75),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+pca = prcomp(expr[expr.var>quantile(expr.var,0.25),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+pca = prcomp(expr[expr.var>quantile(expr.var,0.85),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+pca = prcomp(expr[expr.var>quantile(expr.var,0.90),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+pca = prcomp(expr[expr.var>quantile(expr.var,0.75),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+head(expr)
+pca = prcomp(expr[expr.var>quantile(expr.var,0.75), -c(1:3)])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+pca = prcomp(expr[expr.var>quantile(expr.var,0.75),-c(1:3)])
+pca = prcomp(expr[expr.var>quantile(expr.var,0.75),-c(1:3)])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue[-c(1:3)], shape=species[-c(1:3)], size=2) +#
+	theme_classic()
+pca = prcomp(expr[expr.var>quantile(expr.var,0.85),-c(1:3)])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue[-c(1:3)], shape=species[-c(1:3)], size=2) +#
+	theme_classic()
+dim(expr)
+pca
+summary(pca)
+pca = prcomp(expr[expr.var>quantile(expr.var,0.75),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+summary(pca)
+pca = prcomp(expr[expr.var>quantile(expr.var,0.90),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+summary(pca)
+ggplot(pca$rotation, aes(x=PC1, y=PC3)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+pca = prcomp(expr[expr.var>quantile(expr.var,0.95),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+summary(pca)
+ggplot(pca$rotation, aes(x=PC1, y=PC3)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+sum(expr.var>quantile(expr.var,0.95))
+expr.var = apply(expr, 1, var)#
+#
+species = case_when(grepl('encode', colnames(expr)) ~ 16,#
+					grepl('pahari', colnames(expr)) ~ 17)#
+tissue = rep(c('#648FFF','#785EF0','#DC267F','#FE6100','#FFB000'), c(rep(3,4),4))#
+#
+pca = prcomp(expr[expr.var>quantile(expr.var,0.95),])#
+#
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+ggplot(pca$rotation, aes(x=PC1, y=PC3)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+ggplot(pca$rotation, aes(x=PC2, y=PC3)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+ggplot(pca$rotation, aes(x=PC1, y=PC2)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+library(svglite)
+ggsave('~/Downloads/pc1pc2.svg')
+ggplot(pca$rotation, aes(x=PC2, y=PC3)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+ggsave('~/Downloads/pc2pc3.svg')
+ggplot(pca$rotation, aes(x=PC1, y=PC3)) +#
+	geom_point(colour=tissue, shape=species, size=2) +#
+	theme_classic()
+ggsave('~/Downloads/pc1pc3.svg')
+summary(pca)
+library(tidyverse)#
+library(DESeq2)#
+library(topGO)#
+library(org.Mm.eg.db)#
+##gene raw counts from Seqmonk#
+#
+mm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	dplyr::select(!c(bTSCs_musculus, GFPTSCs_musculus))#
+#
+mp = read_tsv('../pahari_raw_counts.txt.gz') %>%#
+	dplyr::select(Probe, Placenta_pahari_2, Placenta_pahari_3)#
+colnames(mp)[1] = 'pahari_id'#
+##orthology info from biomart#
+#
+ortho = read_tsv('mm.mp.orthologues.txt.gz')#
+ortho1 = filter(ortho, `Shrew mouse homology type`=='ortholog_one2one') %>%#
+	dplyr::select(`Gene stable ID`, `Shrew mouse gene stable ID`) %>%#
+	distinct()#
+colnames(ortho1) = c('ID', 'pahari_id')#
+##merge datasets#
+##remove sex chromosome data#
+#
+mm.ortho = inner_join(mm, ortho1, by='ID') %>%#
+	relocate(pahari_id, .after=ID)#
+#
+mm.mp = inner_join(mm.ortho, mp, by='pahari_id') %>%#
+	filter(Chromosome!='X', Chromosome!='Y')#
+##extract count data for DESeq2#
+#
+counts = data.frame(dplyr::select(mm.mp, Placenta_musculus_1:Placenta_pahari_3))#
+rownames(counts) = mm.mp$Feature#
+#
+coldata = DataFrame(sample=factor(sub('_[[:digit:]]','',colnames(counts))))#
+##get DE genes#
+#
+dds = DESeqDataSetFromMatrix(counts, coldata, design=~sample)#
+dds = DESeq(dds)#
+#
+res = results(dds, contrast=c('sample','Placenta_musculus','Placenta_pahari'))#
+de = subset(res, padj<0.05 & abs(log2FoldChange)>1) %>%#
+	as_tibble(rownames='gene') %>%#
+	mutate(species = case_when(log2FoldChange>0 ~ 'musculus', log2FoldChange<0 ~ 'pahari')) %>%#
+	arrange(-log2FoldChange)
+res
+res[rownames(res)=='Cd31',]
+res[rownames(res)=='Pecam1',]
+res[rownames(res)=='Ror2',]
+res[rownames(res)=='Lgr5',]
+res[rownames(res)=='Met',]
+res[rownames(res)=='Gcm1',]
+res[rownames(res)=='Synb',]
+res[rownames(res)=='Gcgr',]
+res[rownames(res)=='Vegfa',]
+res[rownames(res)=='Tfrc',]
+res[rownames(res)=='Tfra',]
+res[rownames(res)=='Tgfa',]
+res[rownames(res)=='Ctsq',]
+res[rownames(res)=='Podxl',]
+res[rownames(res)=='Stra6',]
+res[rownames(res)=='Prune2',]
+res[rownames(res)=='Ncam1',]
+res[rownames(res)=='Flt1',]
+res[rownames(res)=='Mitf',]
+res[rownames(res)=='Prl8a9',]
+res[rownames(res)=='Ptprm',]
+res[rownames(res)=='Igf1r',]
+res[rownames(res)=='Tcf7l1',]
+res[rownames(res)=='Diaph3',]
+res[rownames(res)=='Gcm1',]
+res[rownames(res)=='Vegfa',]
+markers = c('Ror2','Lgr5','Met','Gcm1','Synb','Gcgr','Vegfa','Egfr','Tcf7l1','Epha4',#
+	'Tgfa','Tfcr','Glis1','Stra6','Nos1ap','Podxl','Lepr','Ctsq','Cdh4','Pvt1',#
+	'Prune2','Ncam1','Igfbp7','Pla2g4d','Plac8','Mitf','Flt1','Prl8a9','Slco2a1')#
+#
+res[rownames(res) %in% markers,]
+as.data.frame(res[rownames(res) %in% markers,])
+vst.expr = vst(dds)
+head(vst.expr)
+vst.expr = expr(vst(dds))
+head(vst.expr)
+?expr
+?vst
+vsd = vst(dds)
+vsd = varianceStabilizingTransformation(dds)
+vst.expr = assay(vsd)
+head(vst.expr)
+vst.expr[rownames(vst.expr) %in% markers,])
+vst.expr[rownames(vst.expr) %in% markers,]
+marsh = vst.expr[rownames(vst.expr) %in% markers,]
+heatmap(marsh)
+?heatmap
+heatmap(marsh, scale='row')
+heatmap(marsh, scale='none')
+heatmap(marsh, scale='column')
+heatmap(marsh, scale='row')
+heatmap(marsh, scale='none')
+heatmap(marsh, scale='row')
+rs
+res
+marsh = res[rownames(res) %in% markers,]
+marsh
+marsh = as.data.frame(res[rownames(res) %in% markers,])
+marsh
+marsh = as.tibble(res[rownames(res) %in% markers,])
+marsh = as_tibble(res[rownames(res) %in% markers,])
+marsh
+?as_tibble
+marsh = as_tibble(res[rownames(res) %in% markers,], rownames='gene')
+marsh
+ggplot(marsh, aes(x=gene, y=log2FoldChange)) +#
+	geom_bar(stat='identity')
+ggplot(marsh, aes(y=gene, x=log2FoldChange)) +#
+	geom_bar(stat='identity')
+ggplot(marsh, aes(y=factor(gene, levels=gene), x=log2FoldChange)) +#
+	geom_bar(stat='identity')
+ggplot(marsh, aes(y=factor(gene, levels=markers), x=log2FoldChange)) +#
+	geom_bar(stat='identity')
+ggplot(marsh, aes(y=factor(gene, levels=markers), x=log2FoldChange)) +#
+	geom_bar(stat='identity') +#
+	theme_classic()
+ggplot(marsh, aes(y=factor(gene, levels=markers), x=log2FoldChange)) +#
+	geom_bar(stat='identity', colour='black', fill='grey') +#
+	geom_vline(xintercept=0) +#
+	theme_classic()
+ggplot(marsh, aes(y=factor(gene, levels=markers), x=log2FoldChange)) +#
+	geom_bar(stat='identity', colour='black', fill='grey') +#
+	geom_vline(xintercept=0) +#
+	ylab('') +#
+	theme_classic()
+data.frame(marsh)
+vsd = varianceStabilizingTransformation(dds)
+vsd.expr = assay(vsd)
+head(vsd.expr)
+markers = c('Ror2','Met','Gcgr','Vegfa','Pla2g4d','Mitf','Flt1','Prl8a9','Slco2a1')
+heatmap(vsd.expr[rownames(vsd.expr) %in% markers,])
+markers = c('Ror2','Met','Gcgr','Vegfa','Cdh4','Pla2g4d','Mitf','Flt1','Prl8a9','Slco2a1')
+heatmap(vsd.expr[rownames(vsd.expr) %in% markers,])
+1.27*6
+?as_tibble
+vsd.expr = as_tibble(assay(vsd), rownames='gene')
+vsd.expr
+as_tibble(assay(vsd), rownames='gene') %>%#
+	pivot_longer(cols=!gene, names_to='sample', values_to='expr')
+as_tibble(assay(vsd), rownames='gene') %>%#
+	pivot_longer(cols=!gene, names_to='sample', values_to='expr') %>%#
+	mutate(species = sapply(strsplit(sample,split='_')), function(x) x[2])
+as_tibble(assay(vsd), rownames='gene') %>%#
+	pivot_longer(cols=!gene, names_to='sample', values_to='expr') %>%#
+	mutate(species = sapply(strsplit(sample,split='_'), function(x) x[2]))
+ggplot(vsd.expr, aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean)
+ggplot(vsd.expr, aes(x=species, y=expr)) +#
+	geom_point()
+vsd.expr = as_tibble(assay(vsd), rownames='gene') %>%#
+	pivot_longer(cols=!gene, names_to='sample', values_to='expr') %>%#
+	mutate(species = sapply(strsplit(sample,split='_'), function(x) x[2]))#
+#
+ggplot(vsd.expr, aes(x=species, y=expr)) +#
+	geom_point()
+filter(vsd.expr, gene=='Ror2') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_point()
+filter(vsd.expr, gene=='Ror2') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean)
+filter(vsd.expr, gene=='Ror2') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point()
+filter(vsd.expr, gene=='Met') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point()
+filter(vsd.expr, gene=='Gcgr') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point()
+min(vsd.expr$expr)
+?counts
+?fpm
+fpm = fpm(dds)
+head(fpm)
+fpm = fpm(dds, robust=FALSE)
+head(fpm)
+cpm = as_tibble(fpm(dds), rownames='gene') %>%#
+	pivot_longer(cols=!gene, names_to='sample', values_to='expr') %>%#
+	mutate(species = sapply(strsplit(sample,split='_'), function(x) x[2]))
+cpm
+filter(vsd.expr, gene=='Gcgr') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point()
+filter(cpm, gene=='Gcgr') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point()
+filter(cpm, gene=='Ror2') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point()
+filter(cpm, gene=='Ror2') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point(position=position_jitter(0.1)) +#
+	theme_classic()
+filter(cpm, gene=='Vegfa') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point(position=position_jitter(0.1)) +#
+	theme_classic()
+filter(cpm, gene=='Vegfa') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene=='Vegfa') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean) +#
+	geom_point(colour='black', fill='lightblue') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene=='Vegfa') %>%#
+ggplot(aes(x=species, y=expr)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', fill='lightblue') +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+markers = c('Ror2','Lgr5','Met','Gcm1','Gcgr','Vegfa','Egfr','Tcf7l1','Epha4',#
+	'Tgfa','Glis1','Stra6','Nos1ap','Podxl','Lepr','Cdh4','Prune2',#
+	'Ncam1','Igfbp7','Pla2g4d','Plac8','Mitf','Flt1','Prl8a9','Slco2a1')#
+#
+marsh = as_tibble(res[rownames(res) %in% markers,], rownames='gene')#
+#
+ggplot(marsh, aes(y=factor(gene, levels=markers), x=log2FoldChange)) +#
+	geom_bar(stat='identity', colour='black', fill='grey') +#
+	geom_vline(xintercept=0) +#
+	ylab('') +#
+	theme_classic()
+plot_marker = function(gene) {#
+	filter(cpm, gene==gene) %>%#
+	ggplot(aes(x=species, y=expr)) +#
+		geom_bar(stat='summary', fun=mean, colour='black', fill='lightblue') +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('CPM')#
+}
+plot_marker('Ror2')
+plot_marker = function(marker) {#
+	filter(cpm, gene==marker) %>%#
+	ggplot(aes(x=species, y=expr)) +#
+		geom_bar(stat='summary', fun=mean, colour='black', fill='lightblue') +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('CPM')#
+}#
+plot_marker('Ror2')
+plot_marker('Met')
+plot_marker('Gcgr')
+plot_marker('Vegfa')
+plot_marker('Cdh4')
+plot_marker('Pla2g4d')
+plot_marker('Mitf')
+plot_marker('Flt1')
+plot_marker('Prl8a9')
+plot_marker('Slco2a1')
+500/3
+300/3
+400/3
+filter(cpm, gene %in% c('Mitf','Flt1','Prl8a9','Slco2a1')) %>%#
+ggplot(aes(x=species, y=expr, fill=gene)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene %in% c('Mitf','Flt1','Prl8a9','Slco2a1')) %>%#
+ggplot(aes(x=species, y=log2(expr), fill=gene)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+	geom_point() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene %in% c('Mitf','Flt1','Prl8a9','Slco2a1')) %>%#
+ggplot(aes(x=species, y=log2(expr), fill=gene)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.8)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene %in% c('Mitf','Flt1','Prl8a9','Slco2a1')) %>%#
+ggplot(aes(x=species, y=log2(expr), fill=gene)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene %in% c('Mitf','Flt1','Prl8a9','Slco2a1')) %>%#
+ggplot(aes(x=gene, y=log2(expr), fill=species)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene %in% c('Mitf','Flt1','Prl8a9','Slco2a1')) %>%#
+ggplot(aes(x=gene, y=expr, fill=species)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('CPM')
+filter(cpm, gene %in% c('Mitf','Flt1','Prl8a9','Slco2a1')) %>%#
+ggplot(aes(x=gene, y=log2(expr), fill=species)) +#
+	geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+	geom_point(position=position_dodge(0.9)) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 CPM')
+res
+ggplot(res, aes(x=log2FoldChange, y=-log10(padj))) +#
+	geom_point()
+ggplot(res, aes(x=log2FoldChange, y=-log10(padj))) +#
+	geom_point() +#
+	geom_point(data=filter(res, rownames(res) %in% c('Mitf','Flt1','Prl8a9','Slco2a1')),#
+		aes(x=log2FoldChange, y=-log10(padj)), colour='blue')
+ggplot(res, aes(x=log2FoldChange, y=-log10(padj))) +#
+	geom_point() +#
+	geom_point(data=res[rownames(res) %in% c('Mitf','Flt1','Prl8a9','Slco2a1'),],#
+		aes(x=log2FoldChange, y=-log10(padj)), colour='blue')
+ggplot(res, aes(x=log2FoldChange, y=-log10(padj))) +#
+	geom_point(colour='grey') +#
+	geom_point(data=res[rownames(res) %in% c('Mitf','Flt1','Prl8a9','Slco2a1'),],#
+		aes(x=log2FoldChange, y=-log10(padj)), colour='blue')
+plot_markers = function(markers) {#
+	filter(cpm, gene %in% markers) %>%#
+	ggplot(aes(x=gene, y=log2(expr), fill=species)) +#
+		geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+		geom_point(position=position_dodge(0.9)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('log2 CPM')#
+}#
+#
+plot_markers(c('Mitf','Flt1','Prl8a9','Slco2a1','Pla2g4d','Cdh4'))
+plot_markers(c('Prl8a9','Slco2a1','Pla2g4d','Cdh4'))
+plot_markers(c('Vegfa','Gcgr','Met','Ror2'))
+plot_markers = function(markers) {#
+	filter(cpm, gene %in% markers) %>%#
+	ggplot(aes(x=factor(gene, levels=markers), y=log2(expr), fill=species)) +#
+		geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+		geom_point(position=position_dodge(0.9)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('log2 CPM')#
+}#
+#
+plot_markers(c('Prl8a9','Slco2a1','Pla2g4d','Cdh4'))
+plot_markers(c('Cdh4','Prl8a9','Slco2a1','Pla2g4d'))
+plot_markers(c('Cdh4','Pla2g4d','Prl8a9','Slco2a1'))
+plot_markers(c('Met','Ror2','Vegfa','Gcgr'))
+plot_markers(c('Ror2','Met','Vegfa','Gcgr'))
+plot_markers = function(markers) {#
+	filter(cpm, gene %in% markers) %>%#
+	ggplot(aes(y=factor(gene, levels=markers), x=log2(expr), fill=species)) +#
+		geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+		geom_point(position=position_dodge(0.9)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('log2 CPM')#
+}#
+#
+plot_markers(c('Cdh4','Pla2g4d','Prl8a9','Slco2a1'))
+plot_markers(c('Slco2a1','Prl8a9','Pla2g4d','Cdh4'))
+plot_markers(c('Gcgr','Ror2','Vegfa','Met'))
+plot_markers(c('Gcgr','Ror2','Vegfa','Met'))
+plot_markers = function(markers) {#
+	filter(cpm, gene %in% markers) %>%#
+	ggplot(aes(y=factor(gene, levels=markers), x=log2(expr), fill=species)) +#
+		geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+		geom_point(position=position_dodge(0.9)) +#
+		theme_classic() +#
+		ylab('') +#
+		xlab('log2 CPM')#
+}
+plot_markers(c('Gcgr','Ror2','Vegfa','Met'))
+plot_markers = function(markers) {#
+	filter(cpm, gene %in% markers) %>%#
+	ggplot(aes(y=factor(gene, levels=markers), x=log2(expr), fill=species)) +#
+		geom_bar(stat='summary', fun=mean, colour='black', position=position_dodge()) +#
+		geom_point(position=position_dodge(0.9), size=0.5) +#
+		theme_classic() +#
+		ylab('') +#
+		xlab('log2 CPM')#
+}#
+#
+plot_markers(c('Slco2a1','Prl8a9','Pla2g4d','Cdh4'))
+library(svglite)
+ggsave('~/Downloads/spt.svg')
+plot_markers(c('Gcgr','Ror2','Vegfa','Met'))
+ggsave('~/Downloads/synt.svg')
+plot_markers(c('Gcgr','Vegfa','Met','Ror2'))

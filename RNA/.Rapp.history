@@ -1,0 +1,705 @@
+rel.plot = function(sample1, sample2) {#
+	quartz(w=4.5,h=3)#
+	filter(as.data.frame(tss), !is.na(distance)) %>%#
+	ggplot(aes(x=nearest, y=get(sample2)-get(sample1), fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed')#
+}#
+#
+rel.plot('placenta','GFPTSC')
+tss$dgroup = cut(tss$distance, c(5e4,1e9), include.lowest=T)#
+##plot relative expression as a function of distance#
+#
+rel.plot = function(sample1, sample2) {#
+	quartz(w=4.5,h=3)#
+	filter(as.data.frame(tss), !is.na(distance)) %>%#
+	ggplot(aes(x=nearest, y=get(sample2)-get(sample1), fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed')#
+}#
+#
+rel.plot('placenta','GFPTSC')
+tss$dgroup = cut(tss$distance, c(0,5e4,1e9), include.lowest=T)#
+##plot relative expression as a function of distance#
+#
+rel.plot = function(sample1, sample2) {#
+	quartz(w=4.5,h=3)#
+	filter(as.data.frame(tss), !is.na(distance)) %>%#
+	ggplot(aes(x=nearest, y=get(sample2)-get(sample1), fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed')#
+}#
+#
+rel.plot('placenta','GFPTSC')
+tss$dgroup = cut(tss$distance, c(0,2e4,5e4,1e5,1e9), include.lowest=T)
+rel.plot('placenta','bTSC')
+subset(tss, gene=='Scarf2')
+subset(tss, gene=='Tpbpa')
+subset(tss, gene=='Braf')
+bed = read.delim('cell_specific_TEs.bed', header=F)#
+tes = GRanges(seqnames=bed$V1,#
+		ranges=IRanges(start=bed$V2, end=bed$V3),#
+		strand=bed$V6,#
+		id=bed$V4)
+tes
+near = distanceToNearest(tss, tes, ignore.strand=TRUE)#
+tss$nearest = tss$distance = rep(NA,length(tss))#
+#
+tss$nearest[near@from] = tes$id[near@to]#
+tss$distance[near@from] = elementMetadata(near)$distance#
+tss$dgroup = cut(tss$distance, c(0,1e4,5e4,1e5,1e9), include.lowest=T)
+group_by(as.data.frame(tss),nearest,dgroup) %>% summarise(n=length(start))
+rel.plot = function(sample1, sample2) {#
+	quartz(w=4.5,h=3)#
+	filter(as.data.frame(tss), !is.na(distance)) %>%#
+	ggplot(aes(x=nearest, y=get(sample2)-get(sample1), fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed')#
+}#
+#
+rel.plot('placenta','GFPTSC')
+data.frame(group_by(as.data.frame(tss),nearest,dgroup) %>% summarise(n=length(start)))
+rel.plot = function(sample1, sample2) {#
+	quartz(w=4.5,h=3)#
+	filter(as.data.frame(tss), !is.na(distance)) %>%#
+	ggplot(aes(x=nearest, y=get(sample2)-get(sample1), fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed')#
+}#
+#
+rel.plot('placenta','GFPTSC')
+rel.plot('placenta','GFPTSC')
+bed = read.delim('cell_specific_TEs.bed', header=F)#
+tes = GRanges(seqnames=bed$V1,#
+		ranges=IRanges(start=bed$V2, end=bed$V3),#
+		strand=bed$V6,#
+		id=bed$V4)#
+##get nearest TE to TSS#
+#
+near = distanceToNearest(tss, tes, ignore.strand=TRUE)#
+tss$nearest = tss$distance = rep(NA,length(tss))#
+#
+tss$nearest[near@from] = tes$id[near@to]#
+tss$distance[near@from] = elementMetadata(near)$distance#
+tss$dgroup = cut(tss$distance, c(0,1e4,5e4,1e5,1e9), include.lowest=T)
+rel.plot = function(sample1, sample2) {#
+	quartz(w=4.5,h=3)#
+	filter(as.data.frame(tss), !is.na(distance)) %>%#
+	ggplot(aes(x=nearest, y=get(sample2)-get(sample1), fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed')#
+}#
+#
+rel.plot('placenta','GFPTSC')
+tss$dgroup = cut(tss$distance, c(0,2e4,5e4,1e5,1e9), include.lowest=T)#
+##plot relative expression as a function of distance#
+#
+rel.plot = function(sample1, sample2) {#
+	quartz(w=4.5,h=3)#
+	filter(as.data.frame(tss), !is.na(distance)) %>%#
+	ggplot(aes(x=nearest, y=get(sample2)-get(sample1), fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed')#
+}#
+#
+rel.plot('placenta','GFPTSC')
+rel.plot('placenta','bTSC')
+rpm = read_tsv('gene_rpm_counts.txt.gz')#
+#
+tsc = log2(rpm$GFPTSCs_musculus.bam + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)
+tss = promoters(rna)
+bed = read.delim('cell_specific_TEs.bed', header=F)#
+tes = GRanges(seqnames=bed$V1,#
+		ranges=IRanges(start=bed$V2, end=bed$V3),#
+		strand=bed$V6,#
+		id=bed$V4)
+= distanceToNearest(tss, tes, ignore.strand=TRUE)#
+tss$nearest = tss$distance = rep(NA,length(tss))#
+#
+tss$nearest[near@from] = tes$id[near@to]#
+tss$distance[near@from] = elementMetadata(near)$distance#
+tss$dgroup = cut(tss$distance, c(0,2e4,5e4,1e5,1e9), include.lowest=T)
+near = distanceToNearest(tss, tes, ignore.strand=TRUE)#
+tss$nearest = tss$distance = rep(NA,length(tss))#
+#
+tss$nearest[near@from] = tes$id[near@to]#
+tss$distance[near@from] = elementMetadata(near)$distance#
+tss$dgroup = cut(tss$distance, c(0,2e4,5e4,1e5,1e9), include.lowest=T)
+tss
+quartz(w=4.5,h=3)#
+filter(as.data.frame(tss), !is.na(distance)) %>%#
+ggplot(aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+filter(as.data.frame(tss), !is.na(distance)) %>%#
+ggplot(aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+tss$dgroup = cut(tss$distance, c(0,5e4,1e9), include.lowest=T)#
+##plot relative expression as a function of distance#
+#
+quartz(w=4.5,h=3)#
+filter(as.data.frame(tss), !is.na(distance)) %>%#
+ggplot(aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+tss$dgroup = cut(tss$distance, c(0,2e4,5e4,1e5,1e9), include.lowest=T)
+head(plac)
+sum(is.na(plac))
+sum(plac==Inf)
+sum(plac==-Inf)
+sum(is.na(tsc))
+sum(tsc==Inf)
+sum(tsc==-Inf)
+t=filter(as.data.frame(tss), !is.na(distance)) %>% mutate(fc=plac-tsc)
+head(t)
+sum(is.na(t$fc))
+sum(t$fc==Inf)
+sum(t$fc==-Inf)
+min(t$fc)
+max(t$fc)
+nrow(t)
+max(t$distance)
+quartz(w=4.5,h=3)#
+filter(as.data.frame(tss), !is.na(distance)) %>%#
+ggplot(aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+#	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+quartz(w=4.5,h=3)#
+filter(as.data.frame(tss), !is.na(distance)) %>%#
+ggplot(aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+quartz(w=5,h=3)#
+filter(as.data.frame(tss), !is.na(distance)) %>%#
+ggplot(aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+library(svglite)
+ggsave('relexpr.svg')
+df = filter(as.data.frame(tss), !is.na(distance))
+head(df)
+hist(df$tsc)
+hist(df$plac)
+df = filter(as.data.frame(tss), !is.na(distance), tsc>0 | plac>0)
+quartz(w=5,h=3)#
+ggplot(df, aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+df = filter(as.data.frame(tss), !is.na(distance), tsc>-1 | plac>-1)#
+#
+quartz(w=5,h=3)#
+ggplot(df, aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+hist(t$plac)
+hist(t$tsc)
+quartz(w=5,h=3)#
+ggplot(df, aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+group_by(df, dgroup, nearest) %>% summarise(n=length(start))
+group_by(df, nearest, dgroup) %>% summarise(n=length(start))
+tss$dgroup = cut(tss$distance, c(0,1e4,5e4,1e5,1e9), include.lowest=T)#
+##plot relative expression as a function of distance#
+#
+df = filter(as.data.frame(tss), !is.na(distance), tsc>-1 | plac>-1)#
+#
+quartz(w=5,h=3)#
+ggplot(df, aes(x=nearest, y=plac-tsc, fill=dgroup)) +#
+	geom_boxplot(outlier.colour=NA) +#
+	theme_classic() +#
+	ylim(-5,5) +#
+	scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+	geom_hline(yintercept=0, linetype='dashed') +#
+	xlab('') +#
+	ylab('Relative expression')
+group_by(df, nearest, dgroup) %>% summarise(n=length(start))
+ggsave('temp.svg')
+model = aov(rel ~ nearest * dgroup, data=df)
+head(df)
+model = aov(plac-tsc ~ nearest * dgroup, data=df)
+summary(model)
+TukeyHSD(model)
+all.p = TukeyHSD(model)[[3]]
+all.p
+split.comp = strsplit(rownames(all.p), split='[-:]')
+split.comp
+same.cell = unlist(lapply(split.comp, function(x) x[1]==x[3]))
+same.cell
+all.p[same.cell]
+all.p
+all.p[same.cell,]
+summary(model)
+TukeyHSD(model)
+model = aov(plac-tsc ~ dgroup, data=df[df$nearest=='RLTR13D5'])
+model = aov(plac-tsc ~ dgroup, data=df[df$nearest=='RLTR13D5',])
+summary(model)
+model = aov(plac-tsc ~ dgroup, data=df[df$nearest=='RMER10A',])
+summary(model)
+cor.test(plac-tsc ~ distance, data=df[df$nearest=='RLTR13D5',])
+?cor.test
+cor.test(plac ~ distance, data=df[df$nearest=='RLTR13D5',])
+?cor.test
+cor.test(formula=plac-tsc ~ distance, data=df[df$nearest=='RLTR13D5',])
+head(df)
+lm(plac-tsc ~ distance, data=df[df$nearest=='RLTR13D5',])
+summary(lm(plac-tsc ~ distance, data=df[df$nearest=='RLTR13D5',]))
+summary(lm(plac-tsc ~ distance, data=df[df$nearest=='RMER10A',]))
+summary(aov(plac-tsc ~ dgroup, data=df[df$nearest=='RLTR13D5',]))
+summary(aov(plac-tsc ~ dgroup, data=df[df$nearest=='RMER10A',]))
+library(tidyverse)
+iap = read_tsv('IAP_intergenic_RPM.txt')
+iap$placenta = rowMeans(select(iap, starts_with('Placenta')))
+colnames(iap)
+ggplot(iap, aes(x=bTSC_musculus.bam, y=placenta)) +#
+	geom_point()
+ggplot(iap, aes(x=bTSCs_musculus.bam, y=placenta)) +#
+	geom_point()
+ggplot(iap, aes(x=GFPTSCs_musculus.bam, y=placenta)) +#
+	geom_point()
+iap.mat = as.matrix(select(iap, ends_with('bam')))
+head(iap.mat)
+iap
+rownames(iap.mat) = iap$Feature
+head(iap.mat)
+library(gplot)
+library(gplots)
+heatmap.2(iap.mat, trace='none')
+de.iap = filter(iap, placenta-GFPTSCs_musculus.bam>1 | placenta-bTSCs_musculus.bam>1)
+de.iap
+de.iap = filter(iap, abs(placenta-GFPTSCs_musculus.bam)>1 | abs(placenta-bTSCs_musculus.bam>1))
+de.iap
+iap.mat = as.matrix(select(de.iap, ends_with('bam')))
+rownames(iap.mat) = de.iap$Feature
+heatmap.2(iap.mat, trace='none')
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+de.iap
+table(de.iap$Feature)
+hist(iap$placenta)
+expr.iap = filter(iap, placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3)
+expr.iap
+iap.mat = as.matrix(select(expr.iap, ends_with('bam')))#
+rownames(iap.mat) = expr.iap$Feature#
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100))#
+table(de.iap$Feature)
+table(iap$Feature)
+expr = table(de.iap$Feature)
+all = table(iap$Feature)
+expr/all
+?table
+merge(all,expr)
+names(all)
+table(expr.iap$Feature)
+table(expr.iap$Description)
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+up = filter(expr.iap, placenta-GFPTSCs_musculus.bam>1, placenta-bTSCs_musculus.bam>1)
+up
+down = filter(expr.iap, placenta-GFPTSCs_musculus.bam<(-1), placenta-bTSCs_musculus.bam<(-1))
+down
+table(up$Feature)
+table(down$Feature)
+table(expr.iap$Feature)
+as.data.frame(all)
+all.subf = table(iap$Feature)#
+expr.subf = table(expr.iap$Feature)#
+up.subf = table(up.iap$Feature)#
+down.subf = table(down.iap$Feature)
+iap = read_tsv('IAP_intergenic_RPM.txt')#
+iap$placenta = rowMeans(select(iap, starts_with('Placenta')))#
+##select loci with minimum expression and DE#
+#
+expr.iap = filter(iap, placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3)#
+#
+up.iap = filter(expr.iap, placenta-GFPTSCs_musculus.bam>1, placenta-bTSCs_musculus.bam>1)#
+down.iap = filter(expr.iap, GFPTSCs_musculus.bam-placenta>1, bTSCs_musculus.bam-placenta>1)#
+##count subfamilies and conformation#
+#
+all.subf = table(iap$Feature)#
+expr.subf = table(expr.iap$Feature)#
+up.subf = table(up.iap$Feature)#
+down.subf = table(down.iap$Feature)
+?inner_join
+data.frame(all.subf)
+df.subf = data.frame(all.subf) %>%#
+	full_join(data.frame(expr.subf), by=Var1)
+df.subf = data.frame(all.subf) %>%#
+	full_join(data.frame(expr.subf), by='Var1')
+df.subf
+df.subf = data.frame(all.subf) %>%#
+	full_join(data.frame(expr.subf), by='Var1') %>%#
+	full_join(data.frame(up.subf), by='Var1') %>%#
+	full_join(data.frame(down.subf), by='Var1')
+df.subf
+?full_join
+iap
+group_by(iap, Feature) %>% summarise(count=length(Feature))
+subf.count = rbind(summarise(group_by(iap, Feature), count=length(Feature)),#
+				summarise(group_by(expr.iap, Feature), count=length(Feature)),#
+				summarise(group_by(up.iap, Feature), count=length(Feature)),#
+				summarise(group_by(down.iap, Feature), count=length(Feature)))
+subf.count
+iap
+iap = mutate(iap, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3,#
+			up = placenta-GFPTSCs_musculus.bam>1 & placenta-bTSCs_musculus.bam>1,#
+			down = GFPTSCs_musculus.bam-placenta>1 & bTSCs_musculus.bam-placenta>1)
+iap
+group_by(iap, Feature) %>% summarise(count=length(Feature))
+group_by(iap, Feature, expr) %>% summarise(count=length(Feature))
+roup_by(iap, Feature) %>%#
+	summarise(expr=sum(expr)/length(Feature))
+group_by(iap, Feature) %>%#
+	summarise(expr=sum(expr)/length(Feature))
+subf.count = group_by(iap, Feature) %>%#
+	summarise(expr=sum(expr)/length(Feature))
+data.frame(subf.count)
+subf.count = group_by(iap, Feature) %>%#
+	summarise(expr=sum(expr)/length(Feature)*100,#
+			up=sum(up)/length(Feature)*100,#
+			down=sum(down)/length(Feature)*100)
+data.frame(subf.count)
+conf.count = group_by(iap, Description) %>%#
+	summarise(expr=sum(expr)/length(Description)*100,#
+			up=sum(up)/length(Description)*100,#
+			down=sum(down)/length(Description)*100)
+data.frame(conf.count)
+conf.count = group_by(iap, Description) %>%#
+	summarise(expr=sum(expr), up=sum(up), down=sum(down))
+conf.count
+subf.count = group_by(iap, Feature) %>%#
+	summarise(expr=sum(expr)/length(Feature)*100,#
+			up=sum(expr&up)/length(Feature)*100,#
+			down=sum(expr&down)/length(Feature)*100)
+data.frame(subf.count)
+conf.count = group_by(iap, Description) %>%#
+	summarise(expr=sum(expr), up=sum(expr&up), down=sum(expr&down))
+conf.count
+subf.count = group_by(iap, Feature) %>%#
+	summarise(exp=sum(expr)/length(Feature)*100,#
+			up=sum(expr&up)/length(Feature)*100,#
+			down=sum(expr&down)/length(Feature)*100)
+data.frame(subf.count)
+group_by(iap, Description) %>%#
+	summarise(exp=sum(expr), up=sum(expr&up), down=sum(expr&down))
+conf.count = group_by(iap, Description) %>%#
+	summarise(exp=sum(expr), up=sum(expr&up), down=sum(expr&down))
+colSums(conf.count)
+colSums(conf.count[,-1])
+484/590
+149/206
+iap.mat = as.matrix(filter(iap, expr) %>% select(ends_with('bam')))#
+rownames(iap.mat) = expr.iap$Feature#
+#
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+subf.counts
+subf.count
+pivot_longer(subf.count, cols=!Feature, names_to='type', values_to='counts')
+pivot_longer(subf.count, cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=type)) +#
+	geom_bar(stat='identity', position=position_dodge())
+pivot_longer(subf.count, cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=type)) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements')
+##plot subfamily counts#
+#
+pivot_longer(subf.count, cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements')
+pivot_longer(subf.count, cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	#scale_fill_manual(values=c())
+?labels
+filter(subf.count, grepl('LTR',Feature)) %>%#
+pivot_longer(subf.count, cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(title='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	#scale_fill_manual(values=c())
+filter(subf.count, grepl('LTR',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(title='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	#scale_fill_manual(values=c())
+filter(subf.count, grepl('LTR',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	#scale_fill_manual(values=c())
+counf.count
+subf.count
+subf.count$Feature
+filter(subf.count, !grepl('int',Feature) | !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	#scale_fill_manual(values=c())
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge()) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	#scale_fill_manual(values=c())
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	#scale_fill_manual(values=c())
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90))#
+	scale_fill_manual(values=c('black','navy','lightblue'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('black','navy','lightblue'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','navy','lightblue'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('orange','navy','lightblue'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','lightblue'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','blue'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','lightblue'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, size=factor(type, levels=c('exp','up','down')))) +#
+	geom_point()
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=factor(type, levels=c('exp','up','down')), size=counts)) +#
+	geom_point()
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=factor(type, levels=c('down','up','exp')), size=counts)) +#
+	geom_point() +#
+	theme_classic()
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('% of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','lightblue'))
+library(svglite)
+ggsave('~/Downloads/subf.svg')
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+iap
+filter(iap, expr,up) %>% arrange(placenta)
+?arrange
+filter(iap, expr,up) %>% arrange(desc(placenta))
+head(as.data.frame(filter(iap, expr,up) %>% arrange(desc(placenta))))
+head(as.data.frame(filter(iap, expr,up,Probe=='IAPEY4_LTR') %>% arrange(desc(placenta))))
+rltr4 = read_tsv('RLTR4_intergenic_RPM.txt')#
+rltr4$placenta = rowMeans(select(rltr4, starts_with('Placenta')))
+rltr4
+rltr4 = mutate(rltr4, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3,#
+			up = placenta-GFPTSCs_musculus.bam>1 & placenta-bTSCs_musculus.bam>1,#
+			down = GFPTSCs_musculus.bam-placenta>1 & bTSCs_musculus.bam-placenta>1)
+rltr4.mat = as.matrix(filter(rltr4, expr) %>% select(ends_with('bam')))
+rltr4.mat = as.matrix(filter(rltr4, expr) %>% select(ends_with('bam')))#
+#
+heatmap.2(rltr4.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+head(as.data.frame(filter(rltr4, expr) %>% arrange(desc(placenta))))
+rltr4 = read_tsv('RLTR4_intergenic_RPM.txt')#
+rltr4$placenta = rowMeans(select(rltr4, starts_with('Placenta')))#
+#
+rltr4 = mutate(rltr4, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3)#
+rltr4.mat = as.matrix(filter(rltr4, expr) %>% select(ends_with('bam')))#
+#
+heatmap.2(rltr4.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+head(as.data.frame(filter(rltr4, expr) %>% arrange(desc(placenta))))
+library(tidyverse)
+rpm = read_tsv('gene_rpm_counts.txt.gz')
+rpm
+filter(rpm,Feature=='Suv39h2')
+as.data.frame(filter(rpm,Feature=='Suv39h2')
+)
+as.data.frame(filter(rpm,Feature=='Rab3gap2'))
+as.data.frame(filter(rpm,Feature=='Cdk5rap1'))
+as.data.frame(filter(rpm,Feature=='Gm13391'))
+as.data.frame(filter(rpm,Feature=='Gm36888'))
+as.data.frame(filter(rpm,Feature=='Noct'))
+as.data.frame(filter(rpm,Feature=='Stx18'))
+as.data.frame(filter(rpm,Feature=='Hikeshi'))
+as.data.frame(filter(rpm,Feature=='Bckdhb'))
+as.data.frame(filter(rpm,Feature=='Qrsl1'))
+as.data.frame(filter(rpm,Feature=='Acly'))
+as.data.frame(filter(rpm,Feature=='Atg2b'))
+as.data.frame(filter(rpm,Feature=='Zfp229'))

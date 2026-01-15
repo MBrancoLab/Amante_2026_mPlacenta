@@ -1,0 +1,386 @@
+install.packages('tidyverse')
+install.packages("BiocManager")
+BiocManager::install("DESeq2")
+barplot(c(1,8))
+barplot(c(1,8),las=1)
+svg('temp.svg',w=2.5,h=4)
+barplot(c(1,8),las=1)
+dev.off()
+library(ggplot2)
+library(svglite)
+install.packages(svglite)
+install.packages('svglite')
+library(svglite)
+data=tibble(x=c('pre-NGF','post-NGF'),y=c(1,8))
+library(tidyverse)
+data=tibble(x=c('pre-NGF','post-NGF'),y=c(1,8))
+data
+ggplot(data,aes(x,y)) +geom_bar(stat='identity')
+ggplot(data,aes(x,y)) +geom_bar(stat='identity') +theme_classic()
+ggsave('Downloads/temp.svg')
+library(DWLS)
+97/110
+47/50
+62/70
+21.5/9.6
+4.83/4
+68.96/4
+4.83/8
+68.96/8
+8.97/8
+77.52/8
+5*.2/5
+.5*0.01/5
+0.05/5
+x='23/06/2023, 13:50 | LIDo DTP#
+https://www.lido-dtp.ac.uk/dtp-portal/view/436#
+1/6#
+      dettimbuS#
+tsalbohport namuh#
+ni sANR gnidoc-non gnol sa surivorter#
+suonegodne fo selor eht gnitagitsevnI#
+stcejorp ym weiV#
+stcejorp lla weiV#
+634 weiv latroP PTD emoH#
+ )CRM( licnuoC hcraeseR lacideM :ydoB gnidnuF#
+1 gnidnuF#
+tcartnoc tnenamreP noitalugeR emoneG ni redaeR :ofni tnemtnioppA#
+:enohP#
+moc.yrotarobalocnarb//:sptth :etisbeW#
+ku.ca.lumq@ocnarb.m :liamE#
+ofni lanoitiddA#
+nodnoL fo ytisrevinU yraM neeuQ#
+eutitsnI drazilB#
+yramirp#
+ocnarB leugiM#
+avirP#
+yc#
+23/06/2023, 13:50 | LIDo DTP#
+ .scipot fo#
+yteirav ediw a no gnikrow elpoep fo puorg esrevid ylhcir a htiw snoitaroballoc dna#
+snoissucsid rof murof elbaulavni na sedivorp hcihw ,)moc.scitenegipelumq//:ptth(#
+LUMQ ta sbal scitenegipe fo gnipuorg rediw a fo trap era eW .detomorp#
+dna dessucsid ylnepo si IDE .pihsrebmem sti ni ytisrevid dna ytivisulcni fo#
+yrotsih raey-9 a htiw ,tnemnorivne gnimoclew a sah bal ocnarB ehT :erutluc puorG#
+seY :ytilauqe gniniarT#
+seY :gniniart noisivrepus etaudargtsoP#
+:etaD noitelpmoC#
+:etaD noissimbuS#
+01-01-2202 :etaD tratS#
+adnariM-zerauJ odlA :emaN tnedutS#
+3 noisivrepuS#
+12-60-2202 :etaD noitelpmoC#
+12-60-2202 :etaD noissimbuS#
+22-90-7102 :etaD tratS#
+rolyaT nerraD :emaN tnedutS#
+2 noisivrepuS#
+30-90-8102 :etaD noitelpmoC#
+30-90-8102 :etaD noissimbuS#
+22-90-4102 :etaD tratS#
+ddoT rehpotsirhC :emaN tnedutS#
+1 noisivrepuS#
+00005 :tnuomA#
+13-80-4202 :etaD dnE#
+10-90-2202 :etaD tratS#
+”?noitamma
+x=rev('.ycnangerp namuh ni sVRE fo snoitcnuf levon revocnu ot kees ew ,seiduts#
+lanoitcnuf dna snoitcessid citsinahcem ,sVRE desserpxe-yllatnecalp fo noitasiretcarahc#
+peed hguorhT .laitnetop gnidoc rieht fo emos sa llew sa ,tsalbohport namuh ni sANR gnidoc#
+-non gnol sa sVRE fo elor eht etagitsevni ot mia ew ,ereH .nagro gnitanicsaf siht fo noitulove#
+tsaf eht delleuf dna noitcnuf latnecalp rof tnatropmi era )sVRE( sesurivorter suonegodne#
+woh ni detseretni si bal ruO .stnemele yrotaluger eneg ro seneg wen sa secneuqes#
+larivorter fo gnisopruper eht rof seitinutroppo detaerc sihT .dezinegodne emaceb taht#
+sesurivorter suoremun yb dedavni neeb sah emoneg namuh eht ,noitulove sti tuohguorhT')
+x
+x='.ycnangerp namuh ni sVRE fo snoitcnuf levon revocnu ot kees ew ,seiduts#
+lanoitcnuf dna snoitcessid citsinahcem ,sVRE desserpxe-yllatnecalp fo noitasiretcarahc#
+peed hguorhT .laitnetop gnidoc rieht fo emos sa llew sa ,tsalbohport namuh ni sANR gnidoc#
+-non gnol sa sVRE fo elor eht etagitsevni ot mia ew ,ereH .nagro gnitanicsaf siht fo noitulove#
+tsaf eht delleuf dna noitcnuf latnecalp rof tnatropmi era )sVRE( sesurivorter suonegodne#
+woh ni detseretni si bal ruO .stnemele yrotaluger eneg ro seneg wen sa secneuqes#
+larivorter fo gnisopruper eht rof seitinutroppo detaerc sihT .dezinegodne emaceb taht#
+sesurivorter suoremun yb dedavni neeb sah emoneg namuh eht ,noitulove sti tuohguorhT'
+paste(rev(strsplit(x)),collapse='')
+paste(rev(strsplit(x),split=''),collapse='')
+paste(rev(strsplit(x,split='')),collapse='')
+paste(rev(strsplit(x,split='')[[1]]),collapse='')
+x='tsalbohport namuh#
+ni sANR gnidoc-non gnol sa surivorter#
+suonegodne fo selor eht gnitagitsevnI'
+paste(rev(strsplit(x,split='')[[1]]),collapse='')
+x='pu-etirw troper#
+,noitargetni ataD – 4 htnoM setadidnac pot rof HSIF-ANR ,atad detareneg ylwen fo sisylanA#
+– 3 htnoM atad dehsilbup fo sisylana ,atad cimonegipe fo noitareneG – 2 htnoM erutluc llec#
+,gniniarT – 1 htnoM :enilemiT .tcejorp DhP eht gnirud demrofrep eb lliw taht stnemirepxe#
+lanoitcnuf dna citsinahcem eht epahs lliw stpircsnart VRE latnecalp fo weiv detargetni#
+sihT .stesatad cimoetorp dna cimonegipe ,cimotpircsnart detareneg ylwen dna gnitsixe#
+fo noitanibmoc a gnisylana ,tsalbohport namuh ni desserpxe sVRE fo noitasiretcarahc#
+peed a mrofrep lliw ew ,noitator siht nI .seditpep desiretcarahcnu tnatropmi sserpxe sVRE#
+eseht fo emos taht laitnetop eht osla si erehT .noitca yrotaluger eneg fo srotaidem lativ#
+sa detaicerpparednu niamer hcihw ,)sANRcnl( sANR gnidoc-non gnol sa noitcnuf nac sVRE#
+rehtehw tuoba nwonk si gnihton tsalbohport ni ,ylemaN .)atnecalp eht fo sllec( tsalbohport#
+ni yalp sVRE desserpxe ylhgih ynam taht selor eht fo noitaicerppa etelpmoc a gnivah#
+morf raf era ew teY .atnecalp eht ni stnemele recnahne sa selor daerpsediw evah osla sVRE#
+taht nwohs evah eW .elpmaxe rof ,sVRE desopruper morf gnigreme seneg latnecalp wen#
+htiw ,ssecorp siht ni elor tnatropmi na deyalp sah )sVRE( sesurivorter suonegodne fo noitpo#
+-oC .seiceps ssorca ytisrevid decnuonorp syalpsid taht nagro gnivlove tsaf a si atnecalp ehT#
+tcejorp noitatoR'
+paste(rev(strsplit(x,split='')[[1]]),collapse='')
+x='.c
+x='c
+x="c
+""
+''
+"
+x='.c
+paste(rev(strsplit(x,split='')[[1]]),collapse='')
+1418*7.5/2051
+1070*7.5/2051
+2008600
+200*600
+BiocManager::install("ggtree")
+library('treeio')
+library('ggtree')
+nwk = read.tree('~/Documents/iqtree-1.6.12/example.phy.treefile')
+nwk
+ggtree(nwk)
+ggtree(nwk, layout='equal_angle')
+ggtree(nwk, layout='equal_angle') + geom_tiplab()
+ggtree(nwk) + geom_tiplab()
+x=read.delim('Desktop/calJac/LTR_bed/LTR8_hg38.bed',header=F)
+head(x)
+hist(x$V3-x$V2)
+x=read.delim('Desktop/calJac/LTR_bed/LTR8B_hg38.bed',header=F)
+hist(x$V3-x$V2)
+median(x$V3-x$V2)
+x=read.delim('Desktop/calJac/LTR_orthology/LTR8B_hsShared.bed',header=F)
+hist(x$V3-x$V2)
+x=read.delim('Desktop/calJac/LTR_orthology/LTR8B_hsSpecific.bed',header=F)
+hist(x$V3-x$V2)
+x=read.delim('Desktop/calJac/LTR8B_H3K27ac_hg38.bed',header=F)
+hist(x$V3-x$V2)
+y=read.delim('Desktop/calJac/LTR_orthology/LTR8B_hsSpecific.bed',header=F)
+z=read.delim('Desktop/calJac/LTR_bed/LTR8B_hg38.bed',header=F)
+hist(z$V3-z$V2)
+boxplot(x$V3-x$V2, y$V3-y$V2,z$V3-z$V2)
+43/4.5
+library(tidyverse)#
+library(GenomicRanges)
+d to granges function#
+#
+bed_to_granges <- function(file){#
+   df = read.table(file, header=F, stringsAsFactors=F)#
+   gr = with(df, GRanges(V1, IRanges(V2, V3), id=V4))   #
+   return(gr)  #
+}#
+##get peaks#
+#
+mark = 'H3K27ac'#
+cj.peaks = bed_to_granges(paste('peaks/cjTSC_CutTag_', mark, '.relaxed.bed', sep=''))#
+hs.peaks = bed_to_granges(paste('peaks/hTSC_CutTag_', mark, '.relaxed.bed', sep=''))#
+##shared families#
+#
+shared.fam = read_tsv('shared_families.txt', col_names=F)#
+##get overlaps#
+#
+overlaps = tibble()#
+#
+for (ltr in shared.fam$X1) {#
+	cj.shared = bed_to_granges(paste('LTR_orthology/', ltr, '_cjShared.bed', sep=''))#
+	cj.spec = bed_to_granges(paste('LTR_orthology/', ltr, '_cjSpecific.bed', sep=''))#
+	hs.shared = bed_to_granges(paste('LTR_orthology/', ltr, '_hsShared.bed', sep=''))#
+	hs.spec = bed_to_granges(paste('LTR_orthology/', ltr, '_hsSpecific.bed', sep=''))#
+	cj.shOv = subsetByOverlaps(cj.shared, cj.peaks, ignore.strand=T)#
+	cj.spOv = subsetByOverlaps(cj.spec, cj.peaks, ignore.strand=T)#
+	hs.shOv = subsetByOverlaps(hs.shared, cj.peaks, ignore.strand=T)#
+	hs.spOv = subsetByOverlaps(hs.spec, cj.peaks, ignore.strand=T)#
+	common = sum(hs.shOv$id %in% cj.shOv$id)#
+	total = length(cj.shOv) + length(cj.spOv) + length(hs.shOv) + length(hs.spOv) - common#
+	sub = tibble(ltr = rep(ltr, 5),#
+				type = c('hs_specific', 'hs_active', 'shared', 'cj_active', 'cj_specific'),#
+				n = c(length(hs.spOv),#
+							length(hs.shOv)-common,#
+							common,#
+							length(cj.shOv)-common,#
+							length(cj.spOv))) %>%#
+			mutate(norm = n/total)#
+	overlaps = rbind(overlaps, sub)#
+}
+0.325/0.153
+0.034/0.153
+0.039/0.153
+0.808/0.328
+0.034/0.328
+0.049/0.328
+1344*3
+1014.7-372
+nchar('TGACAGCTGTGTTCTAAGTGGTAAACAAATAATCTGCGCATGTGCCGAGGGTGGTTCTCCACTCCATGTGCTCTGCCTTCCCCGTGACGTCAACTCGGCCGATGGGCTGCAGCCAATCAGGGAGTGACAAA')
+nchar('GAGGCAGCACCCTGTGTGGGCCGGGGACAGCCGGCCACCTTCCGGACCAGAGGACAGGTGCCCGCCCGGCTGGGGAGGCGGCCTAAGCCACAGCAGCAGCGGTCGCCATCTTGGTCCGGGACCCGCCGAACTTAGGAAATTAGTCTGAACAGGTGAA')
+nchar('AGTTTTAGTTTTATAAAAAGGGTAAAAATTTTATATTCGGCGCGTTAGTTTTTCGATAGATTGAGTCGTTCGGGTATTCGTATTTTTAATAAAGTTTTTTGTTGTTTATATTCGAATCGTGGATTCGTTGATTTTTGGGAGGGTTTTTTAA')
+nchar('aaggggtcagggagttccctttccgagtcaaa#
+gaaaggggtgacggacgcacctggaaaatcgggtcactcccacccgaatactgcgctttt#
+cngaccggcttaaaaaacggcgcaccacgagattatatcccgcacctggctcggagggtc#
+ctacgcccacggagtctcgctgattgct')
+nchar('aaggggtcagggagttccctttccgagtcaaa#
+gaaaggggtgacggacgcacctggaaaatcgggtcactcccacccgaatactgcgctttt#
+cngaccggcttaaaaaacggcgcaccacgagattatatcccgcacctggctcggagggtc#
+ctacgcccacggagtctcgctgattgctagcacagcagtctgagatcaaactgcaaggcg#
+gcagcgaggctgggggaggggcgcccgccattgcccaggcttgcttaggtaaacaaagca#
+gccgggaagctcgaactgggtggagccc')
+nchar('aaggggtcagggagttccctttccgagtcaaa#
+gaaaggggtgacggacgcacctggaaaatcgggtcactcccacccgaatactgcgctttt#
+cngaccggcttaaaaaacggcgcaccacgagattatatcccgcacctggctcggagggtc#
+ctacgcccacggagtctcgctgattgctagcacagcagtctgagatcaaactgcaaggcg#
+gcagcgaggctgggggaggggcgcccgccattgcccaggcttgcttaggtaaacaaagca#
+gccgggaagctcgaactgggtggagcccaccacagctcaaggaggcctgcctgcctctgt#
+aggctccacctctgggggcagggcacag')
+toupper('aaggggtcagggagttccctttccgagtcaaa#
+gaaaggggtgacggacgcacctggaaaatcgggtcactcccacccgaatactgcgctttt#
+cngaccggcttaaaaaacggcgcaccacgagattatatcccgcacctggctcggagggtc#
+ctacgcccacggagtctcgctgattgctagcacagcagtctgagatcaaactgcaaggcg#
+gcagcgaggctgggggaggggcgcccgccattgcccaggcttgcttaggtaaacaaagca#
+gccgggaagctcgaactgggtggagcccaccacagctcaaggaggcctgcctgcctctgt#
+aggctccacctctgggggcagggcac')
+nchar('AAGGGGTCAGGGAGTTCCCTTTCCGAGTCAAAGAAAGGGGTGACGGACGCACCTGGAAAATCGGGTCACTCCCACCCGAATACTGCGCTTTTCNGACCGGCTTAAAAAACGGCGCACCACGAGATTATATCCCGCACCTGGCTCGGAGGGTCCTACGCCCACGGAGTCTCGCTGATTGCTAGCACAGCAGTCTGAGATCAAACTGCAAGGCGGCAGCGAGGCTGGGGGAGGGGCGCCCGCCATTGCCCAGGCTTGCTTAGGTAAACAAAGCAGCCGGGAAGCTCGAACTGGGTGGAGCCCACCACAGCTCAAGGAGGCCTGCCTGCCTCTGTAGGCTCCACCTCTGGGGGCAGGGCAC')
+toupper('agacaa')
+nchar('AAGGGGTCAGGGAGTTCCCTTTCCGAGTCAAAGAAAGGGGTGACGGACGCACCTGGAAAATCGGGTCACTCCCACCCGAATACTGCGCTTTTCNGACCGGCTTAAAAAACGGCGCACCACGAGATTATATCCCGCACCTGGCTCGGAGGGTCCTACGCCCACGGAGTCTCGCTGATTGCTAGCACAGCAGTCTGAGATCAAACTGCAAGGCGGCAGCGAGGCTGGGGGAGGGGCGCCCGCCATTGCCCAGGCTTGCTTAGGTAAACAAAGCAGCCGGGAAGCTCGAACTGGGTGGAGCCCACCACAGCTCAAGGAGGCCTGCCTGCCTCTGTAGGCTCCACCTCTGGGGGCAGGGCACAGACAA')
+nchar('gtacccagggacacaaaaactgcggaagg#
+ccgcagggacctctgcctaggaaagccaggtattgtccaaggtttctccccatgtgatag#
+tctgaaatatggcctcgtgggaagggaaagacctgaccgtcccccagcccgacacccgta#
+aagggtctgtgctgaggaggattagtaaaagaggaaggaatgcctcttgcagttgagaca#
+agaggaaggcatctgtctcctgcccgtccctgggcaatggaatgtctcggtataaaaccc#
+gattgtatgttccatctactgagatagggaa')
+nchar('gtacccagggacacaaaaactgcggaagg#
+ccgcagggacctctgcctaggaaagccaggtattgtccaaggtttctccccatgtgatag#
+tctgaaatatggcctcgtgggaagggaaagacctgaccgtcccccagcccgacacccgta#
+aagggtctgtgctgaggaggattagtaaaagaggaaggaatgcctcttgcagttgagaca#
+agaggaaggcatctgtctcctgcccgtccctgggcaatggaatgtctcggtataaaaccc#
+gattgtatgttccatctactgagatagggaaaaaccgccttagggctggaggtgggacat#
+gcgggcagcaatactgctttgtaaagcattg')
+nchar('gtacccagggacacaaaaactgcggaagg#
+ccgcagggacctctgcctaggaaagccaggtattgtccaaggtttctccccatgtgatag#
+tctgaaatatggcctcgtgggaagggaaagacctgaccgtcccccagcccgacacccgta#
+aagggtctgtgctgaggaggattagtaaaagaggaaggaatgcctcttgcagttgagaca#
+agaggaaggcatctgtctcctgcccgtccctgggcaatggaatgtctcggtataaaaccc#
+gattgtatgttccatctactgaga')
+toupper('gtacccagggacacaaaaactgcggaagg#
+ccgcagggacctctgcctaggaaagccaggtattgtccaaggtttctccccatgtgatag#
+tctgaaatatggcctcgtgggaagggaaagacctgaccgtcccccagcccgacacccgta#
+aagggtctgtgctgaggaggattagtaaaagaggaaggaatgcctcttgcagttgagaca#
+agaggaaggcatctgtctcctgcccgtccctgggcaatggaatgtctcggtataaaaccc#
+gattgtatgttccatctactgaga')
+nchar('GTACCCAGGGACACAAAAACTGCGGAAGGCCGCAGGGACCTCTGCCTAGGAAAGCCAGGTATTGTCCAAGGTTTCTCCCCATGTGATAGTCTGAAATATGGCCTCGTGGGAAGGGAAAGACCTGACCGTCCCCCAGCCCGACACCCGTAAAGGGTCTGTGCTGAGGAGGATTAGTAAAAGAGGAAGGAATGCCTCTTGCAGTTGAGACAAGAGGAAGGCATCTGTCTCCTGCCCGTCCCTGGGCAATGGAATGTCTCGGTATAAAACCCGATTGTATGTTCCATCTACTGAGA')
+18*12
+11*12
+200000/5
+4000/40000
+3136+1344
+rev('ku.ca.xo.mmi@rolyat.nehpets')
+rev(strsplit('ku.ca.xo.mmi@rolyat.nehpets'))
+rev(strsplit('ku.ca.xo.mmi@rolyat.nehpets',split=''))
+paste(rev(strsplit('ku.ca.xo.mmi@rolyat.nehpets',split=''))[[1]],collapse='')
+paste(rev(strsplit('ku.ca.xo.mmi@rolyat.nehpets',split='')[[1]]),collapse='')
+paste(rev(strsplit('ua.ude.asinu.liamym@lassab.duomham',split='')[[1]]),collapse='')
+paste(rev(strsplit('gs.ude.sun@nenet.leinad',split='')[[1]]),collapse='')
+1500/45*35
+1512/45*35
+1512/45*39
+1512/45*34
+1512/45*29
+?file.path
+?writeLines
+?t.test
+counts = read.delim('~/Downloads/H3K4me3_counts.txt')
+head(counts)
+rep1 = 2^counts$H3K4me3_placenta_musculus.2.bam
+head(rep1)
+min(rep1)
+rep1 = 2^counts$H3K4me3_placenta_musculus.3.bam
+rep1 = 2^counts$H3K4me3_placenta_musculus.2.bam
+rep2 = 2^counts$H3K4me3_placenta_musculus.3.bam
+plot(counts$H3K4me3_placenta_musculus.2.bam,counts$H3K4me3_placenta_musculus.3.bam)
+library("RnaSeqSampleSize")
+BiocManager::install("RnaSeqSampleSize")
+library("RnaSeqSampleSize")
+BiocManager::install("RnaSeqSampleSize")
+counts = read.delim('~/Downloads/H3K4me3_counts.txt')#
+rep1 = round(2^counts$H3K4me3_placenta_musculus.2.bam)#
+rep2 = round(2^counts$H3K4me3_placenta_musculus.3.bam)#
+#
+write.table(data.frame(rep1,rep2),'~/Downloads/H3K4me3_rawCounts.txt',sep='\t',quote=F,row.names=F)
+10/.87
+35*0.013
+46*0.028
+0.028*46
+x=read.delim('~/Desktop/PSG/Jessica/Repguide/guides_LTR8B.txt')
+head(x)
+count.psg = function(list,chr,start,end) {#
+	filtered = list[list$seqnames==chr & list$start>start & list$end<end,]#
+	return(nrow(filtered))#
+}
+count.psg = function(x) {#
+	filtered = list[list$seqnames=='chr19' & list$start>42721638 & list$end<43269523,]#
+	return(nrow(filtered))#
+}#
+#
+tapply(x,x$kmer_id,count.psg)
+count.psg = function(x) {#
+	filtered = list[x$seqnames=='chr19' & x$start>42721638 & x$end<43269523,]#
+	return(nrow(filtered))#
+}#
+#
+tapply(x,x$kmer_id,count.psg)
+count.psg = function(x) {#
+	filtered = x[x$seqnames=='chr19' & x$start>42721638 & x$end<43269523,]#
+	return(nrow(filtered))#
+}#
+#
+tapply(x,x$kmer_id,count.psg)
+x=read.delim('Downloads/LTR8B.bed',header=F)
+head(x)
+psg=x[x$V1=='chr19' & x$V2>42700000 & x$V3<43300000,]
+psg
+nrow(psg)
+write.table(psg,'psg_ltr8b.bed',sep='\t',quote=F,row.names=F,col.names=F)
+x=read.delim('Desktop/PSG/Jessica/Repguide/guides_LTR8B.txt')
+head(x)
+all = tapply(x,x$kmer_id,nrow)
+psg = tapply(x,x$kmer_id,function(x) sum(x$seqnames=='chr19' & x$start> 42700000 & x$end<43300000))
+all
+psg
+df = data.frame(sgrna=names(all),all,psg)
+df
+df[order(df$psg,decreasing=TRUE),]
+sel = x[x$kmer_id %in% c(148,251,176,44,18,91,102,201,275,281),]
+sel
+head(sel;)
+head(sel)
+write.table(sel,'~/Downloads/selection.txt',sep='\t',quote=F,row.names=F)
+df[order(df$psg,decreasing=TRUE),]
+19.53*6
+2540*4/3
+paste(strtplit('CACCGAAGAAGGGCCGTACCCGAAA')[[1]],collate='')
+paste(strsplit('CACCGAAGAAGGGCCGTACCCGAAA')[[1]],collate='')
+paste(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]],collate='')
+rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]],collate='')
+rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]])
+paste(rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]]),collapse=')'
+)
+paste(rev(strsplit('CACCGAAGAAGGGCCGTACCCGAAA','')[[1]]),collapse='')
+paste(rev(strsplit('AATGGCTCAGCCAGTCATG','')[[1]]),collapse='')
+t=scan('Downloads/temp.txt',numeric())
+t
+median(t)
+boxplot(t)
+quantile(t)
+quantile(t,c(0.1,0.9))
+quantile(t[t<30])
+boxplot(t[t<30])
+t=scan('Downloads/temp.txt',numeric())
+boxplot(t)
+quantile(t,c(0.1,0.9))
+setwd('~/Dropbox/Amante_2024_mTroph/Annotations/oneCode/')
+x=read.delim('IAP_proviral_mm10.bed',header=F)
+table(x$V4)
+x=read.delim('RLTR4_proviral_mm10.bed',header=F)
+table(x$V4)

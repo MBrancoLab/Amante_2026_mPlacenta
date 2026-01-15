@@ -1,0 +1,97 @@
+gff = scan('MP_blacklist.bed', character(), sep='\n')
+id = read.delim('GCF_900095145.1.chrom.RefSeq.txt', header=F)
+id
+for (i in 1:nrow(id)) {#
+	gff = gsub(id$V2[i], id$V1[i], gff)#
+}
+head(gff)
+gff = scan('MP_blacklist.bed', character(), sep='\n')
+head(gff)
+gff = read.delim('MP_blacklist.bed', header=F)
+head(gff)
+for (i in 1:nrow(id)) {#
+	gff$V1 = gsub(id$V2[i], id$V1[i], gff$V1)#
+}
+head(gff)
+id = read.delim('GCF_900095145.1_PAHARI_EIJ_v1.1_assembly_report.txt', header=F)
+id = read.delim('GCF_900095145.1_PAHARI_EIJ_v1.1_assembly_report.txt', header=F, comment='#')
+head(id)
+id
+head(id)
+id$V3
+id$V7
+id = read.delim('GCF_900095145.1_PAHARI_EIJ_v1.1_assembly_report.txt', header=F, comment='#')
+refseq = read.delim('GCF_900095145.1.chrom.RefSeq.txt',header=F)
+head(refseq)
+nrow(refseq)
+nrow(id)
+sum(refseq$V2 %in% id$V7)
+sum(refseq$V2==id$V7)
+head(id)
+ena = paste('ENA',sub('.1','',id$V5),id$V5,sep='|')
+head(ena)
+head(bed)
+bed = read.delim('MP_blacklist.bed', header=F)
+head(bed)
+sum(bed$V1 %in% ena)
+nrow(bed)
+id$V5
+unique(bed$V1)
+head(ena)
+ena[1:24]
+ena[1:25]
+t=unique(bed$V1)
+t
+t[!(t %in% ena)]
+ena = paste('ENA',sub('\\.1','',id$V5),id$V5,sep='|')
+ena[1:24]
+sum(bed$V1 %in% ena)
+nrow(bed)
+head(refseq)
+head(id)
+refseq$V3 = ena[match(refseq$V2, id$V7)]
+head(refseq)
+refseq[1<25,]
+refseq[1:25,]
+write_table(refseq, 'chr_refseq_ena_pahari.txt', sep='\t',quote=F,row.names=F,col.names=F)
+write.table(refseq, 'chr_refseq_ena_pahari.txt', sep='\t',quote=F,row.names=F,col.names=F)
+head(bed)
+bed.chr = refseq$V1[match(bed$V1, refseq$V3)]
+head(bed.chr)
+length(bed.chr)
+out = data.frame(bed.chr,bed$V2, bed$V3)
+head(out)
+write.table(out, 'MP_blacklist2.bed', sep='\t',quote=F,row.names=F,col.names=F)
+setwd('../Peaks/pahari_cuttag/')
+bed = read.delim('H3K4me1_brain_pahari.bed.gz', header=F)
+head(bed)
+bfiles = list.files()
+bfiles
+for (f in bfiles ) {#
+bed = read.delim(f, header=F)#
+bed.chr = refseq$V1[match(bed$V1, refseq$V3)]#
+out = data.frame(bed.chr,bed$V2, bed$V3)#
+#
+write.table(out, sub('\\.gz','',f), sep='\t',quote=F,row.names=F,col.names=F)#
+#
+}
+f
+bfiles = list.files()#
+for (f in bfiles ) {#
+bed = read.delim(f, header=F)#
+bed.chr = refseq$V1[match(bed$V1, refseq$V3)]#
+out = data.frame(bed.chr,bed$V2, bed$V3)#
+#
+write.table(out, sub('\\.gz','',f), sep='\t',quote=F,row.names=F,col.names=F)#
+#
+}
+setwd('../../Peak_enrichment/permutation_analysis/')
+f='pahari_150PE_lowMap.bed.gz'
+head(f)
+bed = read.delim(f, header=F)
+head(bed)
+bed.chr = refseq$V1[match(bed$V1, refseq$V3)]#
+out = data.frame(bed.chr,bed$V2, bed$V3)#
+#
+write.table(out, sub('\\.gz','',f), sep='\t',quote=F,row.names=F,col.names=F)
+head(out)

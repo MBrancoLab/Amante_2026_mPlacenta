@@ -1,0 +1,41 @@
+library(biomaRt)
+library(dplyr)
+library("org.Mm.eg.db")
+btsc <- read.table("hisat_counts/blastoTSC_EKDL220005469-1a_HK5JJDSX3_L4-counts.txt", sep = "\t", header = F)#
+gfptsc <- read.table("hisat_counts/GFPTSC_EKDL220005468-1a_HK5JJDSX3_L4-counts.txt", sep = "\t", header = F)#
+mm1 <- read.table("hisat_counts/MM_145_PL_01_EKDL220005470-1a_HJYYJDSX3_L1-counts.txt", sep = "\t", header = F)#
+mm2 <- read.table("hisat_counts/MM_145_PL_02_EKDL220005471-1a_HK5JJDSX3_L4-counts.txt", sep = "\t", header = F)#
+mm3 <- read.table("hisat_counts/MM_145_PL_03_EKDL220005472-1a_HK5JJDSX3_L4-counts.txt", sep = "\t", header = F)#
+#
+#mp2 <- read.table("hisat_counts/MP_145_PL_02_EKDL220005473-1a_HK5JJDSX3_L4.mm10-counts.txt", sep = "\t", header = F)#
+#mp3 <- read.table("hisat_counts/MP_145_PL_03_EKDL220005474-1a_HK5JJDSX3_L4.mm10-counts.txt", sep = "\t", header = F)#
+colnames(btsc) <- c("GeneID", "bTSC")#
+colnames(gfptsc) <- c("GeneID", "GFP_TSC")#
+colnames(mm1) <- c("GeneID", "Mm_placenta_01")#
+colnames(mm2) <- c("GeneID", "Mm_placenta_02")#
+colnames(mm3) <- c("GeneID", "Mm_placenta_03")
+all <- dplyr::full_join(btsc, gfptsc, by = "GeneID")#
+all <- dplyr::full_join(all, mm1, by = "GeneID")#
+all <- dplyr::full_join(all, mm2, by = "GeneID")#
+all <- dplyr::full_join(all, mm3, by = "GeneID")#
+#all <- dplyr::full_join(all, mp2, by = "GeneID")
+all
+head(all)
+all$GeneIDclean <- gsub("\\..*","", all$GeneID)
+head(all)
+mymart <- useMart(biomart = "ensembl", dataset = "mmusculus_gene_ensembl")#
+attrs  <- listAttributes(mart = mymart)#
+chr <- biomaRt::getBM(attributes = c("ensembl_gene_id", "chromosome_name", "start_position", "end_position"),#
+                        mart = mymart, #
+                        filters = "ensembl_gene_id", #
+                        values = all$GeneIDclean)#
+#
+colnames(chr) <- c("GeneIDclean", "chr", "start", "end")
+mymart
+listAttributes(mart = mymart)
+chr <- biomaRt::getBM(attributes = c("ensembl_gene_id", "chromosome_name", "start_position", "end_position"),#
+                        mart = mymart, #
+                        filters = "ensembl_gene_id", #
+                        values = all$GeneIDclean)
+?getBM
+tail(all)

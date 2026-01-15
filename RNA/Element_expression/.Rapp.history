@@ -1,0 +1,1075 @@
+gtf = data.frame(chr = paste('chr',sel$Chromosome,sep=''),#
+	source = rep('unknown',nrow(sel)),#
+	feature = rep('exon',nrow(sel)),#
+	start = sel$Start,#
+	end = sel$End,#
+	score = rep('.',nrow(sel)),#
+	strand = sel$`Feature Strand`,#
+	frame = rep('.',nrow(sel)),#
+	attribute = paste("gene_id \"",id,"\"; transcript_id \"",id,"\"",sep=''))
+gtf = data.frame(chr = paste('chr',sel$Chromosome,sep=''),#
+	source = rep('unknown',nrow(sel)),#
+	feature = rep('exon',nrow(sel)),#
+	start = sel$Start,#
+	end = sel$End,#
+	score = rep('.',nrow(sel)),#
+	strand = sel$`Feature Strand`,#
+	frame = rep('.',nrow(sel)),#
+	attribute = paste("gene_id \"",sel$id,"\"; transcript_id \"",sel$id,"\"",sep=''))
+gtf
+gtf = data.frame(chr = paste('chr',sel$Chromosome,sep=''),#
+	source = rep('unknown',nrow(sel)),#
+	feature = rep('exon',nrow(sel)),#
+	start = sel$Start,#
+	end = sel$End,#
+	score = rep('.',nrow(sel)),#
+	strand = sel$`Feature Strand`,#
+	frame = rep('.',nrow(sel)),#
+	attribute = paste('gene_id \"',sel$id,'\"; transcript_id \"',sel$id,'\"',sep=''))
+gtf
+write_tsv(gtf, 'expressed_IAPs.gtf')
+write_tsv(gtf, 'expressed_IAPs.gtf', col_names=FALSE)
+gtf
+write_tsv(gtf, 'expressed_IAPs.gtf', col_names=FALSE, escape='backlash')
+write_tsv(gtf, 'expressed_IAPs.gtf', col_names=FALSE, escape='backslash')
+?write_tsv
+gtf = data.frame(chr = paste('chr',sel$Chromosome,sep=''),#
+	source = rep('unknown',nrow(sel)),#
+	feature = rep('exon',nrow(sel)),#
+	start = sel$Start,#
+	end = sel$End,#
+	score = rep('.',nrow(sel)),#
+	strand = sel$`Feature Strand`,#
+	frame = rep('.',nrow(sel)),#
+	attribute = paste('gene_id "',sel$id,'"; transcript_id "',sel$id,'"',sep=''))
+grf
+gtf
+write_tsv(gtf, 'expressed_IAPs.gtf', col_names=FALSE)
+?write_tsv
+write_tsv(gtf, 'expressed_IAPs.gtf', col_names=FALSE,escape='none')
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Read data from cellranger#
+#
+plac.data = Read10X('filtered_feature_bc_matrix')#
+##Make and filter Seurat object#
+#
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)#
+#
+VlnPlot(plac, features = c("nFeature_RNA", "nCount_RNA"), ncol = 2)#
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)#
+##Process#
+#
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)#
+ElbowPlot(plac, ndims=30)#
+#
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])
+VlnPlot(plac, features = c('Syna','Glis1','Stra6'), pt.size=0.5) #SynTI
+VlnPlot(plac, features = c('Rab3gap2','Cdk5rap1','Suv39h2'), pt.size=0.5) #SynTI
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)
+VlnPlot(plac, features = c('Rab3gap2','Cdk5rap1','Suv39h2'), pt.size=0.5) #SynTI
+VlnPlot(plac, features = c('Gm13391','Gm36888','Noct'), pt.size=0.5) #SynTI
+VlnPlot(plac, features = c('5830444B04Rik','Stx18','Hikeshi'), pt.size=0.5) #SynTI
+VlnPlot(plac, features = c('Bckdhb','Qrsl1','Acly'), pt.size=0.5) #SynTI
+VlnPlot(plac, features = c('2610035D17Rik','Gm30198','Atg2b'), pt.size=0.5) #SynTI
+VlnPlot(plac, features = c('Gm48544','Zfp229','4930481A15Rik'), pt.size=0.5) #SynTI
+chim = scan('~/Downloads/iap_chimeras.txt',character())
+idents = Idents(plac)#
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% chim) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")
+head(iap.mat)
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+?heatmap.2
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='row',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+chim
+chim=chim[-8]
+chum
+chim
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% chim) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+chim
+chim=chim[-7]
+chim
+chim=chim[-6]
+chim
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% chim) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+VlnPlot(plac, features = 'Suv39h2', pt.size=0.5)
+library(tidyverse)#
+library(gplots)#
+##read IAP data#
+##rpm counts from Seqmonk using IAP_merged annotation, only intergenic elements#
+#
+iap = read_tsv('IAP_intergenic_RPM.txt')#
+iap$placenta = rowMeans(select(iap, starts_with('Placenta')))#
+##mark loci with minimum expression and DE#
+#
+iap = mutate(iap, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3,#
+			up = placenta-GFPTSCs_musculus.bam>1 & placenta-bTSCs_musculus.bam>1,#
+			down = GFPTSCs_musculus.bam-placenta>1 & bTSCs_musculus.bam-placenta>1)#
+##plot heatmap#
+#
+iap.mat = as.matrix(filter(iap, expr) %>% select(ends_with('bam')))
+iap
+subf.count = group_by(iap, Feature) %>%#
+	summarise(B6=sum(bTSCs_musculus.bam>-3),#
+			GFP=sum(GFPTSCs_musculus.bam>-3),#
+			Plac=sum(placenta>-3))
+subf.count
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=type)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Number of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','lightblue'))
+reg = read_tsv('REG_IAPs_rpm.txt')#
+reg$placenta = rowMeans(select(reg, starts_with('Placenta')))
+library(tidyverse)#
+library(gplots)
+reg = read_tsv('REG_IAPs_rpm.txt')#
+reg$placenta = rowMeans(select(reg, starts_with('Placenta')))
+reg
+pivot_longer(reg, cols=c(Description, ends_with('bam')), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_violin()
+pivot_longer(reg, cols=c('Probe', 'Description', ends_with('bam')), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_violin()
+?ends_with
+?pivot_longer
+pivot_longer(reg, cols=c(Probe, Description, bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta),#
+		names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_violin()
+?pivot_longer
+pivot_longer(reg, cols=c('Probe', 'Description', 'bTSCs_musculus.bam', 'GFPTSCs_musculus.bam', 'placenta'),#
+		names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_violin()
+pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_violin()
+pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_boxplot()
+pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_boxplot() +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 RPM')
+pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_boxplot(outlier.size=0) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 RPM')
+?geom_boxplot
+pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_boxplot(outliers=FALSE) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 RPM')
+library(svglite)
+ggsave('~/Downloads/boxplot.svg')
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Read data from cellranger#
+#
+plac.data = Read10X('filtered_feature_bc_matrix')#
+##Make and filter Seurat object#
+#
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)#
+#
+VlnPlot(plac, features = c("nFeature_RNA", "nCount_RNA"), ncol = 2)#
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)#
+##Process#
+#
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)#
+ElbowPlot(plac, ndims=30)#
+#
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)
+VlnPlot(plac, features = c('Bmf','Sfpq','Eps8l1'), pt.size=0.5)
+t=scan('~/Downloads/temp.txt')
+t=scan('~/Downloads/temp.txt',character())
+t
+idents = Idents(plac)#
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% t) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+iap.sum
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='row',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order][-1,],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Read data from cellranger#
+#
+plac.data = Read10X('filtered_feature_bc_matrix')#
+##Make and filter Seurat object#
+#
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)#
+#
+VlnPlot(plac, features = c("nFeature_RNA", "nCount_RNA"), ncol = 2)#
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)#
+##Process#
+#
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)#
+ElbowPlot(plac, ndims=30)#
+#
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)
+VlnPlot(plac, features = c('Suv39h2'), pt.size=0.5)
+plac = RunUMAP(plac, dims = 1:20)
+FeaturePlot(plac,features='Suv39h2')
+FeaturePlot(plac,features='Suv39h2',order=TRUE)
+DimPlot(plac, reduction = "umap", label=TRUE, repel=TRUE)
+quartz()
+FeaturePlot(plac,features='Suv39h2',order=TRUE)
+FeaturePlot(plac,features='Zfp229',order=TRUE)
+FeaturePlot(plac,features='Suv39h2',order=TRUE)
+idents = Idents(plac)#
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(grepl('IAP', gene)) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])
+iap
+filter(iap,grepl('chr2',gene))
+FeaturePlot(plac,features='IAPLTR1-Mm-chr2-3483514',order=TRUE)
+VlnPlot(plac,features='IAPLTR1-Mm-chr2-3483514')
+VlnPlot(plac,features=c('IAPLTR1-Mm-chr2-3483514','Suv39h2'))
+FeatureScatter(p3data, feature1 = "IAPLTR1-Mm-chr2-3483514", feature2 = "Suv39h2")
+FeatureScatter(plac, feature1 = "IAPLTR1-Mm-chr2-3483514", feature2 = "Suv39h2")
+FeatureScatter(plac, feature1 = "Tpbpa", feature2 = "Suv39h2")
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)
+plac.data = Read10X('filtered_feature_bc_matrix')
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)#
+#
+VlnPlot(plac, features = c("nFeature_RNA", "nCount_RNA"), ncol = 2)#
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)#
+##Process#
+#
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)#
+ElbowPlot(plac, ndims=30)#
+#
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])
+markers = FindAllMarkers(plac, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.5)
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)
+plac = RunUMAP(plac, dims = 1:20)#
+DimPlot(plac, reduction = "umap", label=TRUE, repel=TRUE)
+idents = Idents(plac)#
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(grepl('IAP', gene)) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+rmer=scan('~/Downloads/RMER10A_proximal_genes.txt',character())
+rmer
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% rmer) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+?heatmap.2
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='row',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+head(iap.mat)
+iap.sum
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100)
+iap.sum
+ggplot(iap.sum, aes(x=cluster, y=perc_cells)) + geom_violin()
+ggplot2(iap.sum, aes(x=cluster, y=perc_cells)) + geom_violin()
+library(ggplpot)
+library(ggplot2)
+ggplot2(iap.sum, aes(x=cluster, y=perc_cells)) + geom_violin()
+ggplot(iap.sum, aes(x=cluster, y=perc_cells)) + geom_violin()
+ggplot(iap.sum, aes(x=cluster, y=perc_cells)) + geom_point()
+ggplot(iap.sum, aes(x=cluster, y=perc_cells)) + geom_point(position=position_jitter(0.2))
+ggplot(iap.sum, aes(x=cluster, y=log10(perc_cells))) + geom_point(position=position_jitter(0.2))
+ggplot(iap.sum, aes(x=cluster, y=log10(perc_cells))) + geom_violin()
+library(tidyverse)#
+library(gplots)#
+##read IAP data#
+##rpm counts from Seqmonk using IAP_merged annotation, only intergenic elements#
+#
+iap = read_tsv('IAP_intergenic_RPM.txt')#
+iap$placenta = rowMeans(select(iap, starts_with('Placenta')))#
+##mark loci with minimum expression and DE#
+#
+iap = mutate(iap, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3,#
+			up = placenta-GFPTSCs_musculus.bam>1 & placenta-bTSCs_musculus.bam>1,#
+			down = GFPTSCs_musculus.bam-placenta>1 & bTSCs_musculus.bam-placenta>1)#
+##plot heatmap#
+#
+iap.mat = as.matrix(filter(iap, expr) %>% select(ends_with('bam')))#
+#
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+iap = mutate(iap, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3,#
+			up = placenta-GFPTSCs_musculus.bam>1 & placenta-bTSCs_musculus.bam>1,#
+			down = GFPTSCs_musculus.bam-placenta>1 & bTSCs_musculus.bam-placenta>1)#
+##plot heatmap#
+#
+iap.mat = as.matrix(filter(iap, expr) %>% select(ends_with('bam')))#
+#
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100))
+?heatmap.2
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100), density.info='none')
+subf.count = group_by(iap, Feature) %>%#
+	summarise(exp=sum(expr), up=sum(expr&up), down=sum(expr&down))
+subf.counts
+subf.count
+data.frame(subf.count)
+conf.count = group_by(iap, Description) %>%#
+	summarise(exp=sum(expr), up=sum(expr&up), down=sum(expr&down))
+data.frame(conf.count)
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Number of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','lightblue'))
+library(svglite)
+ggsave('~/Downloads/iaps.svg')
+reg = read_tsv('REG_IAPs_rpm.txt')#
+reg$placenta = rowMeans(select(reg, starts_with('Placenta')))#
+#
+pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM') %>%#
+ggplot(aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_boxplot(outliers=FALSE) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 RPM')
+reg
+pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM')
+reg2 = pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM')
+ggplot(reg2 aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_boxplot(outliers=FALSE) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 RPM')
+ggplot(reg2, aes(x=Sample, y=RPM, fill=Description)) +#
+	geom_boxplot(outliers=FALSE) +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('log2 RPM')
+summary(aov(RPM ~ Sample + Description))
+summary(aov(RPM ~ Sample + Description, data=reg2))
+summary(aov(RPM ~ Sample * Description, data=reg2))
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Read data from cellranger#
+#
+plac.data = Read10X('filtered_feature_bc_matrix')#
+##Make and filter Seurat object#
+#
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])#
+##Identify clusters#
+#
+markers = FindAllMarkers(plac, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.5)#
+#
+VlnPlot(plac, features = c('Syna','Glis1','Stra6'), pt.size=0.5) #SynTI#
+VlnPlot(plac, features = c('Gcm1','Synb','Gcgr'), pt.size=0) #SynTII#
+VlnPlot(plac, features = c('Nos1ap','Lepr','Ctsq'), pt.size=0) #S-TGC#
+VlnPlot(plac, features = c('Prune2','Ncam1','Plac8'), pt.size=0) #Glycogen cells#
+VlnPlot(plac, features = c('Mitf','Flt1','Prl8a9'), pt.size=0) #SpT#
+VlnPlot(plac, features = c('Pecam1','Kdr','Tek'), pt.size=0.5) #Endothelial#
+VlnPlot(plac, features = c('Ebf1','Pdgfrb','Notch3'), pt.size=0) #Pericytes#
+VlnPlot(plac, features = c('Pdgfra','Kit'), pt.size=0) #Mesenchymal I#
+VlnPlot(plac, features = c('Col1a1','Col1a2'), pt.size=0) #Mesenchymal II#
+VlnPlot(plac, features = c('Pbx1','Pgr','Xist'), pt.size=0) #Decidua#
+#
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)#
+##UMAP#
+#
+plac = RunUMAP(plac, dims = 1:20)
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Read data from cellranger#
+#
+plac.data = Read10X('filtered_feature_bc_matrix')#
+##Make and filter Seurat object#
+#
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)#
+#
+VlnPlot(plac, features = c("nFeature_RNA", "nCount_RNA"), ncol = 2)#
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)#
+##Process#
+#
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)#
+ElbowPlot(plac, ndims=30)#
+#
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])#
+##Identify clusters#
+#
+markers = FindAllMarkers(plac, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.5)#
+#
+VlnPlot(plac, features = c('Syna','Glis1','Stra6'), pt.size=0.5) #SynTI#
+VlnPlot(plac, features = c('Gcm1','Synb','Gcgr'), pt.size=0) #SynTII#
+VlnPlot(plac, features = c('Nos1ap','Lepr','Ctsq'), pt.size=0) #S-TGC#
+VlnPlot(plac, features = c('Prune2','Ncam1','Plac8'), pt.size=0) #Glycogen cells#
+VlnPlot(plac, features = c('Mitf','Flt1','Prl8a9'), pt.size=0) #SpT#
+VlnPlot(plac, features = c('Pecam1','Kdr','Tek'), pt.size=0.5) #Endothelial#
+VlnPlot(plac, features = c('Ebf1','Pdgfrb','Notch3'), pt.size=0) #Pericytes#
+VlnPlot(plac, features = c('Pdgfra','Kit'), pt.size=0) #Mesenchymal I#
+VlnPlot(plac, features = c('Col1a1','Col1a2'), pt.size=0) #Mesenchymal II#
+VlnPlot(plac, features = c('Pbx1','Pgr','Xist'), pt.size=0) #Decidua#
+#
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)#
+##UMAP#
+#
+plac = RunUMAP(plac, dims = 1:20)#
+DimPlot(plac, reduction = "umap", label=TRUE, repel=TRUE)#
+##IAP expression#
+#
+idents = Idents(plac)#
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(grepl('IAP', gene)) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+iap
+iap.sum
+VlnPlot(plac, features = c("IAPLTR1-Mm-chr12-108079292","IAPLTR1-Mm-chr10-78020226","IAPLTR1-Mm-chr5-124104495"), pt.size=0)
+library(tidyverse)
+library(svglite)
+ggsave('~/Downloads/scrna.svg')
+iap.sum
+iap
+VlnPlot(plac, features = c("IAPLTR1-Mm-chr12-108079292","IAPLTR1-Mm-chr10-78020226","IAPLTR1-Mm-chr5-124104495"), pt.size=0)
+library(tidyverse)#
+library(gplots)#
+##read IAP data#
+##rpm counts from Seqmonk using IAP_merged annotation, only intergenic elements#
+#
+iap = read_tsv('IAP_intergenic_RPM.txt')#
+iap$placenta = rowMeans(select(iap, starts_with('Placenta')))#
+##mark loci with minimum expression and DE#
+#
+iap = mutate(iap, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3,#
+			up = placenta-GFPTSCs_musculus.bam>1 & placenta-bTSCs_musculus.bam>1,#
+			down = GFPTSCs_musculus.bam-placenta>1 & bTSCs_musculus.bam-placenta>1)#
+##plot heatmap#
+#
+iap.mat = as.matrix(filter(iap, expr) %>% select(ends_with('bam')))
+reg = read_tsv('REG_IAPs_rpm.txt')#
+reg$placenta = rowMeans(select(reg, starts_with('Placenta')))#
+#
+reg2 = pivot_longer(reg, cols=c(bTSCs_musculus.bam, GFPTSCs_musculus.bam, placenta), names_to='Sample', values_to='RPM')
+reg2
+reg
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Read data from cellranger#
+#
+plac.data = Read10X('filtered_feature_bc_matrix')#
+##Make and filter Seurat object#
+#
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)#
+##Process#
+#
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])#
+##Identify clusters#
+#
+markers = FindAllMarkers(plac, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.5)
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)#
+##UMAP#
+#
+plac = RunUMAP(plac, dims = 1:20)
+idents = Idents(plac)#
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(grepl('IAP', gene)) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene')
+chim = read_tsv('../Chimeric_transcripts/iap_l1_transcripts_curated.txt')
+chim = read.delim('../Chimeric_transcripts/iap_l1_transcripts_curated.txt')
+head9chum
+head(chim)
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(gene %in% chim$gene.name) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='row',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+?heatmap.2
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9),#
+	breaks=seq(0,50,2))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9),#
+	breaks=seq(0,50,length.out=101))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9),#
+	breaks=seq(0,20,length.out=101))
+VlnPlot(plac, features = c("Suv39h2","Noct","Zfp229"), pt.size=0)
+VlnPlot(plac, features = c("Suv39h2","Noct","Zfp229"), pt.size=0.5)
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9),#
+	breaks=seq(0,20,length.out=101))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9),#
+	breaks=seq(0,15,length.out=101))
+DimPlot(plac, reduction = "umap", label=TRUE, repel=TRUE)
+?FeaturePlot
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'))
+?FeaturePlot
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), blend=TRUE)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.5)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.2)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.1)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=FALSE, pt.size=0.1)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.1)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.05)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.1)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.2)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.1)
+DimPlot(plac, reduction = "umap", label=TRUE, repel=TRUE)
+FeaturePlot(plac, features = c('Suv39h2', 'Zfp229'), order=TRUE, pt.size=0.1)
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+head(iap.mat)
+barplot(iap.mat)
+barplot(iap.mat,beside=T)
+barplot(t(iap.mat),beside=T)
+barplot(t(iap.mat),beside=T,ylim=c(0.15))
+barplot(t(iap.mat),beside=T,ylim=c(0,15))
+barplot(t(iap.mat),beside=T,ylim=c(0,15),las=1)
+barplot(t(iap.mat),beside=T,ylim=c(0,15),las=2)
+SaveSeuratRds(plac, 'Marsh_IAP_Seurat.Rds')
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Load Seurat object#
+#
+plac = LoadSeuratRds('../scRNA_processing/Marsh_IAP_Seurat.Rds')
+idents = Idents(plac)#
+iap = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+	filter(grepl('IAP', gene)) %>%#
+	pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+	mutate(cluster = idents[match(barcode, names(idents))])#
+#
+iap.sum = group_by(iap, gene, cluster) %>%#
+	summarise(perc_cells=sum(expr>1)/length(expr)*100) %>%#
+	pivot_wider(names_from=cluster, values_from=perc_cells)#
+#
+iap.mat = as.matrix(iap.sum[,-1])#
+rownames(iap.mat) = iap.sum$gene#
+#
+c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+#
+heatmap.2(iap.mat[order(rowMeans(iap.mat), decreasing=TRUE),c.order],#
+	scale='none',#
+	Rowv=FALSE, Colv=FALSE,#
+	dendrogram='none',#
+	col=hcl.colors(100),#
+	trace='none',#
+	density.info='none',#
+	margins=c(11,9))
+VlnPlot(plac, features = c("IAPLTR1-Mm-chr12-108079292","IAPLTR1-Mm-chr10-78020226","IAPLTR1-Mm-chr5-124104495"), pt.size=0)
+library(Seurat)#
+library(dplyr)#
+library(tidyr)#
+library(gplots)#
+##Load Seurat object#
+#
+plac = LoadSeuratRds('../scRNA_processing/Marsh_IAP_Seurat.Rds')
+plot.means = function(data, genes) {#
+	idents = Idents(data)#
+	sub = as_tibble(as.matrix(plac[['RNA']]$counts), rownames='gene') %>%#
+		filter(gene %in% genes) %>%#
+		pivot_longer(cols=!gene, names_to='barcode', values_to='expr') %>%#
+		mutate(cluster = idents[match(barcode, names(idents))])#
+#
+	expr.sum = group_by(sub, gene, cluster) %>%#
+		summarise(av_expr=mean(expr), perc_cells=sum(expr>1)/length(expr)*100)#
+#
+	c.order = c("SpT", "Glycogen cells", "S-TGC", "SynTI", "SynTII",#
+	"Endothelial", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+	g.order = filter(expr.sum, cluster=='SpT') %>% arrange(perc_cells) %>% pull(gene)#
+#
+	ggplot(expr.sum, aes(x=factor(gene,levels=g.order), y=factor(cluster,levels=c.order))) +#
+		geom_point(aes(size=perc_cells, colour=av_expr), stroke=0) +#
+		scale_size_continuous(range = c(0,7)) +#
+		scale_colour_gradient(low='grey', high='red') +#
+		theme_classic() +#
+		theme(axis.text.x = element_text(angle = 45, hjust=1)) +#
+		xlab('') +#
+		ylab('')#
+}
+plot.means('Tpbpa')
+plot.means(plac,'Tpbpa')
+plot.means(plac, 'Noct')
+library(tidyverse)
+plot.means(plac, 'Noct')
+plot.means(plac, 'Tpbpa')
+plot.means(plac, c('Tpbpa','Flt1','Prune2'))
+plot.means(plac, c('Tpbpa','Flt1','Prune2','Prl8a9'))
+plot.means(plac, c('Tpbpa','Flt1','Prune2','Prl8a9','Slco2a1'))
+plot.means(plac, c('Tpbpa','Flt1','Prune2','Prl8a9','Slco2a1','Prl3d1'))
+library(tidyverse)#
+library(gplots)#
+##read IAP data#
+##rpm counts from Seqmonk using IAP_merged annotation, only intergenic elements#
+#
+iap = read_tsv('IAP_intergenic_RPM.txt')#
+iap$placenta = rowMeans(select(iap, starts_with('Placenta')))#
+##mark loci with minimum expression and DE#
+#
+iap = mutate(iap, expr = placenta>-3 | GFPTSCs_musculus.bam>-3 | bTSCs_musculus.bam>-3,#
+			up = placenta-GFPTSCs_musculus.bam>1 & placenta-bTSCs_musculus.bam>1,#
+			down = GFPTSCs_musculus.bam-placenta>1 & bTSCs_musculus.bam-placenta>1)
+iap.mat = as.matrix(filter(iap, expr) %>% select(ends_with('bam')))
+heatmap.2(iap.mat, trace='none', scale='none',#
+	col=hcl.colors(100), density.info='none')
+subf.count = group_by(iap, Feature) %>%#
+	summarise(exp=sum(expr), up=sum(expr&up), down=sum(expr&down))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Number of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','lightblue'))
+mutate(iap, len=End-Start) %>% filter(expr, len<10000) %>%#
+ggplot(aes(x=len, fill=Description)) +#
+	geom_histogram(col='black') +#
+	theme_classic() +#
+	xlab('Length (bp)')
+mutate(iap, len=End-Start) %>% filter(expr, len<10000) %>%#
+ggplot(aes(x=len, fill=Description)) +#
+	geom_histogram(col='black') +#
+	theme_classic() +#
+	xlab('Length (bp)') +#
+	ylab('Number of elements') +#
+	scale_fill_manual(values=c('grey','orange','lightblue','blue'))
+mutate(iap, len=End-Start) %>% filter(expr, len<10000) %>%#
+ggplot(aes(x=len, fill=Description)) +#
+	geom_histogram(col='black') +#
+	theme_classic() +#
+	xlab('Length (bp)') +#
+	ylab('Number of elements') +#
+	scale_fill_manual(values=c('grey','blue','lightblue','black'))
+filter(subf.count, !grepl('int',Feature) & !grepl('_I',Feature)) %>%#
+pivot_longer(cols=!Feature, names_to='type', values_to='counts') %>%#
+ggplot(aes(x=Feature, y=counts, fill=factor(type, levels=c('exp','up','down')))) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Number of elements') +#
+	labs(fill='') +#
+	scale_x_discrete(guide = guide_axis(angle = 90)) +#
+	scale_fill_manual(values=c('grey','orange','lightblue'))
+mutate(iap, len=End-Start) %>% filter(expr, len<10000) %>%#
+ggplot(aes(x=len, fill=Description)) +#
+	geom_histogram(col='black') +#
+	theme_classic() +#
+	xlab('Length (bp)') +#
+	ylab('Number of elements') +#
+	scale_fill_manual(values=c('grey','orange','lightblue','black'))
+?colours()
+colours()
+mutate(iap, len=End-Start) %>% filter(expr, len<10000) %>%#
+ggplot(aes(x=len, fill=Description)) +#
+	geom_histogram(col='black') +#
+	theme_classic() +#
+	xlab('Length (bp)') +#
+	ylab('Number of elements') +#
+	scale_fill_manual(values=c('lightgrey','orange','lightblue','darkgrey'))
+mutate(iap, len=End-Start) %>% filter(expr, len<10000) %>%#
+ggplot(aes(x=len, fill=Description)) +#
+	geom_histogram(col='black') +#
+	theme_classic() +#
+	xlab('Length (bp)') +#
+	ylab('Number of elements') +#
+	scale_fill_manual(values=c('black','orange','lightblue','grey'))
+library(svglite)
+ggsave('~/Downloads/hist.svg')

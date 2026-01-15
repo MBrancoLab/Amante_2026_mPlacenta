@@ -1,0 +1,11 @@
+Isoform	Primers	Sample	Replicate	Expression
+Canonical	ex1-ex3	GFP TSC	rep1	0.025500453
+Canonical	ex1-ex3	B6 TSC	rep1	0.01064756
+Canonical	ex1-ex3	Placenta	rep1	0.001400347
+Canonical	ex1-ex3	Placenta	rep2	0.00289946
+Canonical	ex1-ex3	Placenta	rep3	0.003553197
+IAP	IAP1-ex3	GFP TSC	rep1	0.000178309
+IAP	IAP1-ex3	B6 TSC	rep1	7.00427E-06
+IAP	IAP1-ex3	Placenta	rep1	0.006087223
+IAP	IAP1-ex3	Placenta	rep2	0.01159784
+IAP	IAP1-ex3	Placenta	rep3	0.013633817

@@ -1,0 +1,913 @@
+group_by(l1p.df, dgroup) %>% summarise(n=length(start))
+enc = read_tsv('../encode_raw_counts.txt.gz')#
+enc$Placenta = rowMeans(log2(enc[,grep('placenta',colnames(enc))] + 0.05))#
+enc$Cerebellum = rowMeans(log2(enc[,grep('cerebellum',colnames(enc))] + 0.05))#
+enc$Cortex = rowMeans(log2(enc[,grep('cortex',colnames(enc))] + 0.05))#
+enc$Heart = rowMeans(log2(enc[,grep('heart',colnames(enc))] + 0.05))#
+enc$Kidney = rowMeans(log2(enc[,grep('kidney',colnames(enc))] + 0.05))#
+enc$Liver = rowMeans(log2(enc[,grep('liver',colnames(enc))] + 0.05))#
+enc$SmallIntestine = rowMeans(log2(enc[,grep('smallintestine',colnames(enc))] + 0.05))#
+enc$Spleen = rowMeans(log2(enc[,grep('spleen',colnames(enc))] + 0.05))#
+enc$Testis = rowMeans(log2(enc[,grep('testis',colnames(enc))] + 0.05))#
+enc$Thymus = rowMeans(log2(enc[,grep('thymus',colnames(enc))] + 0.05))
+enc2 = select(enc, c(Feature, Placenta:Thymus)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')#
+#
+plot.enc = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=sample, y=log2rpm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}	#
+#
+plot.enc(enc2, rltr.df)
+enc
+enc2
+group_by(enc2,sample) %>% summarise(q75=quantile(log2rpm,0.75))
+quantile(enc2$log2rpm,0.75)
+plot(enc$Placenta,enc$Cerebellum,cex=0.3)
+abline(0,1,col='blue')
+plot(enc$Placenta,enc$Heart,cex=0.3)
+abline(0,1,col='blue')
+plot(enc$Placenta,enc$Liver,cex=0.3)
+abline(0,1,col='blue')
+mutate(enc2, ~.x-Mean)
+q75 = group_by(enc2,sample) %>% summarise(q75=quantile(log2rpm,0.75))
+q75
+enc3 = mutate(enc2, log2rpm - q75[q75$sample]==sample)
+q75 = group_by(enc2,sample) %>% summarise(quant=quantile(log2rpm,0.75))
+enc3 = mutate(enc2, log2rpm - q75$quant[q75$sample]==sample)
+enc3
+q75
+setwd('~/Downloads/stringtie_results/')
+tx.files = list.files(pattern='chimTx.txt')#
+#
+tx = tibble()#
+for (f in tx.files) {#
+	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
+								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
+		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
+		add_column(sample = gsub('-chimTx.txt','',f))#
+	tx = rbind(tx,sub)#
+}
+tx
+filter(tx, grepl('LTR12, te.name'))
+filter(tx, grepl('LTR12', te.name))
+p1.tes = tx$te.id[tx$sample=='H358_EV_A']#
+p2.tes = tx$te.id[tx$sample=='H358_EV_B']#
+p3.tes = tx$te.id[tx$sample=='H358_EV_C']#
+plac.tes = p1.tes[p1.tes %in% p2.tes & p1.tes %in% p3.tes]
+plac.tes
+plac.tx = filter(tx, te.id %in% plac.tes)#
+group_by(plac.tx, sample) %>% summarise(n.te=length(unique(te.id)))
+atf1.tes = tx$te.id[tx$sample=='H358_ATF7_A']#
+atf2.tes = tx$te.id[tx$sample=='H358_ATF7_B']#
+atf3.tes = tx$te.id[tx$sample=='H358_ATF7_C']#
+sp.tes = ev.tes[!(ev.tes %in% atf1.tes) & !(ev.tes %in% atf2.tes) & !(ev.tes %in% atf3.tes) ]
+ev1.tes = tx$te.id[tx$sample=='H358_EV_A']#
+ev2.tes = tx$te.id[tx$sample=='H358_EV_B']#
+ev3.tes = tx$te.id[tx$sample=='H358_EV_C']#
+ev.tes = p1.tes[ev1.tes %in% ev2.tes & ev1.tes %in% ev3.tes]#
+##select EV-specific TEs#
+#
+atf1.tes = tx$te.id[tx$sample=='H358_ATF7_A']#
+atf2.tes = tx$te.id[tx$sample=='H358_ATF7_B']#
+atf3.tes = tx$te.id[tx$sample=='H358_ATF7_C']#
+sp.tes = ev.tes[!(ev.tes %in% atf1.tes) & !(ev.tes %in% atf2.tes) & !(ev.tes %in% atf3.tes) ]
+ev.tx = filter(tx, te.id %in% sp.tes)
+ev.tx
+ev.tx = filter(tx, te.id %in% sp.tes, grepl('H358_EV',sample))
+ev.tx
+filter(ev.tx, sample=='H358_EV_A')
+filter(ev.tx, sample=='H358_EV_A') %>% group_by(te.name) %>% summarise(n=length(te.name))
+t=filter(ev.tx, sample=='H358_EV_A') %>% group_by(te.name) %>% summarise(n=length(te.name))
+data.frame(t)
+t=filter(ev.tx, sample=='H358_EV_A', te.name=='LTR12C')
+t
+data.frame(t)
+t=filter(ev.tx, sample=='H358_EV_A', grepl('LTR12',te.name))
+t
+data.frame(t)
+'chr16_68526565_LTR12C' %in% ev1.tes
+'chr16_68526565_LTR12C' %in% ev2.tes
+'chr16_68526565_LTR12C' %in% ev3.tes
+'chr16_68526565_LTR12C' %in% atf1.tes
+'chr16_68526565_LTR12C' %in% atf2.tes
+'chr16_68526565_LTR12C' %in% atf3.tes
+tx
+filter(tx, sample=='H358_ATF7_A', te.name=='LTR12C')
+filter(tx, sample=='H358_ATF7_A', te.name=='LTR12C') %>% print(n=70)
+setwd('~/Downloads/')
+raw = scan('all_LTRs.txt', character(), comment='S', sep='\n')
+raw = scan('all_LTR.txt', character(), comment='S', sep='\n')
+ltr.head = grep('#', raw)#
+#
+ltr = list()#
+for (i in 1:length(ltr.head)) {#
+	start = ltr.head[i] + 1#
+	if (i==length(ltr.head)) {#
+		end = length(ltr.head)#
+	} else {#
+		end = ltr.head[i+1] - 1#
+	}#
+	if (end < start) {#
+		#single entries#
+		entry = strsplit(gsub('#','',raw[start-1]), split='\t')#
+	} else {#
+		#grouped entries#
+		entry = strsplit(raw[start:end], split='\t')#
+	}#
+	te = unlist(lapply(entry, function(x) x[10]))#
+	chr = unlist(lapply(entry, function(x) x[5]))#
+	start = unlist(lapply(entry, function(x) as.numeric(x[6])))#
+	end = unlist(lapply(entry, function(x) as.numeric(x[7])))#
+	length = unlist(lapply(entry, function(x) as.numeric(x[8])))#
+	strand = unlist(lapply(entry, function(x) x[9]))#
+	ltr[[i]] = data.frame(te, chr, start, end, length, strand)#
+}#
+##classify groups#
+#
+ltr.class = lapply(ltr, function(x) {#
+	int.pos = grepl('int',x$te) | grepl('_I',x$te)#
+	ltr.pos = grepl('LTR',x$te) & !int.pos#
+	if (any(ltr.pos)) {#
+		if (all(ltr.pos)) {#
+			return('solo_LTR')#
+		} else if (ltr.pos[1] & ltr.pos[nrow(x)]) {#
+			return('proviral')#
+		} else {#
+			return('truncated')#
+		}#
+	} else {#
+		return('int_fragment')#
+	}#
+})
+df = data.frame(chr = unlist(lapply(ltr, function(x) x$chr[1])),#
+			start = unlist(lapply(ltr, function(x) x$start[1])),#
+			end = unlist(lapply(ltr, function(x) x$end[nrow(x)])),#
+			strand = unlist(lapply(ltr, function(x) x$strand[1])),#
+			type = unlist(ltr.class),#
+			repname = unlist(lapply(ltr, function(x) x$te[1])),#
+			structure = unlist(lapply(ltr, function(x) paste(x$te, collapse=':'))))#
+df$length = df$end - df$start#
+df$strand[df$strand=='C'] = '-'
+head(df)
+write.table(df, 'LTR12_merged_hg38.txt', sep='\t', quote=F, row.names=F)
+setwd('~/Dropbox/Amante_2024_mTroph/RNA/Nearest_gene/')
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))#
+#
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)#
+tss = promoters(rna)
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+rltr = nearestTE(tss, 'TSC_RLTR13D5.bed')#
+rmer = nearestTE(tss, 'Placenta_RMER10A.bed')#
+iap.c = nearestTE(tss, 'Common_IAP.bed')#
+iap.p = nearestTE(tss, 'Placenta_IAP.bed')#
+l1.c = nearestTE(tss, 'Common_L1Md.bed')#
+l1.p = nearestTE(tss, 'Placenta_L1Md.bed')#
+##filter#
+#
+min.expr = -1#
+#
+rltr.df = filter(as.data.frame(rltr), !is.na(distance), tsc>min.expr | plac>min.expr)#
+rmer.df = filter(as.data.frame(rmer), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapc.df = filter(as.data.frame(iap.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapp.df = filter(as.data.frame(iap.p), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1c.df = filter(as.data.frame(l1.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1p.df = filter(as.data.frame(l1.p), !is.na(distance), tsc>min.expr | plac>min.expr)
+plotFC = function(data) {#
+	p = ggplot(data, aes(x=subf, y=plac-tsc, fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Relative expression')#
+	print(p)#
+}
+enc = read_tsv('../encode_raw_counts.txt.gz')#
+enc$Placenta = rowMeans(log2(enc[,grep('placenta',colnames(enc))] + 0.05))#
+enc$Cerebellum = rowMeans(log2(enc[,grep('cerebellum',colnames(enc))] + 0.05))#
+enc$Cortex = rowMeans(log2(enc[,grep('cortex',colnames(enc))] + 0.05))#
+enc$Heart = rowMeans(log2(enc[,grep('heart',colnames(enc))] + 0.05))#
+enc$Kidney = rowMeans(log2(enc[,grep('kidney',colnames(enc))] + 0.05))#
+enc$Liver = rowMeans(log2(enc[,grep('liver',colnames(enc))] + 0.05))#
+enc$SmallIntestine = rowMeans(log2(enc[,grep('smallintestine',colnames(enc))] + 0.05))#
+enc$Spleen = rowMeans(log2(enc[,grep('spleen',colnames(enc))] + 0.05))#
+enc$Testis = rowMeans(log2(enc[,grep('testis',colnames(enc))] + 0.05))#
+enc$Thymus = rowMeans(log2(enc[,grep('thymus',colnames(enc))] + 0.05))
+enc2 = select(enc, c(Feature, Placenta:Thymus)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')
+enc2
+q75 = group_by(enc2,sample) %>% summarise(quant=quantile(log2rpm,0.75))
+q75
+enc3 = mutate(enc2, renorm = log2rpm - q75$quant[q75$sample==sample])
+enc3 = mutate(enc2, renorm = log2rpm - q75$quant[match(q75$sample, sample)])
+enc3
+enc3 = mutate(enc2, renorm = log2rpm - q75$quant[match(q75$sample, sample)] + mean(q75$quant))
+enc3
+mean(q75$quant)
+q75
+enc3 = mutate(enc2, renorm = log2rpm - q75$quant[match(sample, q75$sample)] + mean(q75$quant))
+enc3
+plot.enc = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=sample, y=renorm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}	#
+#
+plot.enc(enc3, rltr.df)
+plot.enc(enc3, rltr.df)
+plot.enc(enc3, rmer.df)
+plot.enc(enc3, iapp.df)
+plot.enc(enc3, iapc.df)
+plot.enc(enc3, l1p.df)
+plot.enc(enc3, l1c.df)
+plot.enc(enc3, rmer.df)
+pivot_wider(enc3, names_from=sample, values_from=renorm)
+select(enc3,!log2rpm) %>% pivot_wider(names_from=sample, values_from=renorm)
+select(enc3,!log2rpm) %>% pivot_wider(names_from=sample, values_from=renorm) %>%#
+ggplot(aes(x=Cerebellum, y=Placenta)) + geom_point()
+select(enc3,!log2rpm) %>% pivot_wider(names_from=sample, values_from=renorm) %>%#
+ggplot(aes(x=Cerebellum, y=Placenta)) + geom_point(size=0.2)
+select(enc3,!log2rpm) %>% pivot_wider(names_from=sample, values_from=renorm) %>%#
+ggplot(aes(x=Cerebellum, y=Placenta)) + geom_point(size=0.2) + geom_abline(slope=1, intercept=0, colour='blue')
+select(enc3,!log2rpm) %>% pivot_wider(names_from=sample, values_from=renorm) %>%#
+ggplot(aes(x=Heart, y=Placenta)) + geom_point(size=0.2) + geom_abline(slope=1, intercept=0, colour='blue')
+plot.enc(enc3, iapp.df)
+plot.enc(enc3, rmer.df)
+plot.enc(enc3, l1p.df)
+vig = read_tsv('../vignola_raw_counts.txt.gz')
+vig
+gfp = rowMeans(log2(rpm[,grep('_GFP.bam',colnames(rpm))] + 0.05))
+tm = rowMeans(log2(rpm[,grep('_TM.bam',colnames(rpm))] + 0.05))
+vig2 = select(vig, c(Feature, gfp, tm)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')
+vig = read_tsv('../vignola_raw_counts.txt.gz')#
+vig$gfp = rowMeans(log2(rpm[,grep('_GFP.bam',colnames(rpm))] + 0.05))#
+vig$tm = rowMeans(log2(rpm[,grep('_TM.bam',colnames(rpm))] + 0.05))#
+#
+vig2 = select(vig, c(Feature, gfp, tm)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')
+vig
+vig = read_tsv('../vignola_raw_counts.txt.gz')#
+vig$gfp = rowMeans(log2(vig[,grep('_GFP.bam',colnames(rpm))] + 0.05))#
+vig$tm = rowMeans(log2(vig[,grep('_TM.bam',colnames(rpm))] + 0.05))
+vig = read_tsv('../vignola_raw_counts.txt.gz')#
+vig$gfp = rowMeans(log2(vig[,grep('_GFP.bam',colnames(vig))] + 0.05))#
+vig$tm = rowMeans(log2(vig[,grep('_TM.bam',colnames(vig))] + 0.05))#
+#
+vig2 = select(vig, c(Feature, gfp, tm)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')
+vig2
+plot(vig$gfp,vig$tm)
+abline(0,1,col='blue')
+quantile(vig$gfp,0.75)
+quantile(vig$tm,0.75)
+quantile(tsc,0.75)
+quantile(plac,0.75)
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))
+quantile(plac,0.75)
+vig = read_tsv('../vignola_raw_counts.txt.gz')#
+vig$gfp = rowMeans(log2(vig[,grep('_GFP.bam',colnames(vig))] + 0.05))#
+tm = rowMeans(log2(vig[,grep('_TM.bam',colnames(vig))] + 0.05))#
+vig$tm = tm + quantile(vig$gfp,0.75) - quantile(tm,0.75)  ##adjust skewed distributions
+quantile(vig$tm,0.75)
+quantile(vig$gfp,0.75)
+vig2 = select(vig, c(Feature, gfp, tm)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')
+vig2
+vig
+plot.vig = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=1, y=gfp-tm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}	#
+#
+plot.vig(vig, rltr.df)
+plot.vig(vig, iapp.df)
+plot.vig(vig, rmer.df)
+plot.vig(vig, iapc.df)
+vig2 = select(vig, c(Feature, gfp, tm)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')
+plot.vig = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=sample, y=log2rpm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}	#
+#
+plot.vig(vig, rmer.df)
+plot.vig(vig2, rmer.df)
+plot.vig(vig2, rltr.df)
+plot.enc(vig2, rmer.df)
+plot.vig(vig2, rmer.df)
+plot.vig(vig2, iapp.df)
+plot.vig(vig2, iapc.df)
+plot.vig(vig2, l1p.df)
+plot.vig(vig2, l1c.df)
+vig
+vig2
+filter(vig2,Feature=='Tpbpa')
+filter(vig2,Feature=='Psg8')
+filter(vig2,Feature=='Psg16')
+filter(vig2,Feature=='Gcm1')
+filter(vig2,Feature=='Syna')
+filter(vig2,Feature=='Vegf')
+filter(vig2,Feature=='Vegf1')
+filter(vig2,Feature=='Epcam')
+filter(vig2,Feature=='Pecam1')
+vig2 = select(vig, c(Feature, ExMesodem=gfp, Trophoblast=tm)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')#
+plot.vig = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=sample, y=log2rpm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}	#
+#
+plot.vig(vig2, rltr.df)
+plot(vig$tm,vig$gfp)
+abline(0,1,col='blue')
+plot.vig = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance>cutoff]) %>%#
+		ggplot(aes(x=sample, y=log2rpm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}
+plot.vig(vig2, iapp.df)
+plot.vig = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=sample, y=log2rpm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}
+plot.vig(vig2, iapp.df)
+plot.vig(vig2, rmer.df)
+plot.vig(vig2, l1p.df)
+plot.vig = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=sample, y=tm-gfp)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 FC') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}#
+#
+plot.vig(vig, rltr.df)
+plot.vig = function(data, df, cutoff=1e4) {#
+	p = filter(data, Feature %in% df$gene[df$distance<cutoff]) %>%#
+		ggplot(aes(x=1, y=tm-gfp)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 FC') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+}#
+#
+plot.vig(vig, rltr.df)
+plot.vig(vig, rmer.df)
+plot.vig(vig, iapp.df)
+plot.vig(vig, iapc.df)
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))#
+#
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)#
+tss = promoters(rna)#
+##get nearest TE to TSS#
+#
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+rltr = nearestTE(tss, 'TSC_RLTR13D5.bed')
+rmer = nearestTE(tss, 'Placenta_RMER10A.bed')#
+iap.c = nearestTE(tss, 'Common_IAP.bed')#
+iap.p = nearestTE(tss, 'Placenta_IAP.bed')#
+l1.c = nearestTE(tss, 'Common_L1Md.bed')#
+l1.p = nearestTE(tss, 'Placenta_L1Md.bed')
+min.expr = -1#
+#
+rltr.df = filter(as.data.frame(rltr), !is.na(distance), tsc>min.expr | plac>min.expr)#
+rmer.df = filter(as.data.frame(rmer), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapc.df = filter(as.data.frame(iap.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapp.df = filter(as.data.frame(iap.p), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1c.df = filter(as.data.frame(l1.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1p.df = filter(as.data.frame(l1.p), !is.na(distance), tsc>min.expr | plac>min.expr)#
+##plot relative expression as a function of distance#
+#
+plotFC = function(data) {#
+	p = ggplot(data, aes(x=subf, y=plac-tsc, fill=dgroup)) +#
+		geom_boxplot(outlier.colour=NA) +#
+		theme_classic() +#
+		ylim(-5,5) +#
+		scale_fill_manual(values=colorRampPalette(c('lightblue','darkblue'))(4)) +#
+		geom_hline(yintercept=0, linetype='dashed') +#
+		xlab('') +#
+		ylab('Relative expression')#
+	print(p)#
+}	#
+#
+plotFC(rbind(add_column(rltr.df, subf='RLTR13D5'), add_column(rmer.df, subf='RMER10A')))
+quartz(w=4, h=4)#
+plotFC(rbind(add_column(rltr.df, subf='RLTR13D5'), add_column(rmer.df, subf='RMER10A')))
+quartz(w=4, h=3)#
+plotFC(rbind(add_column(rltr.df, subf='RLTR13D5'), add_column(rmer.df, subf='RMER10A')))
+plotFC(rbind(add_column(rltr.df, subf='RLTR13D5'), add_column(rmer.df, subf='RMER10A')))
+quartz(w=4.5, h=3)
+plotFC(rbind(add_column(rltr.df, subf='RLTR13D5'), add_column(rmer.df, subf='RMER10A')))
+quartz(w=4.5, h=3)#
+plotFC(rbind(add_column(rltr.df, subf='RLTR13D5'), add_column(rmer.df, subf='RMER10A')))
+plotFC(rbind(add_column(rltr.df, subf='RLTR13D5'), add_column(rmer.df, subf='RMER10A')))
+library(svglite)
+ggsave('~/Downloads/boxplot.svg')
+summary(aov(plac-tsc ~ dgroup, data=rltr.df))
+?aov
+summary(aov(plac-tsc ~ dgroup, data=rltr.df, intercept=TRUE))
+summary(aov(plac-tsc ~ dgroup, data=rltr.df), intercept=TRUE)
+summary(aov(plac-tsc ~ dgroup, data=rmer.df), intercept=TRUE)
+summary(aov(plac-tsc ~ dgroup, data=iapc.df), intercept=TRUE)
+summary(aov(plac-tsc ~ dgroup, data=iapp.df), intercept=TRUE)
+summary(aov(plac-tsc ~ dgroup, data=l1c.df), intercept=TRUE)
+summary(aov(plac-tsc ~ dgroup, data=l1p.df), intercept=TRUE)
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))#
+#
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)#
+tss = promoters(rna)#
+##get nearest TE to TSS#
+#
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+rltr = nearestTE(tss, 'TSC_RLTR13D5.bed')#
+rmer = nearestTE(tss, 'Placenta_RMER10A.bed')#
+iap.c = nearestTE(tss, 'Common_IAP.bed')#
+iap.p = nearestTE(tss, 'Placenta_IAP.bed')#
+l1.c = nearestTE(tss, 'Common_L1Md.bed')#
+l1.p = nearestTE(tss, 'Placenta_L1Md.bed')#
+##filter#
+#
+min.expr = -1#
+#
+rltr.df = filter(as.data.frame(rltr), !is.na(distance), tsc>min.expr | plac>min.expr)#
+rmer.df = filter(as.data.frame(rmer), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapc.df = filter(as.data.frame(iap.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapp.df = filter(as.data.frame(iap.p), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1c.df = filter(as.data.frame(l1.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1p.df = filter(as.data.frame(l1.p), !is.na(distance), tsc>min.expr | plac>min.expr)
+head(rmer.df)
+t=filter(rmer.df, distance<50000)
+nrow(t)
+t
+write(t$gene, '~/Downloads/RMER10A_proximal_genes.txt')
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))#
+#
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)#
+tss = promoters(rna)#
+##get nearest TE to TSS#
+#
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+rltr = nearestTE(tss, 'TSC_RLTR13D5.bed')#
+rmer = nearestTE(tss, 'Placenta_RMER10A.bed')#
+iap.c = nearestTE(tss, 'Common_IAP.bed')#
+iap.p = nearestTE(tss, 'Placenta_IAP.bed')#
+l1.c = nearestTE(tss, 'Common_L1Md.bed')#
+l1.p = nearestTE(tss, 'Placenta_L1Md.bed')
+min.expr = -1#
+#
+rltr.df = filter(as.data.frame(rltr), !is.na(distance), tsc>min.expr | plac>min.expr)#
+rmer.df = filter(as.data.frame(rmer), !is.na(distance), tsc>min.expr | plac>min.expr)
+head(rmer.df)
+filter(rmer, gene=='Itga1')
+filter(rmer.df, gene=='Itga1')
+filter(rmer.df, gene=='Braf')
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))#
+#
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)#
+tss = promoters(rna)#
+##get nearest TE to TSS#
+#
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+rltr = nearestTE(tss, 'TSC_RLTR13D5.bed')#
+rmer = nearestTE(tss, 'Placenta_RMER10A.bed')#
+iap.c = nearestTE(tss, 'Common_IAP.bed')#
+iap.p = nearestTE(tss, 'Placenta_IAP.bed')#
+l1.c = nearestTE(tss, 'Common_L1Md.bed')#
+l1.p = nearestTE(tss, 'Placenta_L1Md.bed')#
+##filter#
+#
+min.expr = -1#
+#
+rltr.df = filter(as.data.frame(rltr), !is.na(distance), tsc>min.expr | plac>min.expr)#
+rmer.df = filter(as.data.frame(rmer), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapc.df = filter(as.data.frame(iap.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapp.df = filter(as.data.frame(iap.p), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1c.df = filter(as.data.frame(l1.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1p.df = filter(as.data.frame(l1.p), !is.na(distance), tsc>min.expr | plac>min.expr)
+enc = read_tsv('../encode_raw_counts.txt.gz')#
+enc$Placenta = rowMeans(log2(enc[,grep('placenta',colnames(enc))] + 0.05))#
+enc$Cerebellum = rowMeans(log2(enc[,grep('cerebellum',colnames(enc))] + 0.05))#
+enc$Cortex = rowMeans(log2(enc[,grep('cortex',colnames(enc))] + 0.05))#
+enc$Heart = rowMeans(log2(enc[,grep('heart',colnames(enc))] + 0.05))#
+enc$Kidney = rowMeans(log2(enc[,grep('kidney',colnames(enc))] + 0.05))#
+enc$Liver = rowMeans(log2(enc[,grep('liver',colnames(enc))] + 0.05))#
+enc$SmallIntestine = rowMeans(log2(enc[,grep('smallintestine',colnames(enc))] + 0.05))#
+enc$Spleen = rowMeans(log2(enc[,grep('spleen',colnames(enc))] + 0.05))#
+enc$Testis = rowMeans(log2(enc[,grep('testis',colnames(enc))] + 0.05))#
+enc$Thymus = rowMeans(log2(enc[,grep('thymus',colnames(enc))] + 0.05))#
+#
+enc2 = select(enc, c(Feature, Placenta:Thymus)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')#
+#
+##adjust skewed distributions#
+q75 = group_by(enc2,sample) %>% summarise(quant=quantile(log2rpm,0.75))#
+enc3 = mutate(enc2, renorm = log2rpm - q75$quant[match(sample, q75$sample)] + mean(q75$quant))#
+plot.enc = function(data, df, cutoff=1e4) {#
+	sub = filter(data, Feature %in% df$gene[df$distance<cutoff])#
+	p = ggplot(sub, aes(x=sample, y=renorm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+	pval = numeric(length(unique(sub$sample))-1)#
+	i = 1#
+	for (t in unique(sub$sample)) {#
+		if (t=='Placenta') next#
+		test.data = filter(sub, sample=='Placenta' | sample==t)#
+		pval[i] = wilcox.test(log2rpm~sample, data=test.data, paired=T)$p.value#
+		i = i+1#
+	}#
+	return(p.adjust(pval, method='BH'))#
+}
+plot.enc(enc3, iapp.df)
+unique(iapp.df$Sample)
+unique(iapp.df$sample)
+head(iapp.df)
+head(enc3)
+unique(enc3$sample)
+plot.enc(enc3, l1p.df)
+plot.vig(vig2, iapp.df)
+vig = read_tsv('../vignola_raw_counts.txt.gz')#
+vig$gfp = rowMeans(log2(vig[,grep('_GFP.bam',colnames(vig))] + 0.05))#
+tm = rowMeans(log2(vig[,grep('_TM.bam',colnames(vig))] + 0.05))#
+vig$tm = tm + quantile(vig$gfp,0.75) - quantile(tm,0.75)  ##adjust skewed distributions#
+#
+vig2 = select(vig, c(Feature, ExMesodem=gfp, Trophoblast=tm)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')#
+plot.vig = function(data, df, cutoff=1e4) {#
+	sub = filter(data, Feature %in% df$gene[df$distance<cutoff])	#
+	p =	ggplot(sub, aes(x=sample, y=log2rpm)) +#
+			geom_boxplot(fill='lightblue', outlier.size=0.5) +#
+			theme_classic() +#
+			xlab('') +#
+			ylab('Log2 RPM') +#
+			scale_x_discrete(guide = guide_axis(angle = 90))#
+	print(p)#
+	return(wilcox.test(log2rpm~sample, data=sub, paired=T))#
+}
+plot.vig(vig2, iapp.df)
+plot.vig(vig2, l1p.df)
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))#
+#
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)#
+tss = promoters(rna)#
+##get nearest TE to TSS#
+#
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+rltr = nearestTE(tss, 'TSC_RLTR13D5.bed')#
+rmer = nearestTE(tss, 'Placenta_RMER10A.bed')#
+iap.c = nearestTE(tss, 'Common_IAP.bed')#
+iap.p = nearestTE(tss, 'Placenta_IAP.bed')#
+l1.c = nearestTE(tss, 'Common_L1Md.bed')#
+l1.p = nearestTE(tss, 'Placenta_L1Md.bed')#
+##filter#
+#
+min.expr = -1#
+#
+rltr.df = filter(as.data.frame(rltr), !is.na(distance), tsc>min.expr | plac>min.expr)#
+rmer.df = filter(as.data.frame(rmer), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapc.df = filter(as.data.frame(iap.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapp.df = filter(as.data.frame(iap.p), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1c.df = filter(as.data.frame(l1.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1p.df = filter(as.data.frame(l1.p), !is.na(distance), tsc>min.expr | plac>min.expr)
+iapc.df
+filter(iapc.df, grepl('Psg',gene))
+filter(iapc.df, grepl('Ipp',gene))
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))
+rpm
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)
+ran
+rna
+tss = promoters(rna)
+tss
+bed='TSC_RLTR13D5.bed'
+bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))
+bed.file='TSC_RLTR13D5.bed'
+bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))
+tes
+near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)
+tss.data=tss
+near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)
+near
+tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance
+tss.data
+tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)
+breaks=c(0,1e4,5e4,1e5,1e9)
+tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)
+tss.data
+library(tidyverse)
+library(GenomicRanges)
+enc = read_tsv('../encode_raw_counts.txt.gz')#
+enc$Placenta = rowMeans(log2(enc[,grep('placenta',colnames(enc))] + 0.05))#
+enc$Cerebellum = rowMeans(log2(enc[,grep('cerebellum',colnames(enc))] + 0.05))#
+enc$Cortex = rowMeans(log2(enc[,grep('cortex',colnames(enc))] + 0.05))#
+enc$Heart = rowMeans(log2(enc[,grep('heart',colnames(enc))] + 0.05))#
+enc$Kidney = rowMeans(log2(enc[,grep('kidney',colnames(enc))] + 0.05))#
+enc$Liver = rowMeans(log2(enc[,grep('liver',colnames(enc))] + 0.05))#
+enc$SmallIntestine = rowMeans(log2(enc[,grep('smallintestine',colnames(enc))] + 0.05))#
+enc$Spleen = rowMeans(log2(enc[,grep('spleen',colnames(enc))] + 0.05))#
+enc$Testis = rowMeans(log2(enc[,grep('testis',colnames(enc))] + 0.05))#
+enc$Thymus = rowMeans(log2(enc[,grep('thymus',colnames(enc))] + 0.05))#
+#
+enc2 = select(enc, c(Feature, Placenta:Thymus)) %>%#
+	pivot_longer(!Feature, names_to='sample', values_to='log2rpm')#
+#
+##adjust skewed distributions#
+q75 = group_by(enc2,sample) %>% summarise(quant=quantile(log2rpm,0.75))#
+enc3 = mutate(enc2, renorm = log2rpm - q75$quant[match(sample, q75$sample)] + mean(q75$quant))
+enc3
+filter(enc3, Feature=='Zfp57')
+filter(enc3, Feature=='Zfp932')
+filter(enc3, Feature=='Gm15446')
+library(tidyverse)#
+library(GenomicRanges)#
+##process read counts from Seqmonk#
+#
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))#
+#
+tsc = log2(rpm$GFPTSCs_musculus + 0.05)#
+plac = rowMeans(log2(rpm[,grep('Placenta',colnames(rpm))] + 0.05))#
+plac = plac + quantile(tsc,0.75) - quantile(plac,0.75)  ##adjust skewed distributions#
+#
+rna = GRanges(seqnames=paste('chr',rpm$Chromosome,sep=''),#
+		ranges=IRanges(start=rpm$Start, end=rpm$End),#
+		strand=rpm$`Probe Strand`,#
+		id=rpm$ID,#
+		gene=rpm$Probe,#
+		tsc, plac)#
+tss = promoters(rna)#
+##get nearest TE to TSS#
+#
+nearestTE = function(tss.data, bed.file, breaks=c(0,1e4,5e4,1e5,1e9)) {#
+	bed = read.delim(bed.file, header=F)#
+	tes = GRanges(seqnames=bed$V1,#
+			ranges=IRanges(start=bed$V2, end=bed$V3),#
+			strand=bed$V6,#
+			id=paste(bed$V4,bed$V1,bed$V2,sep='_'))#
+	near = distanceToNearest(tss.data, tes, ignore.strand=TRUE)#
+	tss.data$nearest = tss.data$distance = rep(NA,length(tss))#
+	tss.data$nearest[near@from] = tes$id[near@to]#
+	tss.data$distance[near@from] = elementMetadata(near)$distance#
+	tss.data$dgroup = cut(tss.data$distance, breaks, include.lowest=T)#
+	return(tss.data)#
+}#
+#
+rltr = nearestTE(tss, 'TSC_RLTR13D5.bed')#
+rmer = nearestTE(tss, 'Placenta_RMER10A.bed')#
+iap.c = nearestTE(tss, 'Common_IAP.bed')#
+iap.p = nearestTE(tss, 'Placenta_IAP.bed')#
+l1.c = nearestTE(tss, 'Common_L1Md.bed')#
+l1.p = nearestTE(tss, 'Placenta_L1Md.bed')
+min.expr = -1#
+#
+rltr.df = filter(as.data.frame(rltr), !is.na(distance), tsc>min.expr | plac>min.expr)#
+rmer.df = filter(as.data.frame(rmer), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapc.df = filter(as.data.frame(iap.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+iapp.df = filter(as.data.frame(iap.p), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1c.df = filter(as.data.frame(l1.c), !is.na(distance), tsc>min.expr | plac>min.expr)#
+l1p.df = filter(as.data.frame(l1.p), !is.na(distance), tsc>min.expr | plac>min.expr)
+rltr.df
+head(rltr.df)
+write_tsv(rltr.df, '~/Downloads/RLTR13_nearest.txt')
+write_tsv(iapp.df, '~/Downloads/IAP_nearest.txt')
+library(tidyverse)
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))
+rpm
+library(tidyverse)
+rpm = read_tsv('../musculus_raw_counts.txt.gz') %>%#
+	mutate(across(bTSCs_musculus:Placenta_musculus_3, ~./sum(.)*1e6))
+rpm

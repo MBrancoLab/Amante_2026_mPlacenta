@@ -1,0 +1,906 @@
+dev.off()
+plot_cor(ac.cor, min=0.3, max=0.8)
+plot_cor(me1.cor, min=0.2, max=0.8)
+plot_cor(me3.cor, min=0.7, max=0.95)
+plot_cor(ac.cor, min=0.3, max=0.8)
+2.21/5*2
+(.95+.7)/2
+plot_plac(ac.cor, 'H3K27ac')
+plot_plac = function(cor.matrix, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=cor.matrix, aes(x=x,y=y)) +#
+		geom_pointdensity(size=0.5) +#
+		scale_color_viridis() +#
+		theme_classic()#
+}
+plot_plac(ac.cor, 'H3K27ac')
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=x,y=y)) +#
+		geom_pointdensity(size=0.5) +#
+		scale_color_viridis() +#
+		theme_classic()#
+}
+plot_plac(ac, 'H3K27ac')
+mod='H3K27ac'
+x = paste(mod, 'placenta_encode', sep='_')
+x
+y = paste(mod, 'placenta_musculus', sep='_')
+ggplot(data=counts, aes(x=x,y=y)) +#
+		geom_pointdensity(size=0.5)
+counts=ac
+ggplot(data=counts, aes(x=x,y=y)) +#
+		geom_pointdensity(size=0.5)
+ggplot(data=counts, aes(x=as.name(x),y=as.name(y))) +#
+		geom_pointdensity(size=0.5)
+as.name(x)
+counts
+head(counts)
+x
+as.name(x)
+?call
+x
+call(x)
+?get
+ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5)
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5) +#
+		scale_color_viridis() +#
+		theme_classic()#
+}
+quartz(w=5,h=5)#
+plot_plac(ac, 'H3K27ac')
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5) +#
+		scale_color_viridis() +#
+		theme_classic() +#
+		xlab(x) + ylab(y)#
+}
+?geom_pointdensity
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5) +#
+		scale_color_viridis(show.legend=F) +#
+		theme_classic() +#
+		xlab(x) + ylab(y)#
+}
+quartz(w=4,h=4)#
+plot_plac(ac, 'H3K27ac')
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5, show.legend=F) +#
+		scale_color_viridis() +#
+		theme_classic() +#
+		xlab(x) + ylab(y)#
+}
+quartz(w=4,h=4)#
+plot_plac(ac, 'H3K27ac')
+library(svglite)
+ggsave('~/Downloads/ac_sc.svg')
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5, show.legend=F) +#
+		scale_color_viridis() +#
+		theme_classic() +#
+		xlab('ENCODE (log2 reads)') +#
+		ylab('This study (log2 reads)')#
+}
+png('ac.png')
+plot_plac(ac, 'H3K27ac')
+dev.off()
+?png
+plot_plac(ac, 'H3K27ac')
+quartz(w=3,h=3)#
+plot_plac(ac, 'H3K27ac')
+plot_plac(me1, 'H3K4me1')
+plot_plac(me3, 'H3K4me3')
+library(GenomicRanges)#
+library(tidyverse)#
+##functions#
+#
+read.bed = function(bed.file) {#
+	bed = read_tsv(bed.file, col_names=FALSE)#
+	gr = GRanges(seqnames=bed$X1, IRanges(start=bed$X2, end=bed$X3))#
+	return(gr)#
+}#
+#
+get.overlaps = function(bed.list, ref) {#
+	overlaps = lapply(bed.list, function(bed) GenomicRanges::intersect(bed.list[[ref]], bed))#
+	return(unlist(lapply(overlaps, function(x) sum(lengths(x)))))#
+}#
+##read peaks#
+#
+me1.files = c(list.files('musculus_cuttag', pattern='H3K4me1', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me1', full.names=TRUE))#
+#
+me3.files = c(list.files('musculus_cuttag', pattern='H3K4me3', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me3', full.names=TRUE))#
+#
+ac.files = c(list.files('musculus_cuttag', pattern='H3K27ac', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K27ac', full.names=TRUE))#
+#
+me1 = me3 = ac = list()#
+for (i in 1:length(me1.files)) {#
+	me1[[i]] = read.bed(me1.files[i])#
+	me3[[i]] = read.bed(me3.files[i])#
+	if (i <= length(ac.files)) ac[[i]] = read.bed(ac.files[i])#
+}#
+names(me1) = me1.files#
+names(me3) = me3.files#
+names(ac) = ac.files
+me1.files
+length(me1)
+length(me3)
+me3.files
+ac.files
+me1.ov = get.overlaps(me1, ref='musculus_encode/H3K4me1_placenta.bed.gz')
+all.ov = c(me1.ov/me1.ov['musculus_encode/H3K4me1_placenta.bed.gz'])
+bname = basename(names(all.ov))#
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode',#
+			'placenta cuttag', 'TSCs cuttag', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',basename(names(all.ov))),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))
+ov
+ggplot(ov, aes(x=mark, y=plength, fill=ts)) +#
+	geom_bar(stat='identity', position=position_dodge(), colour='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Overlap length relative to ENCODE placenta')
+me1.ov
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode',#
+			'placenta cuttag', 'TSCs cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',basename(names(all.ov))),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))
+ov
+library(GenomicRanges)#
+library(tidyverse)#
+##functions#
+#
+read.bed = function(bed.file) {#
+	bed = read_tsv(bed.file, col_names=FALSE)#
+	gr = GRanges(seqnames=bed$X1, IRanges(start=bed$X2, end=bed$X3))#
+	return(gr)#
+}#
+#
+get.overlaps = function(bed.list, ref) {#
+	overlaps = lapply(bed.list, function(bed) GenomicRanges::intersect(bed.list[[ref]], bed))#
+	return(unlist(lapply(overlaps, function(x) sum(lengths(x)))))#
+}#
+##read peaks#
+#
+me1.files = c(list.files('musculus_cuttag', pattern='H3K4me1', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me1', full.names=TRUE))#
+#
+me3.files = c(list.files('musculus_cuttag', pattern='H3K4me3', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me3', full.names=TRUE))#
+#
+ac.files = c(list.files('musculus_cuttag', pattern='H3K27ac', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K27ac', full.names=TRUE))
+me1 = me3 = ac = list()#
+for (i in 1:length(me1.files)) {#
+	me1[[i]] = read.bed(me1.files[i])#
+	me3[[i]] = read.bed(me3.files[i])#
+	if (i <= length(ac.files)) ac[[i]] = read.bed(ac.files[i])#
+}#
+names(me1) = me1.files#
+names(me3) = me3.files#
+names(ac) = ac.files
+me1.ov = get.overlaps(me1, ref='musculus_encode/H3K4me1_placenta.bed.gz')#
+me3.ov = get.overlaps(me3, ref='musculus_encode/H3K4me3_placenta.bed.gz')#
+ac.ov = get.overlaps(ac, ref='musculus_encode/H3K27ac_placenta.bed.gz')#
+all.ov = c(me1.ov/me1.ov['musculus_encode/H3K4me1_placenta.bed.gz'],#
+	me3.ov/me3.ov['musculus_encode/H3K4me3_placenta.bed.gz'],#
+	ac.ov/ac.ov['musculus_encode/H3K27ac_placenta.bed.gz'])
+bname = basename(names(all.ov))#
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode',#
+			'placenta cuttag', 'TSCs cuttag', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',basename(names(all.ov))),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))
+ggplot(ov, aes(x=mark, y=plength, fill=ts)) +#
+	geom_bar(stat='identity', position=position_dodge(), colour='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Overlap length relative to ENCODE placenta')
+me1.files
+me3.files
+ac.files
+me1.ov
+all.ov
+sub('_[[:print:]]+','',basename(names(all.ov))
+)
+ov
+bname = basename(names(all.ov))
+bname
+substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1)
+me1.files = c(list.files('musculus_cuttag', pattern='H3K4me1', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me1', full.names=TRUE))#
+#
+me3.files = c(list.files('musculus_cuttag', pattern='H3K4me3', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me3', full.names=TRUE))#
+#
+ac.files = c(list.files('musculus_cuttag', pattern='H3K27ac', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K27ac', full.names=TRUE))#
+#
+me1 = me3 = ac = list()#
+for (i in 1:length(me1.files)) {#
+	me1[[i]] = read.bed(me1.files[i])#
+	me3[[i]] = read.bed(me3.files[i])#
+	if (i <= length(ac.files)) ac[[i]] = read.bed(ac.files[i])#
+}#
+names(me1) = me1.files#
+names(me3) = me3.files#
+names(ac) = ac.files#
+##get overlap lengths relative to ENCODE placenta#
+#
+me1.ov = get.overlaps(me1, ref='musculus_encode/H3K4me1_placenta.bed.gz')#
+me3.ov = get.overlaps(me3, ref='musculus_encode/H3K4me3_placenta.bed.gz')#
+ac.ov = get.overlaps(ac, ref='musculus_encode/H3K27ac_placenta.bed.gz')#
+all.ov = c(me1.ov/me1.ov['musculus_encode/H3K4me1_placenta.bed.gz'],#
+	me3.ov/me3.ov['musculus_encode/H3K4me3_placenta.bed.gz'],#
+	ac.ov/ac.ov['musculus_encode/H3K27ac_placenta.bed.gz'])#
+##make tibbles#
+#
+bname = basename(names(all.ov))#
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode',#
+			'placenta cuttag', 'TSCs cuttag', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',bname),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))
+ov
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode', 'merged encode',#
+			'placenta cuttag', 'bTSCs cuttag', 'GFPTSCs', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',bname),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))
+ov
+bname = basename(names(all.ov))#
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode', 'merged encode',#
+			'placenta cuttag', 'bTSCs cuttag', 'GFPTSCs cuttag', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',bname),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))
+ov
+ggplot(ov, aes(x=mark, y=plength, fill=ts)) +#
+	geom_bar(stat='identity', position=position_dodge(), colour='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Overlap length relative to ENCODE placenta')
+print(ov, 30)
+print(ov, n=30)
+me1.files = c(list.files('musculus_cuttag', pattern='H3K4me1', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me1', full.names=TRUE))#
+#
+me3.files = c(list.files('musculus_cuttag', pattern='H3K4me3', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me3', full.names=TRUE))#
+#
+ac.files = c(list.files('musculus_cuttag', pattern='H3K27ac', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K27ac', full.names=TRUE))#
+#
+me1 = me3 = ac = list()#
+for (i in 1:length(me1.files)) {#
+	me1[[i]] = read.bed(me1.files[i])#
+	me3[[i]] = read.bed(me3.files[i])#
+	if (i <= length(ac.files)) ac[[i]] = read.bed(ac.files[i])#
+}#
+names(me1) = me1.files#
+names(me3) = me3.files#
+names(ac) = ac.files#
+##get overlap lengths relative to ENCODE placenta#
+#
+me1.ov = get.overlaps(me1, ref='musculus_encode/H3K4me1_placenta.bed.gz')#
+me3.ov = get.overlaps(me3, ref='musculus_encode/H3K4me3_placenta.bed.gz')#
+ac.ov = get.overlaps(ac, ref='musculus_encode/H3K27ac_placenta.bed.gz')#
+all.ov = c(me1.ov/me1.ov['musculus_encode/H3K4me1_placenta.bed.gz'],#
+	me3.ov/me3.ov['musculus_encode/H3K4me3_placenta.bed.gz'],#
+	ac.ov/ac.ov['musculus_encode/H3K27ac_placenta.bed.gz'])#
+##make tibbles#
+#
+bname = basename(names(all.ov))#
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode', 'merged encode',#
+			'placenta cuttag', 'bTSCs cuttag', 'GFPTSCs cuttag', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',bname),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))#
+##plot#
+#
+ggplot(ov, aes(x=mark, y=plength, fill=ts)) +#
+	geom_bar(stat='identity', position=position_dodge(), colour='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Overlap length relative to ENCODE placenta')
+ggplot(ov, aes(x=mark, y=plength, fill=ts)) +#
+	geom_bar(stat='identity', position=position_dodge(), colour='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Overlap length relative to ENCODE placenta')
+library(gplots)#
+library(ggplot2)#
+library(ggpointdensity)#
+library(viridis)#
+##Functions#
+#
+cor_matrix = function(counts) {#
+	nc = ncol(counts)#
+	m = matrix(nrow=nc-12, ncol=nc-12)#
+	colnames(m) = rownames(m) = colnames(counts)[13:nc]#
+	for (i in 13:nc) {#
+		for (j in 13:nc) {#
+			m[i-12,j-12] = cor.test(counts[,i],counts[,j])$estimate#
+		}#
+	}#
+	return(m)#
+}#
+#
+plot_cor = function(cor.matrix, min=0, max=1) {#
+	heatmap.2(cor.matrix, scale='none',#
+		col = cm.colors(60),#
+		breaks = seq(min,max,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')#
+}#
+#
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5, show.legend=F) +#
+		scale_color_viridis() +#
+		theme_classic() +#
+		xlab('ENCODE (log2 reads)') +#
+		ylab('This study (log2 reads)')#
+}
+ac = read.delim('H3K27ac_log2Counts.txt.gz')#
+me1 = read.delim('H3K4me1_log2Counts.txt.gz')#
+me3 = read.delim('H3K4me3_log2Counts.txt.gz')#
+##Correlation matrices#
+#
+ac.cor = cor_matrix(ac)#
+me1.cor = cor_matrix(me1)#
+me3.cor = cor_matrix(me3)
+plot_cor(ac.cor, min=0.3, max=0.8)#
+plot_cor(me1.cor, min=0.2, max=0.8)#
+plot_cor(me3.cor, min=0.7, max=0.95)#
+#
+quartz(w=3,h=3)#
+plot_plac(ac, 'H3K27ac')#
+plot_plac(me1, 'H3K4me1')#
+plot_plac(me3, 'H3K4me3')
+ov
+filter(ov,mark=='H3K27ac')
+me1.ov = get.overlaps(me1, ref='musculus_cuttag/H3K4me1_placenta.bed.gz')#
+me3.ov = get.overlaps(me3, ref='musculus_cuttag/H3K4me3_placenta.bed.gz')#
+ac.ov = get.overlaps(ac, ref='musculus_cuttag/H3K27ac_placenta.bed.gz')#
+all.ov = c(me1.ov/me1.ov['musculus_cuttag/H3K4me1_placenta.bed.gz'],#
+	me3.ov/me3.ov['musculus_cuttag/H3K4me3_placenta.bed.gz'],#
+	ac.ov/ac.ov['musculus_cuttag/H3K27ac_placenta.bed.gz'])#
+##make tibbles#
+#
+bname = basename(names(all.ov))#
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode', 'merged encode',#
+			'placenta cuttag', 'bTSCs cuttag', 'GFPTSCs cuttag', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',bname),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))
+filter(ov,mark=='H3K27ac')
+me1.ov
+me1.files
+me1
+str(me1)
+read.bed = function(bed.file) {#
+	bed = read_tsv(bed.file, col_names=FALSE)#
+	gr = GRanges(seqnames=bed$X1, IRanges(start=bed$X2, end=bed$X3))#
+	return(gr)#
+}#
+#
+get.overlaps = function(bed.list, ref) {#
+	overlaps = lapply(bed.list, function(bed) GenomicRanges::intersect(bed.list[[ref]], bed))#
+	return(unlist(lapply(overlaps, function(x) sum(lengths(x)))))#
+}#
+##read peaks#
+#
+me1.files = c(list.files('musculus_cuttag', pattern='H3K4me1', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me1', full.names=TRUE))#
+#
+me3.files = c(list.files('musculus_cuttag', pattern='H3K4me3', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K4me3', full.names=TRUE))#
+#
+ac.files = c(list.files('musculus_cuttag', pattern='H3K27ac', full.names=TRUE),#
+			list.files('musculus_encode', pattern='H3K27ac', full.names=TRUE))#
+#
+me1 = me3 = ac = list()#
+for (i in 1:length(me1.files)) {#
+	me1[[i]] = read.bed(me1.files[i])#
+	me3[[i]] = read.bed(me3.files[i])#
+	if (i <= length(ac.files)) ac[[i]] = read.bed(ac.files[i])#
+}#
+names(me1) = me1.files#
+names(me3) = me3.files#
+names(ac) = ac.files
+str(me1)
+me1.ov = get.overlaps(me1, ref='musculus_cuttag/H3K4me1_placenta.bed.gz')#
+me3.ov = get.overlaps(me3, ref='musculus_cuttag/H3K4me3_placenta.bed.gz')#
+ac.ov = get.overlaps(ac, ref='musculus_cuttag/H3K27ac_placenta.bed.gz')#
+all.ov = c(me1.ov/me1.ov['musculus_cuttag/H3K4me1_placenta.bed.gz'],#
+	me3.ov/me3.ov['musculus_cuttag/H3K4me3_placenta.bed.gz'],#
+	ac.ov/ac.ov['musculus_cuttag/H3K27ac_placenta.bed.gz'])
+all.ov
+bname = basename(names(all.ov))#
+ts.order = c('kidney encode', 'liver encode', 'spleen encode', 'placenta encode', 'merged encode',#
+			'placenta cuttag', 'bTSCs cuttag', 'GFPTSCs cuttag', 'trophoblast cuttag', 'endothelial cuttag')#
+#
+ov = tibble(mark = sub('_[[:print:]]+','',bname),#
+			tissue = substr(bname,regexpr('_',bname)+1,regexpr('\\.',bname)-1),#
+			source = sub('musculus_','',dirname(names(all.ov))),#
+			plength = all.ov,#
+			ts = factor(paste(tissue, source), levels = ts.order))#
+##plot#
+#
+ggplot(ov, aes(x=mark, y=plength, fill=ts)) +#
+	geom_bar(stat='identity', position=position_dodge(), colour='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Overlap length relative to ENCODE placenta')
+library(GenomicRanges)#
+library(tidyverse)#
+##functions#
+#
+read.bed = function(bed.file) {#
+	bed = read_tsv(bed.file, col_names=FALSE)#
+	gr = GRanges(seqnames=bed$X1, IRanges(start=bed$X2, end=bed$X3))#
+	return(gr)#
+}#
+#
+get.overlaps = function(bed.list, ref) {#
+	overlaps = lapply(bed.list, function(bed) GenomicRanges::intersect(bed.list[[ref]], bed))#
+	return(unlist(lapply(overlaps, function(x) sum(lengths(x)))))#
+}
+me1.files
+me1.files = 	list.files('musculus_encode', pattern='H3K4me1', full.names=TRUE)#
+me3.files = list.files('musculus_encode', pattern='H3K4me3', full.names=TRUE)#
+ac.files = list.files('musculus_encode', pattern='H3K27ac', full.names=TRUE)
+me1.files
+me3.files
+ac.files
+me1 = me3 = ac = list()#
+for (i in 1:length(me1.files)) {#
+	me1[[i]] = read.bed(me1.files[i])#
+	me3[[i]] = read.bed(me3.files[i])#
+	ac[[i]] = read.bed(ac.files[i])#
+}#
+names(me1) = me1.files#
+names(me3) = me3.files#
+names(ac) = ac.files
+me1.files
+sub('.bed.gz', '', basename(me1.files))
+names(me3) = sub('.bed.gz', '', basename(me3.files))
+names(ac) = sub('.bed.gz', '', basename(ac.files))
+str(me3)
+me1.ov = get.overlaps(me1, ref='H3K4me1_placenta')
+me1.ov
+me1 = me3 = ac = list()#
+for (i in 1:length(me1.files)) {#
+	me1[[i]] = read.bed(me1.files[i])#
+	me3[[i]] = read.bed(me3.files[i])#
+	ac[[i]] = read.bed(ac.files[i])#
+}#
+names(me1) = sub('.bed.gz', '', basename(me1.files))#
+names(me3) = sub('.bed.gz', '', basename(me3.files))#
+names(ac) = sub('.bed.gz', '', basename(ac.files))#
+##get overlap lengths relative to ENCODE placenta#
+#
+me1.ov = get.overlaps(me1, ref='H3K4me1_placenta')
+me1.ov
+get.overlaps(ac, ref='H3K27ac_placenta')
+get.overlaps(ac, ref='H3K27ac_kidney')
+get.overlaps(ac, ref='H3K27ac_liver')
+ac = read.delim('H3K27ac_log2Counts.txt.gz')
+head(ac)
+cor_matrix = function(counts) {#
+	nc = ncol(counts)#
+	m = matrix(nrow=nc-12, ncol=nc-12)#
+	colnames(m) = rownames(m) = colnames(counts)[13:nc]#
+	for (i in 13:nc) {#
+		for (j in 13:nc) {#
+			m[i-12,j-12] = cor.test(counts[,i],counts[,j])$estimate#
+		}#
+	}#
+	return(m)#
+}#
+#
+plot_cor = function(cor.matrix, min=0, max=1) {#
+	heatmap.2(cor.matrix, scale='none',#
+		col = cm.colors(60),#
+		breaks = seq(min,max,length.out=61),#
+		margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+		trace = 'none', density.info='none')#
+}#
+#
+plot_plac = function(counts, mod) {#
+	x = paste(mod, 'placenta_encode', sep='_')#
+	y = paste(mod, 'placenta_musculus', sep='_')#
+	ggplot(data=counts, aes(x=get(x),y=get(y))) +#
+		geom_pointdensity(size=0.5, show.legend=F) +#
+		scale_color_viridis() +#
+		theme_classic() +#
+		xlab('ENCODE (log2 reads)') +#
+		ylab('This study (log2 reads)')#
+}
+ac.cor = cor_matrix(ac)
+plot_cor(ac.cor, min=0.3, max=0.8)
+library(gplots)#
+library(ggplot2)#
+library(ggpointdensity)#
+library(viridis)
+plot_cor(ac.cor, min=0.3, max=0.8)
+head(ac)
+head(ac[,!'H3K27ac_bTSCs_musculus'])
+head(ac[,'H3K27ac_bTSCs_musculus'])
+ac.cor = cor_matrix(ac[,!grepl('bTSCs',colnames(ac))])
+plot_cor(ac.cor, min=0.3, max=0.8)
+max(ac.cor)
+max(ac.cor[ac.cor<1])
+plot_cor(ac.cor, min=0.3, max=1)
+ac.cor
+library(GenomicRanges)#
+library(tidyverse)
+?intersect
+me1.files
+me1.files = 	list.files('musculus_encode', pattern='H3K4me1', full.names=TRUE)
+me1.files
+me1.files = c('musculus_encode/H3K4me1_placenta.bed.gz',#
+			'musculus_encode/H3K4me1_liver.bed.gz',#
+			'musculus_encode/H3K4me1_kidney.bed.gz',#
+			'musculus_encode/H3K4me1_spleen.bed.gz',)#
+#
+me3.files = sub('H3K4me1','H3K4me3',me1.files)
+me1.files = c('musculus_encode/H3K4me1_placenta.bed.gz',#
+			'musculus_encode/H3K4me1_liver.bed.gz',#
+			'musculus_encode/H3K4me1_kidney.bed.gz',#
+			'musculus_encode/H3K4me1_spleen.bed.gz')#
+#
+me3.files = sub('H3K4me1','H3K4me3',me1.files)
+me1.files
+me3.files
+ac.files = sub('H3K4me1','H3K27ac',me1.files)
+bed.files=ac.files
+bed = list(length(bed.files))#
+	for (i in 1:length(bed.files)) {#
+		bed[[i]] = read.bed(bed.files[i])#
+	}#
+	names(bed) = sub('.bed.gz', '', basename(bed.files))
+read.bed = function(bed.file) {#
+	bed = read_tsv(bed.file, col_names=FALSE)#
+	gr = GRanges(seqnames=bed$X1, IRanges(start=bed$X2, end=bed$X3))#
+	return(gr)#
+}
+bed = list(length(bed.files))#
+	for (i in 1:length(bed.files)) {#
+		bed[[i]] = read.bed(bed.files[i])#
+	}#
+	names(bed) = sub('.bed.gz', '', basename(bed.files))
+str(bed)
+bed
+bed[[!H3K27ac_spleen]]
+bed[!H3K27ac_spleen]
+bed[[!'H3K27ac_spleen']]
+bed[!'H3K27ac_spleen']
+bed[-'H3K27ac_spleen']
+bed[[-'H3K27ac_spleen']]
+bed[-1]
+ref = bed[[1]]
+ref
+others = bed[-1]
+others
+?subsetByOverlaps
+for (j in 1:length(others)) {#
+			ref = subsetByOverlaps(ref, others[[j]], invert=TRUE)#
+		}
+ref
+bed = list(length(bed.files))#
+	for (i in 1:length(bed.files)) {#
+		bed[[i]] = read.bed(bed.files[i])#
+	}#
+	names(bed) = sub('.bed.gz', '', basename(bed.files))#
+	#get tissue-specific peaks#
+	sp.peaks = list(length(bed))#
+	for (i in 1:length(bed)) {#
+		ref = bed[[i]]#
+		others = bed[-i]#
+		for (j in 1:length(others)) {#
+			ref = subsetByOverlaps(ref, others[[j]], invert=TRUE)#
+		}#
+		sp.peaks[[i]] = ref#
+	}
+sp.peaks
+?list
+names(sp.peaks) = names(bed)
+sp.peaks
+unique.peaks = function(bed.files) {	#
+	#read peak files#
+	bed = list(length(bed.files))#
+	for (i in 1:length(bed.files)) {#
+		bed[[i]] = read.bed(bed.files[i])#
+	}#
+	names(bed) = sub('.bed.gz', '', basename(bed.files))#
+	#get tissue-specific peaks#
+	sp.peaks = list(length(bed))#
+	names(sp.peaks) = names(bed)#
+	for (i in 1:length(bed)) {#
+		ref = bed[[i]]#
+		others = bed[-i]#
+		for (j in 1:length(others)) {#
+			ref = subsetByOverlaps(ref, others[[j]], invert=TRUE)#
+		}#
+		sp.peaks[[i]] = ref#
+	}#
+	return(sp.peaks)#
+}
+me1.sp = unique(peaks, me1.files)
+me1.sp = unique.peaks(me1.files)
+me1.files
+?list
+unique.peaks = function(bed.files) {	#
+	#read peak files#
+	bed = list()#
+	for (i in 1:length(bed.files)) {#
+		bed[[i]] = read.bed(bed.files[i])#
+	}#
+	names(bed) = sub('.bed.gz', '', basename(bed.files))#
+	#get tissue-specific peaks#
+	sp.peaks = list()	#
+	for (i in 1:length(bed)) {#
+		ref = bed[[i]]#
+		others = bed[-i]#
+		for (j in 1:length(others)) {#
+			ref = subsetByOverlaps(ref, others[[j]], invert=TRUE)#
+		}#
+		sp.peaks[[i]] = ref#
+	}#
+	names(sp.peaks) = names(bed)#
+	return(sp.peaks)#
+}
+me1.sp = unique.peaks(me1.files)
+me1.sp
+me3.sp = unique.peaks(me3.files)
+ac.sp = unique.peaks(ac.files)
+me3.sp
+barplot(unlist(lapply(ac.sp,length)))
+barplot(unlist(lapply(me1.sp,length)))
+barplot(unlist(lapply(ac.sp,length)))
+barplot(unlist(lapply(me3.sp,length)))
+unlist(lapply(me3.sp,length))
+sapply(me3.sp,length)
+tibble(file=c(names(me1.sp),names(me3.sp),names(ac.sp)),#
+			n.peaks=c(sapply(me1.sp,length),sapply(me3,length),sapply(ac,length)))
+tibble(file=c(names(me1.sp), names(me3.sp), names(ac.sp)),#
+			n.peaks=c(sapply(me1.sp,length), sapply(me3.sp,length), sapply(ac.sp,length)))
+tibble(file=c(names(me1.sp), names(me3.sp), names(ac.sp)),#
+			n.peaks=c(sapply(me1.sp,length), sapply(me3.sp,length), sapply(ac.sp,length))) %>%#
+		mutate(mark=gsub('_[[:alnum:]]+','',file), tissue=gsub('[[:alnum:]]+_','',file))
+n.sp = tibble(file=c(names(me1.sp), names(me3.sp), names(ac.sp)),#
+			n.peaks=c(sapply(me1.sp,length), sapply(me3.sp,length), sapply(ac.sp,length))) %>%#
+		mutate(mark=gsub('_[[:alnum:]]+','',file), tissue=gsub('[[:alnum:]]+_','',file))
+ggplot(n.sp, aes(x=tissue, y=n.peaks, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge())
+ggplot(n.sp, aes(x=tissue, y=n.peaks, fill=mark)) +#
+	geom_bar(stat='identity', position=position_dodge(), col='black') +#
+	theme_classic() +#
+	xlab('') +#
+	ylab('Tissue-specific peaks')
+ac.sp
+as.data.frame(as.sp[[1]])
+head(as.data.frame(ac.sp[[1]]))
+for (i in 1:length(ac.sp)){#
+	write_tsv(as.data.frame(ac.sp[[i]]),#
+		paste(names(ac.sp)[i],'specific.bed',sep='_'),#
+		col_names=FALSE)#
+}
+ac = read.delim('H3K27ac_log2Counts.txt.gz')
+counts = read.delim('H3K27ac_log2Counts.txt.gz')
+nc = ncol(counts)#
+m = matrix(nrow=nc-12, ncol=nc-12)#
+colnames(m) = rownames(m) = colnames(counts)[13:nc]#
+for (i in 13:nc) {#
+	for (j in 13:nc) {#
+		m[i-12,j-12] = cor.test(counts[,i],counts[,j])$estimate#
+	}#
+}
+head(m)
+nc = ncol(counts)#
+cor.mat = matrix(nrow=nc-12, ncol=nc-12)#
+colnames(cor.mat) = rownames(cor.mat) = colnames(counts)[13:nc]#
+for (i in 13:nc) {#
+	for (j in 13:nc) {#
+		cor.mat[i-12,j-12] = cor.test(counts[,i],counts[,j])$estimate#
+	}#
+}
+head(cor.mat)
+heatmap.2(cor.mat, scale='none',#
+	col = cm.colors(60),#
+#	breaks = seq(min,max,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+library(gplots)
+heatmap.2(cor.mat, scale='none',#
+	col = cm.colors(60),#
+#	breaks = seq(min,max,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+max(cor.mat[cor.mat<1])
+max(cor.mat[cor.mat<0.9])
+heatmap.2(cor.mat, scale='none',#
+	col = cm.colors(60),#
+	breaks = seq(0,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = cm.colors(60),#
+#	breaks = seq(0,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+min(cor.mat)
+heatmap.2(cor.mat, scale='none',#
+	col = cm.colors(60),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = hcl.colors(60),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	#col = hcl.colors(60),#
+	col = colorRampPalette(c('white','blue')),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('white','lightblue')),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('white','blue')),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+svg('~/Downloads/cormat.svg',width=5,height=5)
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('white','blue')),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+dev.off()
+heatmap.2(cor.mat, scale='none',#
+	#col = colorRampPalette(c('white','blue')),#
+	col = cm.colors(60),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('navy','black','yellow')),#
+	#col = cm.colors(60),#
+	breaks = seq(0.5,0.9,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('navy','black','yellow')),#
+	#col = cm.colors(60),#
+	breaks = seq(0.5,0.85,length.out=61),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('navy','black','yellow')),#
+	breaks = seq(0.5,0.85,0.01),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('navy','black','yellow')),#
+	breaks = seq(0.5,0.85,length.out=100),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+svg('~/Downloads/cormat.svg',width=5,height=5)
+heatmap.2(cor.mat, scale='none',#
+	col = colorRampPalette(c('navy','black','yellow')),#
+	breaks = seq(0.5,0.85,length.out=100),#
+	margins = c(8,8), cexRow=0.7, cexCol=0.7,#
+	trace = 'none', density.info='none')
+dev.off()
+library(tidyverse)#
+#
+##Read counts#
+#
+mm = read_tsv('RMER10A_orthMM_counts.txt') %>%#
+	mutate(Peak_mm = `Feature Orientation`=='overlapping') %>%#
+	select(Probe:End,Peak_mm,H3K27ac_placenta_musculus.bam)#
+mp = read_tsv('RMER10A_orthMP_counts.txt') %>%#
+	mutate(Peak_mp = `Feature Orientation`=='overlapping') %>%#
+	select(Probe:End,Peak_mp,H3K27ac_placenta)#
+#
+counts = inner_join(mm, mp, by='Probe') %>%#
+	mutate(any_peak = Peak_mm | Peak_mp)#
+##Plot#
+#
+ggplot(counts, aes(x=H3K27ac_placenta_musculus.bam, y=H3K27ac_placenta)) +#
+	geom_point(colour='grey', cex=0.5) +#
+	geom_point(data=filter(counts, any_peak),#
+		aes(x=H3K27ac_placenta_musculus.bam, y=H3K27ac_placenta), colour='red') +#
+	theme_classic() +#
+	xlab('H3K27ac musculus (RPM)') +#
+	ylab('H3K27ac pahari (RPM)')
+library(svglite)
+ggsave('~/Downloads/scatter.svg')
+14/3
+87987753-87984415
+53623955-3338
+87987753-87924415
+53623955-63338
+63272150-63239870
+98686935-32280
+60502003+ 32280
+library(tidyverse)#
+#
+##Read counts#
+#
+mm = read_tsv('RMER10A_orthMM_counts.txt') %>%#
+	mutate(Peak_mm = `Feature Orientation`=='overlapping') %>%#
+	select(Probe:End,Peak_mm,H3K27ac_placenta_musculus.bam)#
+mp = read_tsv('RMER10A_orthMP_counts.txt') %>%#
+	mutate(Peak_mp = `Feature Orientation`=='overlapping') %>%#
+	select(Probe:End,Peak_mp,H3K27ac_placenta)#
+#
+counts = inner_join(mm, mp, by='Probe') %>%#
+	mutate(any_peak = Peak_mm | Peak_mp)
+mm
+counts
+filter(counts, any_peak) %>%#
+ggplot(aes(x=H3K27ac_placenta_musculus.bam, y=H3K27ac_placenta)) +#
+	geom_point(colour='navy') +#
+	theme_classic() +#
+	xlab('H3K27ac musculus (RPM)') +#
+	ylab('H3K27ac pahari (RPM)')
+library(svglite)
+ggsave('~/Downloads/scatter.svg')

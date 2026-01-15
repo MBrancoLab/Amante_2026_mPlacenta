@@ -1,0 +1,542 @@
+sq.files = list.files(pattern='subFcounts.txt')#
+#
+squire = tibble()#
+for (i in 1:length(sq.files)) {#
+	squire = rbind(squire, read_tsv(sq.files[i]))#
+}
+library(tidyverse)
+sq.files = list.files(pattern='subFcounts.txt')#
+#
+squire = tibble()#
+for (i in 1:length(sq.files)) {#
+	squire = rbind(squire, read_tsv(sq.files[i]))#
+}
+squire
+unique(squire$Sample)
+squire = tibble()#
+for (i in 1:length(sq.files)) {#
+	sub = read_tsv(sq.files[i]) %>%#
+		mutate(tissue=gsub('_musculus[[:print:]]+','',Sample))#
+	squire = rbind(squire, sub)#
+}
+squire
+plot.te = function(te) {#
+	quartz(w=3.5,h=4)#
+	subf %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle(te)#
+}#
+#
+plot.te('Ricksha_c:MULE-MuDR:DNA')
+plot.te = function(data, te) {#
+	quartz(w=3.5,h=4)#
+	data %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle(te)#
+}#
+#
+plot.te(squire, 'Ricksha_c:MULE-MuDR:DNA')
+plot.te(squire, 'IAPEz-int:ERVK:LTR')
+plot.te(squire, 'L1Md_T:L1:LINE')
+plot.te(squire, 'IAPLTR1_Mm:ERVK:LTR')
+plot.te(squire, 'IAPLTR2 _Mm:ERVK:LTR')
+plot.te(squire, 'IAPLTR2_Mm:ERVK:LTR')
+plot.te(squire, 'RLTR4_MM-int:ERV1:LTR')
+plot.te(squire, 'L1Md_A:L1:LINE')
+plot.te(squire, 'L1Md_T:L1:LINE')
+plot.te(squire, 'IAPLTR2b_Mm:ERVK:LTR')
+plot.te(squire, 'IAPLTR2b:ERVK:LTR')
+plot.te(squire, 'IAPEy-int:ERVK:LTR')
+plot.te(squire, 'IAPEz-int:ERVK:LTR')
+plot.te(squire, 'IAPLTR1_Mm:ERVK:LTR')
+plot.te(squire, 'IAPLTR2_Mm:ERVK:LTR')
+plot.te(squire, 'RLTR9A4:ERVK:LTR')
+library(tidyverse)#
+library(patchwork)#
+##read squire files#
+#
+sq.files = list.files(pattern='subFcounts.txt')#
+#
+squire = tibble()#
+for (f in sq.files) {#
+	sub = read_tsv(f) %>% mutate(tissue=gsub('_musculus[[:print:]]+','',Sample))#
+	squire = rbind(squire, sub)#
+}#
+##read TEtranscripts files#
+#
+te.files = list.files(pattern='TEtranscripts.cntTable')#
+#
+tetr = tibble()#
+for (f in te.files) {#
+	sub = read_tsv(f, col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=gsub('_musculus[[:print:]]+','',f)) %>%#
+		add_column(sample=gsub('_1_TEtranscripts.cntTable','',f))#
+	tetr = rbind(tetr, sub)#
+}
+plot.te = function(te) {#
+	p1 = squire %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle('SQuIRE')#
+	p2 = tetr %>% filter(roi==te) %>%#
+	ggplot(aes(x=tissue, y=rpm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('RPM') +#
+		ggtitle('TEtranscripts')#
+	p1 + p2#
+}#
+#
+plot.te('IAPEz-int:ERVK:LTR')
+plot.te('IAPLTR1_Mm:ERVK:LTR')
+plot.te('L1Md_T:L1:LINE')
+plot.te('RLTR4_Mm:ERV1:LTR')
+tetr = tibble()#
+for (f in te.files) {#
+	sub = read_tsv(f, col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=gsub('_musculus[[:print:]]+','',f)) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	tetr = rbind(tetr, sub)#
+}
+plot.te('IAPLTR1_Mm:ERVK:LTR')
+tetr
+sq.mus = tibble()#
+for (f in list.files('musculus', pattern='subFcounts.txt', full.names=TRUE)) {#
+	sub = read_tsv(f) %>% mutate(tissue=gsub('_musculus[[:print:]]+','',Sample))#
+	sq.mus = rbind(sq.mus, sub)#
+}
+sq.mus
+sq.mus = tibble()#
+for (f in list.files('musculus', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('musculus', f, sep='/')) %>%#
+		mutate(tissue=gsub('_musculus[[:print:]]+','',Sample))#
+	sq.mus = rbind(sq.mus, sub)#
+}
+sq.mus
+sq.enc = tibble()#
+for (f in list.files('encode', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('encode', f, sep='/')) %>%#
+		mutate(tissue=gsub('-[[:digit:]]','',Sample))#
+	sq.enc = rbind(sq.enc, sub)#
+}
+sq.enc
+unique(sq.enc$tissue)
+sq.enc = tibble()#
+for (f in list.files('encode', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('encode', f, sep='/')) %>%#
+		mutate(tissue=sub('-[[:digit:]]','',sub('RNA_','',Sample)))#
+	sq.enc = rbind(sq.enc, sub)#
+}
+unique(sq.enc$tissue)
+te.mus = tibble()#
+for (f in list.files('musculus', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('musculus', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=gsub('_musculus[[:print:]]+','',f)) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.mus = rbind(te.mus, sub)#
+}
+te.mus
+f
+te.enc = tibble()#
+for (f in list.files('encode', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('encode', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('-[[:print:]]+','',sub('RNA_','',f))) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.enc = rbind(te.enc, sub)#
+}
+te.enc
+plot.te = function(te, squire, tetr) {#
+	p1 = squire %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle('SQuIRE')#
+	p2 = tetr %>% filter(roi==te) %>%#
+	ggplot(aes(x=tissue, y=rpm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('RPM') +#
+		ggtitle('TEtranscripts')#
+	p1 + p2#
+}
+plot.te('IAPEz-int:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPEz-int:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR2_Mm:ERVK:LTR')
+plot.te('IAPLTR2_Mm:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPLTR2_Mm:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR2b:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPEy-int:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPEy-int:ERVK:LTR', sq.enc, te.enc)
+plot.te('L1Md_T:L1:LINE', sq.enc, te.enc)
+plot.te('L1Md_A:L1:LINE', sq.mus, te.mus))
+plot.te('L1Md_A:L1:LINE', sq.mus, te.mus)
+plot.te('L1Md_A:L1:LINE', sq.enc, te.enc)
+plot.te('L1Md_T:L1:LINE', sq.enc, te.enc)
+plot.te('RLTR4_Mm:ERV1:LTR', sq.enc, te.enc)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR2_Mm:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPEy-int:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPEy-int:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPEY4_LTR:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPEY4_LTR:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPEz-int:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR1a_Mm:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPLTR1a_Mm:ERVK:LTR', sq.enc, te.enc)
+plot.te('L1Md_Gf:L1:LINE', sq.mus, te.mus)
+plot.te('L1Md_Gf:L1:LINE', sq.enc, te.enc)
+library(tidyverse)#
+library(patchwork)#
+##read squire files#
+#
+sq.mus = tibble()#
+for (f in list.files('musculus', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('musculus', f, sep='/')) %>%#
+		mutate(tissue=sub('_musculus[[:print:]]+','',Sample))#
+	sq.mus = rbind(sq.mus, sub)#
+}#
+#
+sq.enc = tibble()#
+for (f in list.files('encode', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('encode', f, sep='/')) %>%#
+		mutate(tissue=sub('-[[:digit:]]','',sub('RNA_','',Sample)))#
+	sq.enc = rbind(sq.enc, sub)#
+}#
+##read TEtranscripts files#
+#
+te.mus = tibble()#
+for (f in list.files('musculus', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('musculus', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('_musculus[[:print:]]+','',f)) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.mus = rbind(te.mus, sub)#
+}#
+#
+te.enc = tibble()#
+for (f in list.files('encode', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('encode', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('-[[:print:]]+','',sub('RNA_','',f))) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.enc = rbind(te.enc, sub)#
+}
+plot.te = function(te, squire, tetr) {#
+	p1 = squire %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle('SQuIRE')#
+	p2 = tetr %>% filter(roi==te) %>%#
+	ggplot(aes(x=tissue, y=rpm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('RPM') +#
+		ggtitle('TEtranscripts')#
+	p1 + p2#
+}
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.enc, te.enc)
+library(tidyverse)#
+library(patchwork)#
+##read squire files#
+#
+sq.mus = tibble()#
+for (f in list.files('musculus', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('musculus', f, sep='/')) %>%#
+		mutate(tissue=sub('_musculus[[:print:]]+','',Sample))#
+	sq.mus = rbind(sq.mus, sub)#
+}#
+#
+sq.enc = tibble()#
+for (f in list.files('encode', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('encode', f, sep='/')) %>%#
+		mutate(tissue=sub('-[[:digit:]]','',sub('RNA_','',Sample)))#
+	sq.enc = rbind(sq.enc, sub)#
+}#
+##read TEtranscripts files#
+#
+te.mus = tibble()#
+for (f in list.files('musculus', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('musculus', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('_musculus[[:print:]]+','',f)) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.mus = rbind(te.mus, sub)#
+}#
+#
+te.enc = tibble()#
+for (f in list.files('encode', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('encode', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('-[[:print:]]+','',sub('RNA_','',f))) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.enc = rbind(te.enc, sub)#
+}
+plot.te = function(te, squire, tetr) {#
+	p1 = squire %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle('SQuIRE')#
+	p2 = tetr %>% filter(roi==te) %>%#
+	ggplot(aes(x=tissue, y=rpm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point(position=position_jitter(0.1)) +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('RPM') +#
+		ggtitle('TEtranscripts')#
+	p1 + p2#
+}#
+#
+plot.te('IAPEz-int:ERVK:LTR', sq.mus, te.mus)
+plot.te = function(te, squire, tetr) {#
+	p1 = squire %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle('SQuIRE')#
+	p2 = tetr %>% filter(roi==te) %>%#
+	ggplot(aes(x=tissue, y=rpm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('RPM') +#
+		ggtitle('TEtranscripts')#
+	p1 + p2#
+}#
+#
+plot.te('IAPEz-int:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPEz-int:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.mus, te.mus)
+library(svglite)
+ggsave('~/Downloads/ltr1_own.svg')
+plot.te('L1Md_T:L1:LINE', sq.mus, te.mus)
+plot.te('L1Md_Gf:L1:LINE', sq.mus, te.mus)
+plot.te('L1Md_T:L1:LINE', sq.mus, te.mus)
+plot.te('L1Md_A:L1:LINE', sq.mus, te.mus)
+plot.te('RLTR4_Mm:ERV1:LTR', sq.mus, te.mus)
+plot.te('L1Md_T:L1:LINE', sq.mus, te.mus)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.enc, te.enc)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.mus, te.mus)
+plot.te('L1Md_T:L1:LINE', sq.mus, te.mus)
+ggsave('~/Downloads/l1t_own.svg')
+plot.te('RLTR4_Mm:ERV1:LTR', sq.mus, te.mus)
+ggsave('~/Downloads/rltr4_own.svg')
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.enc, te.enc)
+ggsave('~/Downloads/iap_enc.svg')
+plot.te('L1Md_T:L1:LINE', sq.enc, te.enc)
+ggsave('~/Downloads/l1_enc.svg')
+plot.te('RLTR4_Mm:ERV1:LTR', sq.enc, te.enc)
+ggsave('~/Downloads/rltr4_enc.svg')
+plot.te('IAPEz-int:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPEz-int:ERVK:LTR', sq.enc, te.enc)
+library(tidyverse)#
+library(patchwork)#
+##read squire files#
+#
+sq.mus = tibble()#
+for (f in list.files('musculus', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('musculus', f, sep='/')) %>%#
+		mutate(tissue=sub('_musculus[[:print:]]+','',Sample))#
+	sq.mus = rbind(sq.mus, sub)#
+}
+sq.mus
+?case_when
+sq.vig = tibble()#
+for (f in list.files('vignola', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('vignola', f, sep='/')) %>%#
+		mutate(tissue = case_when(grepl('GFP',Sample) ~ 'trophoblast',#
+								grepl('TM',Sample) ~ 'endothelial'))#
+	sq.mus = rbind(sq.mus, sub)#
+}
+sq.vig
+list.files('vignola', pattern='subFcounts.txt')
+f="MTDK63.1_GFP_subFcounts.txt"
+read_tsv(paste('vignola', f, sep='/'))
+read_tsv(paste('vignola', f, sep='/')) %>%#
+		mutate(tissue = case_when(grepl('GFP',Sample) ~ 'trophoblast',#
+								grepl('TM',Sample) ~ 'endothelial'))
+sq.vig = tibble()#
+for (f in list.files('vignola', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('vignola', f, sep='/')) %>%#
+		mutate(tissue = case_when(grepl('GFP',Sample) ~ 'trophoblast',#
+								grepl('TM',Sample) ~ 'endothelial'))#
+	sq.mus = rbind(sq.vig, sub)#
+}
+sq.vig
+sq.vig = tibble()#
+for (f in list.files('vignola', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('vignola', f, sep='/')) %>%#
+		mutate(tissue = case_when(grepl('GFP',Sample) ~ 'trophoblast',#
+								grepl('TM',Sample) ~ 'endothelial'))#
+	sq.vig = rbind(sq.vig, sub)#
+}
+sq.vig
+te.mus = tibble()#
+for (f in list.files('musculus', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('musculus', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('_musculus[[:print:]]+','',f)) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.mus = rbind(te.mus, sub)#
+}
+te.mus
+te.vig = tibble()#
+for (f in list.files('vignola', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('vignola', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6,#
+			tissue=case_when(grepl('GFP',f) ~ 'trophoblast',#
+						grepl('TM',f) ~ 'endothelial')) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.vig = rbind(te.vig, sub)#
+}
+te.vig
+plot.te = function(te, squire, tetr) {#
+	p1 = squire %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle('SQuIRE')#
+	p2 = tetr %>% filter(roi==te) %>%#
+	ggplot(aes(x=tissue, y=rpm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('RPM') +#
+		ggtitle('TEtranscripts')#
+	p1 + p2#
+}
+plot.te('IAPEz-int:ERVK:LTR', sq.vig, te.vig)
+sq.vig = tibble()#
+for (f in list.files('vignola', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('vignola', f, sep='/')) %>%#
+		mutate(tissue = case_when(grepl('GFP',Sample) ~ 'endothelial',#
+								grepl('TM',Sample) ~ 'trophoblast'))#
+	sq.vig = rbind(sq.vig, sub)#
+}
+te.vig = tibble()#
+for (f in list.files('vignola', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('vignola', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6,#
+			tissue=case_when(grepl('GFP',f) ~ 'endothelial',#
+						grepl('TM',f) ~ 'trophoblast')) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.vig = rbind(te.vig, sub)#
+}
+plot.te('IAPEz-int:ERVK:LTR', sq.vig, te.vig)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.vig, te.vig)
+plot.te('L1Md_T:L1:LINE', sq.vig, te.vig)
+plot.te('L1Md_Gf:L1:LINE', sq.vig, te.vig)
+plot.te('RLTR4_Mm:ERV1:LTR', sq.vig, te.vig)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.vig, te.vig)
+library(svglite)
+ggsave('~/Downloads/iap.svg')
+plot.te('L1Md_T:L1:LINE', sq.vig, te.vig)
+ggsave('~/Downloads/l1.svg')
+library(tidyverse)#
+library(patchwork)#
+##read squire files#
+#
+sq.mus = tibble()#
+for (f in list.files('musculus', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('musculus', f, sep='/')) %>%#
+		mutate(tissue=sub('_musculus[[:print:]]+','',Sample))#
+	sq.mus = rbind(sq.mus, sub)#
+}#
+#
+sq.enc = tibble()#
+for (f in list.files('encode', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('encode', f, sep='/')) %>%#
+		mutate(tissue=sub('-[[:digit:]]','',sub('RNA_','',Sample)))#
+	sq.enc = rbind(sq.enc, sub)#
+}#
+#
+sq.vig = tibble()#
+for (f in list.files('vignola', pattern='subFcounts.txt')) {#
+	sub = read_tsv(paste('vignola', f, sep='/')) %>%#
+		mutate(tissue = case_when(grepl('GFP',Sample) ~ 'endothelial',#
+								grepl('TM',Sample) ~ 'trophoblast'))#
+	sq.vig = rbind(sq.vig, sub)#
+}#
+##read TEtranscripts files#
+#
+te.mus = tibble()#
+for (f in list.files('musculus', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('musculus', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('_musculus[[:print:]]+','',f)) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.mus = rbind(te.mus, sub)#
+}#
+#
+te.enc = tibble()#
+for (f in list.files('encode', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('encode', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6, tissue=sub('-[[:print:]]+','',sub('RNA_','',f))) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.enc = rbind(te.enc, sub)#
+}#
+#
+te.vig = tibble()#
+for (f in list.files('vignola', pattern='TEtranscripts.cntTable')) {#
+	sub = read_tsv(paste('vignola', f, sep='/'), col_names=c('roi','count'), skip=1) %>%#
+		mutate(rpm=count/sum(count)*1e6,#
+			tissue=case_when(grepl('GFP',f) ~ 'endothelial',#
+						grepl('TM',f) ~ 'trophoblast')) %>%#
+		add_column(sample=gsub('_TEtranscripts.cntTable','',f))#
+	te.vig = rbind(te.vig, sub)#
+}
+plot.te = function(te, squire, tetr) {#
+	p1 = squire %>% filter(`Subfamily:Family:Class`==te) %>%#
+	ggplot(aes(x=tissue, y=fpkm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('FPKM') +#
+		ggtitle('SQuIRE')#
+	p2 = tetr %>% filter(roi==te) %>%#
+	ggplot(aes(x=tissue, y=rpm)) +#
+		geom_bar(stat='summary', fun=mean) +#
+		geom_point() +#
+		theme_classic() +#
+		xlab('') +#
+		ylab('RPM') +#
+		ggtitle('TEtranscripts')#
+	p1 + p2#
+}#
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.mus, te.mus)
+plot.te('IAPLTR1_Mm:ERVK:LTR', sq.mus, te.mus)

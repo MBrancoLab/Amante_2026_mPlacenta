@@ -1,0 +1,321 @@
+sample	tissue	celltype	fraction
+GFP_WT_M_L1	embryonic	decidual stroma	0
+GFP_WT_M_L4	embryonic	decidual stroma	0
+GFP_WT_F_L5	embryonic	decidual stroma	0
+GFP_WT_F_L3	embryonic	decidual stroma	0
+GFP_WT_F_L6	embryonic	decidual stroma	0.00525417
+GFP_WT_F_L2	embryonic	decidual stroma	0
+GFP_WT_M_L5	embryonic	decidual stroma	0
+TM_WT_M_L1	extraembryonic	decidual stroma	0
+TM_WT_M_L2	extraembryonic	decidual stroma	0
+TM_WT_M_L3	extraembryonic	decidual stroma	0
+TM_WT_M_L4	extraembryonic	decidual stroma	0
+TM_WT_F_L5	extraembryonic	decidual stroma	0
+TM_WT_F_L6	extraembryonic	decidual stroma	0
+TM_WT_F_L2	extraembryonic	decidual stroma	0
+TM_WT_M_L5	extraembryonic	decidual stroma	0
+GFP_WT_M_L1	embryonic	fetal mesenchyme	0.035057694
+GFP_WT_M_L4	embryonic	fetal mesenchyme	0
+GFP_WT_F_L5	embryonic	fetal mesenchyme	0
+GFP_WT_F_L3	embryonic	fetal mesenchyme	0
+GFP_WT_F_L6	embryonic	fetal mesenchyme	0.100032162
+GFP_WT_F_L2	embryonic	fetal mesenchyme	0.001177159
+GFP_WT_M_L5	embryonic	fetal mesenchyme	0
+TM_WT_M_L1	extraembryonic	fetal mesenchyme	0
+TM_WT_M_L2	extraembryonic	fetal mesenchyme	0
+TM_WT_M_L3	extraembryonic	fetal mesenchyme	0
+TM_WT_M_L4	extraembryonic	fetal mesenchyme	0
+TM_WT_F_L5	extraembryonic	fetal mesenchyme	0
+TM_WT_F_L6	extraembryonic	fetal mesenchyme	0
+TM_WT_F_L2	extraembryonic	fetal mesenchyme	0
+TM_WT_M_L5	extraembryonic	fetal mesenchyme	0
+GFP_WT_M_L1	embryonic	erythrocyte	0.185303254
+GFP_WT_M_L4	embryonic	erythrocyte	0.135024463
+GFP_WT_F_L5	embryonic	erythrocyte	0.156923998
+GFP_WT_F_L3	embryonic	erythrocyte	0.161549968
+GFP_WT_F_L6	embryonic	erythrocyte	0.074580171
+GFP_WT_F_L2	embryonic	erythrocyte	0.129582767
+GFP_WT_M_L5	embryonic	erythrocyte	0.145845947
+TM_WT_M_L1	extraembryonic	erythrocyte	0.045070546
+TM_WT_M_L2	extraembryonic	erythrocyte	0.03235029
+TM_WT_M_L3	extraembryonic	erythrocyte	0.02434597
+TM_WT_M_L4	extraembryonic	erythrocyte	0.030533649
+TM_WT_F_L5	extraembryonic	erythrocyte	0.038849076
+TM_WT_F_L6	extraembryonic	erythrocyte	0.058860264
+TM_WT_F_L2	extraembryonic	erythrocyte	0.055565399
+TM_WT_M_L5	extraembryonic	erythrocyte	0.042353243
+GFP_WT_M_L1	embryonic	macrophage	0
+GFP_WT_M_L4	embryonic	macrophage	0
+GFP_WT_F_L5	embryonic	macrophage	0
+GFP_WT_F_L3	embryonic	macrophage	0
+GFP_WT_F_L6	embryonic	macrophage	0
+GFP_WT_F_L2	embryonic	macrophage	0
+GFP_WT_M_L5	embryonic	macrophage	0
+TM_WT_M_L1	extraembryonic	macrophage	0
+TM_WT_M_L2	extraembryonic	macrophage	0
+TM_WT_M_L3	extraembryonic	macrophage	0
+TM_WT_M_L4	extraembryonic	macrophage	0
+TM_WT_F_L5	extraembryonic	macrophage	0
+TM_WT_F_L6	extraembryonic	macrophage	0
+TM_WT_F_L2	extraembryonic	macrophage	0
+TM_WT_M_L5	extraembryonic	macrophage	0
+GFP_WT_M_L1	embryonic	pro-angiogenic endothelial	0.135155179
+GFP_WT_M_L4	embryonic	pro-angiogenic endothelial	0.240499533
+GFP_WT_F_L5	embryonic	pro-angiogenic endothelial	0.255891172
+GFP_WT_F_L3	embryonic	pro-angiogenic endothelial	0.175695108
+GFP_WT_F_L6	embryonic	pro-angiogenic endothelial	0.209661942
+GFP_WT_F_L2	embryonic	pro-angiogenic endothelial	0.247888119
+GFP_WT_M_L5	embryonic	pro-angiogenic endothelial	0.285942334
+TM_WT_M_L1	extraembryonic	pro-angiogenic endothelial	0
+TM_WT_M_L2	extraembryonic	pro-angiogenic endothelial	0
+TM_WT_M_L3	extraembryonic	pro-angiogenic endothelial	0
+TM_WT_M_L4	extraembryonic	pro-angiogenic endothelial	0
+TM_WT_F_L5	extraembryonic	pro-angiogenic endothelial	0
+TM_WT_F_L6	extraembryonic	pro-angiogenic endothelial	0
+TM_WT_F_L2	extraembryonic	pro-angiogenic endothelial	0
+TM_WT_M_L5	extraembryonic	pro-angiogenic endothelial	0
+GFP_WT_M_L1	embryonic	B-cell	0.031171128
+GFP_WT_M_L4	embryonic	B-cell	0.068106401
+GFP_WT_F_L5	embryonic	B-cell	0.035689353
+GFP_WT_F_L3	embryonic	B-cell	0.059966714
+GFP_WT_F_L6	embryonic	B-cell	0
+GFP_WT_F_L2	embryonic	B-cell	0
+GFP_WT_M_L5	embryonic	B-cell	0.011051948
+TM_WT_M_L1	extraembryonic	B-cell	0.03294102
+TM_WT_M_L2	extraembryonic	B-cell	0.023769634
+TM_WT_M_L3	extraembryonic	B-cell	0.027629797
+TM_WT_M_L4	extraembryonic	B-cell	0.022979943
+TM_WT_F_L5	extraembryonic	B-cell	0.035379186
+TM_WT_F_L6	extraembryonic	B-cell	0.032073247
+TM_WT_F_L2	extraembryonic	B-cell	0.030049601
+TM_WT_M_L5	extraembryonic	B-cell	0.030936945
+GFP_WT_M_L1	embryonic	T-cell	0.043108762
+GFP_WT_M_L4	embryonic	T-cell	0.06518454
+GFP_WT_F_L5	embryonic	T-cell	0.119418706
+GFP_WT_F_L3	embryonic	T-cell	0.137998302
+GFP_WT_F_L6	embryonic	T-cell	0.130853764
+GFP_WT_F_L2	embryonic	T-cell	0.171760412
+GFP_WT_M_L5	embryonic	T-cell	0.118681221
+TM_WT_M_L1	extraembryonic	T-cell	0
+TM_WT_M_L2	extraembryonic	T-cell	0
+TM_WT_M_L3	extraembryonic	T-cell	0
+TM_WT_M_L4	extraembryonic	T-cell	0
+TM_WT_F_L5	extraembryonic	T-cell	0
+TM_WT_F_L6	extraembryonic	T-cell	0
+TM_WT_F_L2	extraembryonic	T-cell	0
+TM_WT_M_L5	extraembryonic	T-cell	0
+GFP_WT_M_L1	embryonic	natural killer cell	0
+GFP_WT_M_L4	embryonic	natural killer cell	0
+GFP_WT_F_L5	embryonic	natural killer cell	0
+GFP_WT_F_L3	embryonic	natural killer cell	0
+GFP_WT_F_L6	embryonic	natural killer cell	0
+GFP_WT_F_L2	embryonic	natural killer cell	0
+GFP_WT_M_L5	embryonic	natural killer cell	0
+TM_WT_M_L1	extraembryonic	natural killer cell	0
+TM_WT_M_L2	extraembryonic	natural killer cell	0
+TM_WT_M_L3	extraembryonic	natural killer cell	0
+TM_WT_M_L4	extraembryonic	natural killer cell	0
+TM_WT_F_L5	extraembryonic	natural killer cell	0
+TM_WT_F_L6	extraembryonic	natural killer cell	0
+TM_WT_F_L2	extraembryonic	natural killer cell	0
+TM_WT_M_L5	extraembryonic	natural killer cell	0
+GFP_WT_M_L1	embryonic	lymphogenic endothelial	0.114873917
+GFP_WT_M_L4	embryonic	lymphogenic endothelial	0.076992332
+GFP_WT_F_L5	embryonic	lymphogenic endothelial	0.087650002
+GFP_WT_F_L3	embryonic	lymphogenic endothelial	0.079177795
+GFP_WT_F_L6	embryonic	lymphogenic endothelial	0.110115082
+GFP_WT_F_L2	embryonic	lymphogenic endothelial	0.097536326
+GFP_WT_M_L5	embryonic	lymphogenic endothelial	0.056254277
+TM_WT_M_L1	extraembryonic	lymphogenic endothelial	0
+TM_WT_M_L2	extraembryonic	lymphogenic endothelial	0
+TM_WT_M_L3	extraembryonic	lymphogenic endothelial	0
+TM_WT_M_L4	extraembryonic	lymphogenic endothelial	0
+TM_WT_F_L5	extraembryonic	lymphogenic endothelial	0
+TM_WT_F_L6	extraembryonic	lymphogenic endothelial	0
+TM_WT_F_L2	extraembryonic	lymphogenic endothelial	0
+TM_WT_M_L5	extraembryonic	lymphogenic endothelial	0
+GFP_WT_M_L1	embryonic	SpT	0.104118309
+GFP_WT_M_L4	embryonic	SpT	0.153603661
+GFP_WT_F_L5	embryonic	SpT	0.092545759
+GFP_WT_F_L3	embryonic	SpT	0.13258658
+GFP_WT_F_L6	embryonic	SpT	0.002385111
+GFP_WT_F_L2	embryonic	SpT	0
+GFP_WT_M_L5	embryonic	SpT	0.163161286
+TM_WT_M_L1	extraembryonic	SpT	0.40987964
+TM_WT_M_L2	extraembryonic	SpT	0.334609214
+TM_WT_M_L3	extraembryonic	SpT	0.311691038
+TM_WT_M_L4	extraembryonic	SpT	0.387196961
+TM_WT_F_L5	extraembryonic	SpT	0.302215024
+TM_WT_F_L6	extraembryonic	SpT	0.334722233
+TM_WT_F_L2	extraembryonic	SpT	0.26075979
+TM_WT_M_L5	extraembryonic	SpT	0.26089766
+GFP_WT_M_L1	embryonic	S-TGC	0
+GFP_WT_M_L4	embryonic	S-TGC	0.04523012
+GFP_WT_F_L5	embryonic	S-TGC	0
+GFP_WT_F_L3	embryonic	S-TGC	0
+GFP_WT_F_L6	embryonic	S-TGC	0
+GFP_WT_F_L2	embryonic	S-TGC	0
+GFP_WT_M_L5	embryonic	S-TGC	0
+TM_WT_M_L1	extraembryonic	S-TGC	0.049538905
+TM_WT_M_L2	extraembryonic	S-TGC	0.121771376
+TM_WT_M_L3	extraembryonic	S-TGC	0.184100212
+TM_WT_M_L4	extraembryonic	S-TGC	0.199017853
+TM_WT_F_L5	extraembryonic	S-TGC	0.114895255
+TM_WT_F_L6	extraembryonic	S-TGC	0.165367047
+TM_WT_F_L2	extraembryonic	S-TGC	0.138485928
+TM_WT_M_L5	extraembryonic	S-TGC	0.144835029
+GFP_WT_M_L1	embryonic	SynTI	0
+GFP_WT_M_L4	embryonic	SynTI	0
+GFP_WT_F_L5	embryonic	SynTI	0
+GFP_WT_F_L3	embryonic	SynTI	0
+GFP_WT_F_L6	embryonic	SynTI	0
+GFP_WT_F_L2	embryonic	SynTI	0
+GFP_WT_M_L5	embryonic	SynTI	0
+TM_WT_M_L1	extraembryonic	SynTI	0.058026163
+TM_WT_M_L2	extraembryonic	SynTI	0.064499358
+TM_WT_M_L3	extraembryonic	SynTI	0.075627829
+TM_WT_M_L4	extraembryonic	SynTI	0.056173677
+TM_WT_F_L5	extraembryonic	SynTI	0.038057108
+TM_WT_F_L6	extraembryonic	SynTI	0.067916593
+TM_WT_F_L2	extraembryonic	SynTI	0.110939359
+TM_WT_M_L5	extraembryonic	SynTI	0.064178319
+GFP_WT_M_L1	embryonic	glycogen cell	0.019537478
+GFP_WT_M_L4	embryonic	glycogen cell	0
+GFP_WT_F_L5	embryonic	glycogen cell	0
+GFP_WT_F_L3	embryonic	glycogen cell	0
+GFP_WT_F_L6	embryonic	glycogen cell	0.042987322
+GFP_WT_F_L2	embryonic	glycogen cell	0.047692355
+GFP_WT_M_L5	embryonic	glycogen cell	0
+TM_WT_M_L1	extraembryonic	glycogen cell	0.002462188
+TM_WT_M_L2	extraembryonic	glycogen cell	0.037605185
+TM_WT_M_L3	extraembryonic	glycogen cell	0.003185578
+TM_WT_M_L4	extraembryonic	glycogen cell	0
+TM_WT_F_L5	extraembryonic	glycogen cell	0
+TM_WT_F_L6	extraembryonic	glycogen cell	0
+TM_WT_F_L2	extraembryonic	glycogen cell	0.008665045
+TM_WT_M_L5	extraembryonic	glycogen cell	0
+GFP_WT_M_L1	embryonic	JZP	0
+GFP_WT_M_L4	embryonic	JZP	0
+GFP_WT_F_L5	embryonic	JZP	0
+GFP_WT_F_L3	embryonic	JZP	0
+GFP_WT_F_L6	embryonic	JZP	0
+GFP_WT_F_L2	embryonic	JZP	0
+GFP_WT_M_L5	embryonic	JZP	0
+TM_WT_M_L1	extraembryonic	JZP	0.254221258
+TM_WT_M_L2	extraembryonic	JZP	0.233888396
+TM_WT_M_L3	extraembryonic	JZP	0.204318466
+TM_WT_M_L4	extraembryonic	JZP	0.174105249
+TM_WT_F_L5	extraembryonic	JZP	0.310139277
+TM_WT_F_L6	extraembryonic	JZP	0.19681785
+TM_WT_F_L2	extraembryonic	JZP	0.223055771
+TM_WT_M_L5	extraembryonic	JZP	0.279744618
+GFP_WT_M_L1	embryonic	SynTII	0
+GFP_WT_M_L4	embryonic	SynTII	0.048021879
+GFP_WT_F_L5	embryonic	SynTII	0
+GFP_WT_F_L3	embryonic	SynTII	0.029479646
+GFP_WT_F_L6	embryonic	SynTII	0.040786416
+GFP_WT_F_L2	embryonic	SynTII	0.056232761
+GFP_WT_M_L5	embryonic	SynTII	0.06354706
+TM_WT_M_L1	extraembryonic	SynTII	0.012931627
+TM_WT_M_L2	extraembryonic	SynTII	0.029558024
+TM_WT_M_L3	extraembryonic	SynTII	0.017883395
+TM_WT_M_L4	extraembryonic	SynTII	0.011867328
+TM_WT_F_L5	extraembryonic	SynTII	0
+TM_WT_F_L6	extraembryonic	SynTII	0.027792211
+TM_WT_F_L2	extraembryonic	SynTII	0.026732439
+TM_WT_M_L5	extraembryonic	SynTII	0
+GFP_WT_M_L1	embryonic	LaTP	0.33167428
+GFP_WT_M_L4	embryonic	LaTP	0.167337071
+GFP_WT_F_L5	embryonic	LaTP	0.251881011
+GFP_WT_F_L3	embryonic	LaTP	0.223545887
+GFP_WT_F_L6	embryonic	LaTP	0.283343862
+GFP_WT_F_L2	embryonic	LaTP	0.2481301
+GFP_WT_M_L5	embryonic	LaTP	0.155515927
+TM_WT_M_L1	extraembryonic	LaTP	0.134928652
+TM_WT_M_L2	extraembryonic	LaTP	0.121948523
+TM_WT_M_L3	extraembryonic	LaTP	0.151217716
+TM_WT_M_L4	extraembryonic	LaTP	0.118125341
+TM_WT_F_L5	extraembryonic	LaTP	0.160465073
+TM_WT_F_L6	extraembryonic	LaTP	0.116450555
+TM_WT_F_L2	extraembryonic	LaTP	0.145746668
+TM_WT_M_L5	extraembryonic	LaTP	0.177054186
+bTSC	TSCs	decidual stroma	0
+GFPTSC	TSCs	decidual stroma	0.028380554
+Placenta01	placenta	decidual stroma	0.065900725
+Placenta02	placenta	decidual stroma	0.118365681
+Placenta03	placenta	decidual stroma	0.172816093
+bTSC	TSCs	fetal mesenchyme	0
+GFPTSC	TSCs	fetal mesenchyme	0
+Placenta01	placenta	fetal mesenchyme	0
+Placenta02	placenta	fetal mesenchyme	0
+Placenta03	placenta	fetal mesenchyme	0
+bTSC	TSCs	erythrocyte	0
+GFPTSC	TSCs	erythrocyte	0.017295092
+Placenta01	placenta	erythrocyte	0
+Placenta02	placenta	erythrocyte	0
+Placenta03	placenta	erythrocyte	0
+bTSC	TSCs	macrophage	0
+GFPTSC	TSCs	macrophage	0.045428239
+Placenta01	placenta	macrophage	0
+Placenta02	placenta	macrophage	0
+Placenta03	placenta	macrophage	0
+bTSC	TSCs	pro-angiogenic endothelial	0
+GFPTSC	TSCs	pro-angiogenic endothelial	0.025627142
+Placenta01	placenta	pro-angiogenic endothelial	0.033357737
+Placenta02	placenta	pro-angiogenic endothelial	0.005207629
+Placenta03	placenta	pro-angiogenic endothelial	0.106991104
+bTSC	TSCs	B-cell	0
+GFPTSC	TSCs	B-cell	0.016411436
+Placenta01	placenta	B-cell	0
+Placenta02	placenta	B-cell	0
+Placenta03	placenta	B-cell	0
+bTSC	TSCs	T-cell	0
+GFPTSC	TSCs	T-cell	0.031764644
+Placenta01	placenta	T-cell	0
+Placenta02	placenta	T-cell	0
+Placenta03	placenta	T-cell	0
+bTSC	TSCs	natural killer cell	0
+GFPTSC	TSCs	natural killer cell	0.001715136
+Placenta01	placenta	natural killer cell	0
+Placenta02	placenta	natural killer cell	0
+Placenta03	placenta	natural killer cell	0
+bTSC	TSCs	lymphogenic endothelial	0.050911813
+GFPTSC	TSCs	lymphogenic endothelial	0
+Placenta01	placenta	lymphogenic endothelial	0
+Placenta02	placenta	lymphogenic endothelial	0.008646282
+Placenta03	placenta	lymphogenic endothelial	0
+bTSC	TSCs	SpT	0
+GFPTSC	TSCs	SpT	0
+Placenta01	placenta	SpT	0.008629755
+Placenta02	placenta	SpT	0.016520248
+Placenta03	placenta	SpT	0.009034039
+bTSC	TSCs	S-TGC	0.151961916
+GFPTSC	TSCs	S-TGC	0.111562757
+Placenta01	placenta	S-TGC	0.279733403
+Placenta02	placenta	S-TGC	0.242638477
+Placenta03	placenta	S-TGC	0.241502466
+bTSC	TSCs	SynTI	0
+GFPTSC	TSCs	SynTI	0.054411239
+Placenta01	placenta	SynTI	0.065103982
+Placenta02	placenta	SynTI	0
+Placenta03	placenta	SynTI	0
+bTSC	TSCs	glycogen cell	0.226371032
+GFPTSC	TSCs	glycogen cell	0.065682205
+Placenta01	placenta	glycogen cell	0.132510839
+Placenta02	placenta	glycogen cell	0.306281861
+Placenta03	placenta	glycogen cell	0.236157629
+bTSC	TSCs	JZP	0
+GFPTSC	TSCs	JZP	0
+Placenta01	placenta	JZP	0
+Placenta02	placenta	JZP	0
+Placenta03	placenta	JZP	0
+bTSC	TSCs	SynTII	0.218299302
+GFPTSC	TSCs	SynTII	0.272459713
+Placenta01	placenta	SynTII	0.203878708
+Placenta02	placenta	SynTII	0.097510139
+Placenta03	placenta	SynTII	0.03079632
+bTSC	TSCs	LaTP	0.352455938
+GFPTSC	TSCs	LaTP	0.329261842
+Placenta01	placenta	LaTP	0.210884851
+Placenta02	placenta	LaTP	0.204829684
+Placenta03	placenta	LaTP	0.202702349
