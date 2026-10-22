@@ -112,3 +112,52 @@ plac = RenameIdents(plac, new.cluster.ids)
 VlnPlot(plac, features = c('Trim28'), pt.size=0.5)
 plac = RunUMAP(plac, dims = 1:20)
 DimPlot(plac, reduction = "umap", label=TRUE, repel=TRUE)
+library(Seurat)#
+##Read data from cellranger#
+#
+plac.data = Read10X('filtered_feature_bc_matrix')#
+##Make and filter Seurat object#
+#
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)
+plac = subset(plac, subset = nFeature_RNA > 200 & nFeature_RNA < 2000)#
+##Process#
+#
+plac = NormalizeData(plac) #
+plac = FindVariableFeatures(plac, selection.method = "vst", nfeatures = 2000)#
+plac = ScaleData(plac)#
+plac = RunPCA(plac)
+plac = FindNeighbors(plac, dims = 1:20)#
+plac = FindClusters(plac, resolution = 0.5)#
+##Remove minor clusters#
+#
+ncells = table(Idents(plac))#
+plac = subset(plac, idents = names(ncells)[ncells>50])
+new.cluster.ids = c("SynTI", "Glycogen cells", "SpT", "S-TGC", "Endothelial",#
+	"SynTII", "Pericytes", "Mesenchymal I", "Mesenchymal II", "Decidua")#
+names(new.cluster.ids) = levels(plac)#
+plac = RenameIdents(plac, new.cluster.ids)
+plac = RunUMAP(plac, dims = 1:20)
+DimPlot(plac, reduction = "umap", label=TRUE, repel=TRUE)
+VlnPlot(plac, features = c('Nanog','Elf5'), pt.size=0.5)
+plac.data
+head(plac.data)
+colnames(plac.data)
+colnames(plac.data)[1:10]
+head(rownames(plac.data))
+grep('Nanog',rownames(plac.data))
+rownames(plac.data)[grep('Nanog',rownames(plac.data))]
+rownames(plac.data)[grep('Elf5',rownames(plac.data))]
+? AggregateExpression
+?NormalizeData
+plac['Nanog']
+plac['Cdx2']
+plac = CreateSeuratObject(plac.data, min.cells=3, min.features=200)
+plac['Cdx2']
+plac['Nanog']
+plac = CreateSeuratObject(plac.data, min.cells=0, min.features=200)
+plac['Nanog']
+? AggregateExpression
+library(Seurat)
+plac=readRDS('Marsh_IAP_Seurat.Rds')
+VlnPlot(plac, features = c('Syna','Glis1','Stra6'), pt.size=0.5) #SynTI
+VlnPlot(plac, features = c('Mitf','Smad3','Prdm9'), pt.size=0.5) #SynTI

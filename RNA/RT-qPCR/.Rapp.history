@@ -31,3 +31,177 @@ ggplot(suv, aes(x=Isoform, y=Expression, fill=Sample)) +#
 	theme_classic()
 library(svglite)
 ggsave('~/Downloads/suv.svg')
+library(tidyverse)
+diff = read_tsv('diffTSC_qPCR.txt')
+diff
+ggplot(diff, aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point()
+ggplot(diff, aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point()
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(diff, aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point()
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes'))
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point()
+filter(diff, Target %in% c('Ctsq','Prl3d1','Syna','Synb')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point()
+filter(diff, Target=='Ctsq') %>%#
+ggplot(aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point()
+filter(diff, Target=='Ctsq') %>%#
+ggplot(aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point(colour='')
+?geom_point
+filter(diff, Target=='Ctsq') %>%#
+ggplot(aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point(colour=NA)
+?geom_point
+filter(diff, Target %in% c('Prl3d1','Syna','Synb')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Expression)) +#
+	geom_point()
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point()
+filter(diff, Target %in% c('Prl3d1','Syna','Synb')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point()
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point()
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=4, h=3)#
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=4, h=2)#
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=4, h=2.5)#
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=4, h=2.3)#
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=4, h=2.4)#
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=4, h=2.5)#
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=4, h=2)#
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+library(svglite)
+ggsave('~/Downloads/tsc_markers.svg')
+quartz(w=4, h=2.5)#
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+ggsave('~/Downloads/diff_markers.svg')
+quartz(w=3, h=2)#
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=3.5, h=2)#
+filter(diff, Target %in% c('Cdx2','Elf5','Eomes')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+ggsave('~/Downloads/tsc_markers.svg')
+quartz(w=4, h=2.5)#
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+quartz(w=3.5, h=2.5)#
+filter(diff, Target %in% c('Prl3d1','Syna','Synb','Ctsq')) %>%#
+ggplot(aes(x=Sample, y=Target, size=Normalised)) +#
+	geom_point() +#
+	scale_size_continuous(range = c(0,7)) +#
+	xlab('') +#
+	ylab('') +#
+	theme_classic()
+ggsave('~/Downloads/diff_markers.svg')

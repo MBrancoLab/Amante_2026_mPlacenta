@@ -3,24 +3,30 @@ library(gplots)
 
 
 ##files from permutation analysis
+##listed in plotting order
 
 o.files = c('musculus_cuttag/H3K27ac_bTSCs_overlap.txt',
 			'musculus_cuttag/H3K27ac_GFPTSCs_overlap.txt',
+			'musculus_cuttag/H3K27ac_bdiffTSCs_overlap.txt',
+			'musculus_cuttag/H3K27ac_GFPdiffTSCs_overlap.txt',
 			'musculus_cuttag/H3K27ac_placenta_overlap.txt',
+			'musculus_atac/ATAC_TS_overlap.txt',
+			'musculus_atac/ATAC_trophoblast_overlap.txt',
+			'musculus_atac/ATAC_endothelial_overlap.txt',
 			'musculus_cuttag/H3K4me1_bTSCs_overlap.txt',
 			'musculus_cuttag/H3K4me1_GFPTSCs_overlap.txt',
+			'musculus_cuttag/H3K4me1_bdiffTSCs_overlap.txt',
+			'musculus_cuttag/H3K4me1_GFPdiffTSCs_overlap.txt',
 			'musculus_cuttag/H3K4me1_placenta_overlap.txt',
 			'musculus_cuttag/H3K4me1_trophoblast_overlap.txt',
 			'musculus_cuttag/H3K4me1_endothelial_overlap.txt',
 			'musculus_cuttag/H3K4me3_bTSCs_overlap.txt',
 			'musculus_cuttag/H3K4me3_GFPTSCs_overlap.txt',
+			'musculus_cuttag/H3K4me3_bdiffTSCs_overlap.txt',
+			'musculus_cuttag/H3K4me3_GFPdiffTSCs_overlap.txt',
 			'musculus_cuttag/H3K4me3_placenta_overlap.txt',
 			'musculus_cuttag/H3K4me3_trophoblast_overlap.txt',
-			'musculus_cuttag/H3K4me3_endothelial_overlap.txt',
-			'musculus_atac/ATAC_TS_overlap.txt',
-			'musculus_atac/ATAC_d2diff_overlap.txt',
-			'musculus_atac/ATAC_trophoblast_overlap.txt',
-			'musculus_atac/ATAC_endothelial_overlap.txt')
+			'musculus_cuttag/H3K4me3_endothelial_overlap.txt')
 
 
 ##read into tibble

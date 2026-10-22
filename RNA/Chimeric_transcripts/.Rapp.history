@@ -1,471 +1,3 @@
-te.sum
-ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
-	geom_bar(stat='identity') +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('')
-ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
-	geom_bar(stat='identity', position=position_dodge()) +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('')
-ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
-	geom_bar(stat='identity', position=position_dodge(), col='black') +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('')
-ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
-	geom_bar(stat='identity', position=position_dodge(), col='black') +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('') +#
-	scale_fill_discrete(values=c('lightblue','blue',rep('orange',3)))
-ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
-	geom_bar(stat='identity', position=position_dodge(), col='black') +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('') +#
-	scale_colour_discrete(values=c('lightblue','blue',rep('orange',3)))
-?scale_fill_discrete
-ggplot(te.sum, aes(x=gene, y=perc, fill=sample)) +#
-	geom_bar(stat='identity', position=position_dodge(), col='black') +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('') +#
-	scale_fill_manual(values=c('lightblue','blue',rep('orange',3)))
-te.sum
-quant
-te.sum = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))
-te.sum
-ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
-	geom_bar(stat='summary', stat='mean', position=position_dodge(), col='black') +#
-	geom_point(position=position_dodge(0.9)) +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('')
-ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
-	geom_bar(stat='summary', fun=mean, position=position_dodge(), col='black') +#
-	geom_point(position=position_dodge(0.9)) +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('')
-te.sum
-te.sum = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
-te.sum$perc[te.sum$perc=='NaN'] = 0#
-ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
-	geom_bar(stat='summary', fun=mean, position=position_dodge(), col='black') +#
-	geom_point(position=position_dodge(0.9)) +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('')
-te.sum
-ggplot(te.sum, aes(x=sample, y=gene)) +#
-	geom_point(aes(size=perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,8))
-ggplot(te.sum, aes(x=sample, y=gene)) +#
-	geom_point(aes(size=perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-q.files = list.files('encode_quant', full.names=TRUE)#
-#
-quant = tibble()#
-for (f in q.files) {#
-	sub = read_tsv(f) %>%#
-		add_column(sample = gsub('_quant.ctab.gz','',basename(f))) %>%#
-		mutate(tissue = gsub('RNA_','',gsub('-[[:digit:]]','',sample)))#
-	quant = rbind(quant,sub)#
-}
-te.sum = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
-te.sum$perc[te.sum$perc=='NaN'] = 0
-te.sum
-ggplot(te.sum, aes(x=sample, y=gene)) +#
-	geom_point(aes(size=perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-meta = read_tsv('iap_l1_isoforms.txt')
-meta = read_tsv('iap_chimera_isoforms.txt')
-te.sum = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
-te.sum$perc[te.sum$perc=='NaN'] = 0#
-ggplot(te.sum, aes(x=sample, y=gene)) +#
-	geom_point(aes(size=perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-q.files = list.files('merged_quant', full.names=TRUE)#
-#
-quant = tibble()#
-for (f in q.files) {#
-	sub = read_tsv(f) %>%#
-		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
-		mutate(tissue = gsub('-[[:digit:]]','',sample))#
-	quant = rbind(quant,sub)#
-}#
-##isoforms with/without IAP/L1 TSS#
-#
-meta = read_tsv('iap_chimera_isoforms.txt')#
-#
-te.sum = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM))#
-te.sum$perc[te.sum$perc=='NaN'] = 0
-ggplot(te.sum, aes(x=sample, y=gene)) +#
-	geom_point(aes(size=perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-quant
-te.sum = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
-te.sum$perc[te.sum$perc=='NaN'] = 0
-te.sum
-iap = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
-iap$perc[te.sum$perc=='NaN'] = 0
-iap
-ggplot(te.sum, aes(x=gene, y=perc, fill=tissue)) +#
-	geom_bar(stat='summary', fun=mean, position=position_dodge(), col='black') +#
-	geom_point(position=position_dodge(0.9)) +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	theme_classic() +#
-	xlab('')
-ggplot(te.sum, aes(x=sample, y=gene)) +#
-	geom_point(aes(size=perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
-ggplot(aes(x=gene, y=tissue)) +#
-	geom_point(aes(size=perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc))
-iap = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
-iap$perc[iap$perc=='NaN'] = 0
-group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
-ggplot(aes(x=gene, y=tissue)) +#
-	geom_point(aes(size=mean_perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
-ggplot(aes(x=gene, y=tissue)) +#
-	geom_point(aes(size=mean_perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5)) +#
-	xlab('') +#
-	ylab('')
-filter(quant, gene_id=='MSTRG.10695') %>%#
-ggplot(aes(x=sample, y=t_name)) +#
-	geom_point(aes(size=FPKM), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,8))
-filter(quant, gene_id=='MSTRG.10695')
-filter(quant, gene_id=='MSTRG.10695') %>%#
-group_by(tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
-ggplot(aes(x=tissue, y=t_name)) +#
-	geom_point(aes(size=fpkm), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,8))
-filter(quant, gene_id=='MSTRG.10695') %>%#
-group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
-ggplot(aes(x=tissue, y=t_name)) +#
-	geom_point(aes(size=fpkm), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,8))
-filter(quant, gene_id=='MSTRG.10695') %>%#
-group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
-ggplot(aes(x=tissue, y=t_name)) +#
-	geom_point(aes(size=fpkm), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-ggsave('~/Downloads/suv.svg')
-library(tidyverse)#
-##stringtie quantification data#
-#
-q.files = list.files('merged_quant', full.names=TRUE)#
-#
-quant = tibble()#
-for (f in q.files) {#
-	sub = read_tsv(f) %>%#
-		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
-		mutate(tissue = gsub('-[[:digit:]]','',sample))#
-	quant = rbind(quant,sub)#
-}
-filter(quant, gene_id=='MSTRG.10695') %>%#
-group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
-ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
-	geom_bar(stat='identity') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-filter(quant, gene_id=='MSTRG.10695') %>%#
-group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
-ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
-	geom_bar(stat='identity', position=position_dodge()) +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5))
-filter(quant, gene_id=='MSTRG.10695') %>%#
-group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
-ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
-	geom_bar(stat='identity', position=position_dodge()) +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	xlab('') +#
-	ylab('FPKM')
-filter(quant, gene_id=='MSTRG.10695') %>%#
-group_by(t_name, tissue) %>% summarise(fpkm=mean(FPKM)) %>%#
-ggplot(aes(x=t_name, y=fpkm, fill=tissue)) +#
-	geom_bar(stat='identity', position=position_dodge(), col='black') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	xlab('') +#
-	ylab('FPKM')
-library(svglite)
-ggsave('~/Downloads/suv.svg')
-library(tidyverse)#
-library(ggtranscript)#
-#gtf file#
-#
-gtf = read_tsv('Suv39h2_isoforms.gtf', col_names=FALSE)#
-#
-##parse#
-#
-split.att = strsplit(gtf$X9, split='[;\"]')#
-get.att = function(att) {#
-	unlist(lapply(split.att, function(x) {#
-			pos = grep(att, x)#
-			if (length(pos)>0) {#
-				return(x[pos + 1])#
-			} else {#
-				return('')#
-			}#
-		}))#
-}#
-#
-suv = tibble(seqnames=gtf$X1,#
-			start=gtf$X4,#
-			end=gtf$X5,#
-			strand=gtf$X7,#
-			type=gtf$X3,#
-			gene_name=get.att('^gene_id'),#
-			transcript_name=get.att('transcript_id'))#
-##plot#
-#
-suv.exons = filter(suv, type=='exon')#
-#
-ggplot(suv.exons, aes(xstart=start, xend=end, y=transcript_name)) +#
-    geom_range() +#
-    geom_intron(data=to_intron(suv.exons,'transcript_name'), aes(strand=strand)) +#
-    theme_classic()
-library(tidyverse)#
-##stringtie quantification data#
-#
-q.files = list.files('merged_quant', full.names=TRUE)#
-#
-quant = tibble()#
-for (f in q.files) {#
-	sub = read_tsv(f) %>%#
-		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
-		mutate(tissue = gsub('-[[:digit:]]','',sample))#
-	quant = rbind(quant,sub)#
-}#
-##add info on which isoforms from selected genes have IAP TSS#
-##calculate percentage of IAP TSS usage#
-#
-meta = read_tsv('iap_chimera_isoforms.txt')#
-#
-iap = filter(quant, t_name %in% meta$t_name) %>%#
-	mutate(te_tss = meta$te_tss[match(t_name, meta$t_name)],#
-			gene = meta$gene_name[match(t_name, meta$t_name)]) %>%#
-	group_by(gene, sample, tissue) %>%#
-	summarise(perc = sum(FPKM[te_tss])/sum(FPKM)*100)#
-iap$perc[iap$perc=='NaN'] = 0#
-##plot IAP isoform usage#
-#
-group_by(iap, gene, tissue) %>% summarise(mean_perc=mean(perc)) %>%#
-ggplot(aes(x=gene, y=tissue)) +#
-	geom_point(aes(size=mean_perc), stroke=0, col='navy') +#
-	theme_classic() +#
-	scale_x_discrete(guide=guide_axis(angle=90)) +#
-	scale_size_continuous(range=c(0,5)) +#
-	xlab('') +#
-	ylab('')
-library(tidyverse)
-tx.files = list.files(pattern='chimTx.txt')#
-#
-tx = tibble()#
-for (f in tx.files) {#
-	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
-								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
-		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
-		add_column(sample = gsub('-chimTx.txt','',f))#
-	tx = rbind(tx,sub)#
-}#
-##select consistent TEs in placenta#
-#
-p1.tes = tx$te.id[tx$sample=='Placenta_musculus-1']#
-p2.tes = tx$te.id[tx$sample=='Placenta_musculus-2']#
-p3.tes = tx$te.id[tx$sample=='Placenta_musculus-3']#
-plac.tes = p1.tes[p1.tes %in% p2.tes & p1.tes %in% p3.tes]#
-#
-plac.tx = filter(tx, te.id %in% plac.tes)#
-group_by(plac.tx, sample) %>% summarise(n.te=length(unique(te.id)))
-gfp.tes = tx$te.id[tx$sample=='GFPTSCs_musculus']#
-b6.tes = tx$te.id[tx$sample=='bTSCs_musculus']#
-#
-pspec = filter(plac.tx, !(te.id %in% gfp.tes) & !(te.id %in% b6.tes),#
-			sample=='Placenta_musculus-1')#
-group_by(pspec, te.name) %>% summarise(n=length(te.name))
-filter(tx,grepl('IAP',te.name)) %>%#
-	group_by(sample) %>%#
-	summarise(n.te=length(unique(te.id)))#
-#
-iap.tx = filter(plac.tx, grepl('IAP',te.name))#
-group_by(iap.tx, sample) %>% summarise(n.te=length(unique(te.id)))
-l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
-group_by(l1.tx, sample) %>% summarise(n.te=length(unique(te.id)))
-write_tsv(rbind(iap.tx, l1.tx), 'iap_l1_transcripts.txt')
-iap.tx
-filter(iap.tx, te.chr=='chr2')
-tx
-filter(tx, tx.name=='Suv39h2')
-filter(tx, te.end==3488773)
-tx.files = list.files(pattern='chimTx.txt')#
-#
-tx = tibble()#
-for (f in tx.files) {#
-	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
-								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
-		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
-		add_column(sample = gsub('-chimTx.txt','',f))#
-	tx = rbind(tx,sub)#
-}#
-##select consistent TEs in placenta#
-#
-p1.tes = tx$te.id[tx$sample=='Placenta_musculus-1']#
-p2.tes = tx$te.id[tx$sample=='Placenta_musculus-2']#
-p3.tes = tx$te.id[tx$sample=='Placenta_musculus-3']#
-plac.tes = p1.tes[p1.tes %in% p2.tes & p1.tes %in% p3.tes]#
-#
-plac.tx = filter(tx, te.id %in% plac.tes)
-plac.tx
-filter(plac.tx, te.chr=='chr2')
-filter(plac.tx, te.chr=='chr2',grepl('IAP',te.name))
-data.frame(filter(plac.tx, te.chr=='chr2',grepl('IAP',te.name)))
-tx
-data.frame(filter(tx, te.chr=='chr2',grepl('IAP',te.name)))
-tx
-plac.tes = tx$te.id[grep('Placenta_musculus', tx$sample)]
-te.frq = table(plac.tes)
-head(te.frq)
-sum(te.freq>1)
-sum(te.frq>1)
-sum(te.frq>2)
-plac.tx = filter(tx, te.id %in% names(te.frq[te.freq>=2]))
-te.freq = table(plac.tes)
-plac.tx = filter(tx, te.id %in% names(te.frq[te.freq>=2]))
-plac.tx
-group_by(plac.tx, sample) %>% summarise(n.te=length(unique(te.id)))
-filter(tx,grepl('IAP',te.name)) %>%#
-	group_by(sample) %>%#
-	summarise(n.te=length(unique(te.id)))#
-#
-iap.tx = filter(plac.tx, grepl('IAP',te.name))#
-group_by(iap.tx, sample) %>% summarise(n.te=length(unique(te.id)))
-l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
-group_by(l1.tx, sample) %>% summarise(n.te=length(unique(te.id)))
-filter(iap.tx,te.chr=='chr2')
-iap.tx
-filter(tx,grepl('IAP',te.name)) %>%#
-	group_by(sample) %>%#
-	summarise(n.te=length(unique(te.id)))
-filter(tx,grepl('L1Md',te.name)) %>%#
-	group_by(sample) %>%#
-	summarise(n.te=length(unique(te.id)))
-group_by(plac.tx, sample) %>% summarise(n.te=length(unique(te.id)))
-tx.files = list.files(pattern='chimTx.txt')#
-#
-tx = tibble()#
-for (f in tx.files) {#
-	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
-								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
-		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
-		add_column(sample = gsub('-chimTx.txt','',f))#
-	tx = rbind(tx,sub)#
-}#
-##overview of IAP/L1 transcrips#
-#
-filter(tx,grepl('IAP',te.name)) %>%#
-	group_by(sample) %>%#
-	summarise(n.te=length(unique(te.id)))
-filter(tx,grepl('L1Md',te.name)) %>%#
-	group_by(sample) %>%#
-	summarise(n.te=length(unique(te.id)))
-plac.tes = tx$te.id[grep('Placenta_musculus', tx$sample)]#
-te.freq = table(plac.tes)#
-plac.tx = filter(tx, te.id %in% names(te.frq[te.freq>=2])) #TE in at least 2 out of 3 replicates
-iap.tx = filter(plac.tx, grepl('IAP',te.name))#
-l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
-##write output for manual curation#
-#
-write_tsv(rbind(iap.tx, l1.tx), 'iap_l1_transcripts.txt')
-library(tidyverse)#
-##read data#
-#
-tx.files = list.files(pattern='chimTx.txt')#
-#
-tx = tibble()#
-for (f in tx.files) {#
-	sub = read_tsv(f, col_names=c('te.chr','te.start','te.end','te.name','te.sw','te.strand',#
-								'tx.chr','tx.start','tx.end','tx.name','tx.fpkm','tx.strand')) %>%#
-		mutate(te.id = paste(te.chr,te.start,te.name,sep='_')) %>%#
-		add_column(sample = gsub('-chimTx.txt','',f))#
-	tx = rbind(tx,sub)#
-}
-plac.tes = tx$te.id[grep('Placenta_musculus', tx$sample)]
-head(plac.tes)
-te.freq = table(plac.tes)
-te.freq(grep('L1Md',names(te.freq)))
-te.freq[grep('L1Md',names(te.freq))]
 plac.tx = filter(tx, te.id %in% names(te.freq[te.freq>=2])) #TE in at least 2 out of 3 replicates
 iap.tx = filter(plac.tx, grepl('IAP',te.name))#
 l1.tx = filter(plac.tx, grepl('L1Md',te.name), te.end-te.start>5000)#
@@ -1066,3 +598,179 @@ plot.means(plac, c('Trim28','Tpbpa','Csta2'))
 plot.means(plac, c('Trim28','Tpbpa','Cstq'))
 plot.means(plac, c('Trim28','Tpbpa','Elf5'))
 plot.means(plac, c('Trim28','Tpbpa','Gcm1'))
+library(tidyverse)#
+##stringtie quantification data#
+#
+q.files = list.files('merged_quant', full.names=TRUE)#
+#
+quant = tibble()#
+for (f in q.files) {#
+	sub = read_tsv(f) %>%#
+		add_column(sample = gsub('_quant.ctab.gz','',basename(f)))%>%#
+		mutate(tissue = gsub('-[[:digit:]]','',sample))#
+	quant = rbind(quant,sub)#
+}
+quant
+filter(quant,gene_name=='Suv39h2')
+filter(quant,gene_name=='Suv39h2') %>% select(gene_id)
+filter(quant,gene_id=='MSTRG.10018')
+data.frame(filter(quant,gene_id=='MSTRG.10018'))
+nchar('MWGRLPTVTHPLVAHVFLRQTQQAVPVQSEYNDLLQWIPACGGSGWGRQSLDRSAELFCQ')
+nchar('atgcgcagattatttgtttaccacttagaacacaggatgtcagcgccatcttgtgacggcgaatgtgggg#
+gcggctcccaacatgtaaccttgactggactggaactcactctgtagaccaggctggcttcaaactcaaa#
+gatccacctgcccctgctgggtgctgggactaaaggcctgcaccacacgcctgactGGTGAATTGTCTTC#
+TAATTCTAAATCTGGTACTAAGTGCTCTAAGAAAGCTCAAGAGGCTCACTGGTGTTGTGGTGGCCCAGGG#
+')
+nchar('atgcgcagattatttgtttaccacttagaacacaggatgtcagcgccatcttgtgacggcgaatgtgggg#
+gcggctcccaacatgtaaccttgactggactggaactcactctgtagaccaggctggcttcaaactcaaa#
+gatccacctgcccctgctgggtgctgggactaaaggcctgcaccacacgcctgact')
+data.frame(filter(quant,gene_id=='MSTRG.3424'))
+data.frame(filter(quant,gene_id=='MSTRG.18396'))
+data.frame(filter(quant,t_name=='ENSMUST00000208363.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000207059.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000098966.4'))
+data.frame(filter(quant,t_name=='ENSMUST00000239102.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000208845.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000238813.1'))
+data.frame(filter(quant,t_name=='MSTRG.18396.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000131773.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000004684.12'))
+data.frame(filter(quant,t_name=='ENSMUST00000130587.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000145394.2'))
+data.frame(filter(quant,t_name=='ENSMUST00000238786.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000156085.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000145360.1'))
+data.frame(filter(quant,gene_id=='MSTRG.4504'))
+data.frame(filter(quant,gene_id=='MSTRG.20301'))
+nchar('cagaattggatggctgaatttgaacagatccttcgggaattgagacttcaggtcaactccacgcgcttgg#
+acctgtcgctgaccaaaggattacccaattggatctcctcagcattttctttctttaaaaaatagGGCAA#
+ACTCAGAAGA')
+data.frame(filter(quant,gene_id=='MSTRG.7559'))
+nchar('MLSSFSETSSFNRIQREAEVHCHKPCERQPLPPPQLTGPDGISLGAGEVDETLQE')
+data.frame(filter(quant,gene_id=='MSTRG.10065'))
+nchar('MLRCIQEVKIWNNIKLGDVVSTKSILNFRLFTSKEHKSIINISTIIMSLNDVRTGMNTFS')
+data.frame(filter(quant,gene_id=='MSTRG.7851'))
+nchar('MRKPSMGSPSLTRREVPFEDITQHNYLAQVTSNIWGTKFKIVGLAAFLPTNLGAVIYKTS#
+LLHLQPRQMTIYLPEVRKISMDYINLPVFNPNVFSEDEDDLPVTGASGVPENNPPCTVNI#
+PIAPIHSSAQALSPTQSIGLVQSLLANQNVQLDVLTNQTTAVGSAEHAGDAATQYPVSSR#
+YSNPGQVIFGGVEMGRIIQNPPQLPLPPPPPPPPQAPMQLSAVDHGDRDHEHLQKSAKAL#
+RPVPQLAAEGDAVVFSAPQEVQVAKMNPPPPYPGTIPAAPTTAAPPPPLPPPQPPVDVCL#
+KKGDFSLYPTAAHYQPPLGYERITTFDSSGNVEEVCRPRTRMLCSQNTYTLPGPGSSATL#
+RLTATEKKVPQPCTSATLNRLTVPRYSIPTGDPPPYPEIASQLAQGRSAAQRLDNSLIHA#
+TLRRNNREVALKMAQLADSSRAPLQPLAKPKGGAAGAVAQLPARPPPALYTCSQCSGAGP#
+SSQSGAALAHAISTSPLASQSSYNLLSPPDTSRDRTDYVNSAFTEDEALSQHCQLEKPLR#
+HPPLPEAAVTMKRPPPYQWDPMLGEDVWVPQERTAQPTVPNPLKLSPLMLGQGQHLDVAR#
+VPFVSPKSPSSPTATFPTGYGMGMPYPGSYNNPSLPGVQAPCSPKDALSQAQFAQQESAV#
+VLQPAYPPSLSYCTLPPTYPGSSTCSSVQLPPIALHPWNSYSTCPPMQNTQGTLPPKPHL#
+VVEKPLVSPPPAKLQSHMGTEVMVETADNFQEVLSLTESPVPQRTEKFGKKNRKRLDSRA#
+EEGSVQAITEGKVKKDARTLSDFNSLISSPRLGREKKKVKSQKDQLKSKKLNKTNEFQDS#
+SESEPELFISGDELMNQSQGSKKGWKSKRSLRTASELEEFKCRKASEKEDGRLGSQGFVY#
+VMANKQPLWNEATQVYQLDFGGRVTQESAKNFQIELEGRQVMQFGRIDGNAYILDFQYPF#
+SAVQAFAVALANVTQCLK#
+')
+data.frame(filter(quant,gene_id=='MSTRG.17644'))
+data.frame(filter(quant,t_name=='ENSMUST00000153470.8'))
+data.frame(filter(quant,t_name=='ENSMUST00000207309.1'))
+data.frame(filter(quant,t_name=='MSTRG.17644.2'))
+data.frame(filter(quant,t_name=='MSTRG.17644.3'))
+data.frame(filter(quant,t_name=='ENSMUST00000078918.9'))
+data.frame(filter(quant,t_name=='ENSMUST00000208357.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000075010.11'))
+data.frame(filter(quant,t_name=='ENSMUST00000150740.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000130609.2'))
+data.frame(filter(quant,t_name=='ENSMUST00000207695.1'))
+data.frame(filter(quant,gene_id=='MSTRG.11865'))
+data.frame(filter(quant,t_name=='ENSMUST00000023849.14'))
+data.frame(filter(quant,t_name=='ENSMUST00000167780.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000144826.1'))
+data.frame(filter(quant,t_name=='MSTRG.11865.3'))
+data.frame(filter(quant,t_name=='MSTRG.11865.4'))
+data.frame(filter(quant,t_name=='MSTRG.11865.5'))
+data.frame(filter(quant,t_name=='MSTRG.11865.6'))
+data.frame(filter(quant,t_name=='ENSMUST00000193018.1'))
+nchar('tctctcttctcttgcttcgctctcttgcttttctctctctcttgctttttcgctctcttgcttctcgctc#
+tctcttgcttcttgctctcttttcctgaagatgtaagaataaagctttgccgcagaagattctggtctgt#
+ggtgttcttcctggccggtcgtgagaacgcgtctaataacaattggtgccgaattccgggacgagaaaat#
+ccgggacgagaaaaaactccggactggcgcaggagggatacttcattccagaaccagaactgcgaatcaa#
+ggttataaggttcccgtaacacagactgttgagaaggattcaactgccgaattcagaactcatcagctgg#
+ggaacgacggtgataaaggttcccgtaaagcagactgttgagaaggattcaactgccgaattcagaactc#
+atcagctggggaacggaagtgagaaatggctttaccagaatgaagacaacccattttgggtaccagaaag#
+actcacccgaaaaatccagactgaccaagggaatactaatgtccctcgtcttggtgatgtccagggcgtc#
+aataataaagagagagcagcgttgggggataatgtcgacatttccactcccaatgacg')
+data.frame(filter(quant,gene_id=='MSTRG.2525'))
+data.frame(filter(quant,t_name=='MSTRG.2525.1'))
+data.frame(filter(quant,t_name=='MSTRG.2525.2'))
+data.frame(filter(quant,t_name=='MSTRG.2525.3'))
+data.frame(filter(quant,t_name=='MSTRG.2525.4'))
+data.frame(filter(quant,t_name=='ENSMUST00000154924.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000148173.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000020756.8'))
+data.frame(filter(quant,t_name=='ENSMUST00000131527.1'))
+nchar('ctctcttttcctgaagatgtaagaataaagctttgccgcagaagattctggtctgtggtgttcttcctgg#
+ccggtcgtgagaacgcgtcgaataacaattggtgctgaaacccgggacgagaaaatccgggacgagaaaa#
+aactccggactggcgcaggagggatacttcattccagaaccagaactgcgaatcaaggttataaggttcc#
+cgtaacacagactgttgagaaggattcaactgccgaattcagaactcatcagctggggaacgacggtgat#
+aaaggttcccgtaaaacagactgttgagaaggattcaactgccgaattcagaactcatcagctggggaac#
+ggaagtgagaaatggctttaccaggtagggtcccttgctgaacctggagccctcaggcaagtctaacaag#
+ccaggatgattcatggattcattctcagcctctgaacgttggaattacaggtggccttccatagacacaa#
+acctagatctttag')
+nchar('MKTTHFGYQKDSPEKSRLTKEILMSLVLVMSRASIIKREQRWGIMSTFPLPMTVMYNAQV#
+FSCFFTTNWELGLALIQTALALSGQVQMTDTINTLSASVTTVIDEQASANVKIQGGLMLV#
+NQLIDLVQIQLDVL#
+')
+data.frame(filter(quant,gene_id=='MSTRG.1249'))
+data.frame(filter(quant,t_name=='ENSMUST00000194740.5'))
+data.frame(filter(quant,t_name=='ENSMUST00000069652.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000191966.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000195042.5'))
+data.frame(filter(quant,t_name=='ENSMUST00000193482.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000195534.1'))
+nchar('gtggctttcgcttttggggctgggggtttgcgctcctagctcctgaagatgtaagcaataaagttttgcc#
+gcagaagattctggtctgttgtgttcttcctggccgggcgtgagaacgc')
+data.frame(filter(quant,t_name=='ENSMUST00000023616.9'))
+data.frame(filter(quant,t_name=='MSTRG.7563.2'))
+data.frame(filter(quant,t_name=='ENSMUST00000165380.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000165531.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000163471.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000172382.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000163964.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000167941.7'))
+data.frame(filter(quant,t_name=='MSTRG.7563.8'))
+data.frame(filter(quant,t_name=='ENSMUST00000164770.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000100308.9'))
+data.frame(filter(quant,t_name=='ENSMUST00000167909.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000164579.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000168279.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000166399.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000231574.1'))
+nchar('tctctttaaaatagaaggggtttcgtttttctctctctcttgcttcttgctctctcttgcttccctctct#
+tgcttcttgctctctcttgcttccctctcttgcttcttacactctggcccgataaagatataagcaataa#
+agctttgccgtggaagattctggttgttgtattcttcctggccggtcgtgagaacgcgtctaataacaat#
+tggtgccgaattccgggacgagaaaaaactccggactggcgcaggagggatacttcatttcagaaccaga#
+actgcgaatcaaggttataaggttcccgtaaagcagactgttgagaaggattcaactgccgaattcagaa#
+ctcatcagctggggaacgacggtgataaaggttcccgtaaagcagactgttaagaaggattcaactgtat#
+gaattcagaacttttcagctggggaacgagaatgaagacaacccattttgggtaccagaaagactcaccc#
+gaaaaatccagactgaccaagggaatactaatgtccctcgtcttggtgatgtccagggcgtcaataataa#
+agagagagcagcgttgggggataatgtcgacatttccactcccaatgacg')
+data.frame(filter(quant,t_name=='MSTRG.7978.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000182334.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000182923.1'))
+data.frame(filter(quant,t_name=='ENSMUST00000065871.13'))
+data.frame(filter(quant,t_name=='ENSMUST00000183192.7'))
+data.frame(filter(quant,t_name=='ENSMUST00000182603.1'))
+nchar('tgcaattgctcgcagcacgtaccggctctccacaagccctgttttgtttttgttttttgttttcaagaca#
+gggtttctctgtgtagccctggctgtcctggaactcactctgtagaccaggctggcctcaaactcagaaa#
+tccgcctgcctctgcctccggagtgctgggattaaaggtgtgtgccaccaccgcccggcatcaccttgaa#
+cccatggagatctgcctgcctctgcctgctgagtgctgggattaaag')
+nchar('tactagttaggcacagcggaggcccgcgccatcttataatggcgattgctcgcggcacacacggctctcc#
+tcagagattactggcagcacgcatgcaattgctcgcagcacgtaccggctctccacaagccctgttttgt#
+ttttgttttttgttttcaagacagggtttctctgtgtagccctggctgtcctggaactcactctgtagac#
+caggctggcctcaaactcagaaatccgcctgcctctgcctccggagtgctgggattaaaggtgtgtgcca#
+ccaccgcccggcatcaccttgaacccatggagatctgcctgcctctgcctgctgagtgctgggattaaag')
+library(Seurat)#
+library(tidyverse)#
+##Load Seurat object#
+#
+plac = LoadSeuratRds('../scRNA_processing/Marsh_IAP_Seurat.Rds')
+VmlPlot(plac, features='Trim28')
+VlnPlot(plac, features='Trim28')

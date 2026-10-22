@@ -751,7 +751,6 @@ plot_markers = function(markers) {#
 plot_markers(c('Cdh4','Pla2g4d','Prl8a9','Slco2a1'))
 plot_markers(c('Slco2a1','Prl8a9','Pla2g4d','Cdh4'))
 plot_markers(c('Gcgr','Ror2','Vegfa','Met'))
-plot_markers(c('Gcgr','Ror2','Vegfa','Met'))
 plot_markers = function(markers) {#
 	filter(cpm, gene %in% markers) %>%#
 	ggplot(aes(y=factor(gene, levels=markers), x=log2(expr), fill=species)) +#
